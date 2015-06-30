@@ -1,0 +1,14 @@
+{
+  "id": 41483,
+  "name": "FlashEnergy",
+  "type": [
+    "RATIONAL"
+  ],
+  "cardinality": "1",
+  "defaultValue": "",
+  "ifd": "",
+  "description": "",
+  "source": "",
+  "created": "18/05/2015",
+  "modified": "18/05/2015"
+}

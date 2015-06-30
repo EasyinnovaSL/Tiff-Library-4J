@@ -1,0 +1,14 @@
+{
+  "id": 50738,
+  "name": "AntiAliasStrength",
+  "type": [
+    "RATIONAL"
+  ],
+  "cardinality": "1",
+  "defaultValue": "1/1",
+  "ifd": "",
+  "description": "",
+  "source": "",
+  "created": "18/05/2015",
+  "modified": "18/05/2015"
+}

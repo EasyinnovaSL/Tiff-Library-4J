@@ -1,0 +1,15 @@
+{
+  "id": 50932,
+  "name": "ProfileCalibrationSignature",
+  "type": [
+    "ASCII",
+    "BYTE"
+  ],
+  "cardinality": "N",
+  "defaultValue": "",
+  "ifd": "",
+  "description": "",
+  "source": "",
+  "created": "18/05/2015",
+  "modified": "18/05/2015"
+}

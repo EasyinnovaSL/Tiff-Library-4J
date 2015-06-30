@@ -1,0 +1,14 @@
+{
+  "id": 50727,
+  "name": "AnalogBalance",
+  "type": [
+    "RATIONAL"
+  ],
+  "cardinality": "CP",
+  "defaultValue": "\"1/1,1/1\"",
+  "ifd": "",
+  "description": "",
+  "source": "",
+  "created": "18/05/2015",
+  "modified": "18/05/2015"
+}
