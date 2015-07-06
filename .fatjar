@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Fri Jul 03 12:22:13 CEST 2015
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=tifflibrary4j_fat.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=<inc|tifflibrary4j/src\\main\\config>

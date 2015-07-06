@@ -470,7 +470,8 @@ public class TiffReader {
 
         try {
           abstractTiffType instanceOfMyClass =
-              (abstractTiffType) Class.forName("com.easyinnova.tiff.model.types." + tagclass)
+              (abstractTiffType) Class
+                  .forName("main.java.com.easyinnova.tiff.model.types." + tagclass)
                   .getConstructor().newInstance();
           if (instanceOfMyClass.isIFD()) {
             long ifdOffset = tv.getFirstNumericValue();
@@ -488,10 +489,17 @@ public class TiffReader {
           }
         } catch (ClassNotFoundException e) {
           validation.addError("Parse error getting tag " + id + " value");
-        } catch (NoSuchMethodException | SecurityException e) {
+        } catch (NoSuchMethodException e) {
           validation.addError("Parse error getting tag " + id + " value");
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-            | InvocationTargetException e) {
+        } catch (SecurityException e) {
+          validation.addError("Parse error getting tag " + id + " value");
+        } catch (InstantiationException e) {
+          validation.addError("Parse error getting tag " + id + " value");
+        } catch (IllegalAccessException e) {
+          validation.addError("Parse error getting tag " + id + " value");
+        } catch (IllegalArgumentException e) {
+          validation.addError("Parse error getting tag " + id + " value");
+        } catch (InvocationTargetException e) {
           validation.addError("Parse error getting tag " + id + " value");
         }
       }

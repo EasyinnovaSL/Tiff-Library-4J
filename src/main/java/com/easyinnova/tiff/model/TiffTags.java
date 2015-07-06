@@ -75,10 +75,10 @@ public class TiffTags {
     try {
       Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
 
-      Path path = Paths.get("./config");
+      Path path = Paths.get("./src/main/config");
       if (Files.exists(path)) {
         // Look in current dir
-        File folder = new File("./config/tifftags/");
+        File folder = new File("./src/main/config/tifftags/");
         for (final File fileEntry : folder.listFiles()) {
           try {
             BufferedReader br = new BufferedReader(new FileReader(fileEntry.toPath().toString()));
