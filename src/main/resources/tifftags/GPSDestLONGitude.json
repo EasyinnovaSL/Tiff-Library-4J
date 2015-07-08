@@ -1,0 +1,14 @@
+{
+  "id": 22,
+  "name": "GPSDestLONGitude",
+  "type": [
+    "RATIONAL"
+  ],
+  "cardinality": "3",
+  "defaultValue": "",
+  "ifd": "",
+  "description": "",
+  "source": "",
+  "created": "18/05/2015",
+  "modified": "18/05/2015"
+}

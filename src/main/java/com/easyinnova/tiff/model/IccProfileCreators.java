@@ -61,10 +61,10 @@ public class IccProfileCreators {
    */
   protected IccProfileCreators() throws ReadIccConfigIOException {
     try {
-      Path path = Paths.get("./src/main/config");
+      Path path = Paths.get("./src/main/resources");
       if (Files.exists(path)) {
         // Look in current dir
-        FileReader fr = new FileReader("./src/main/config/iccprofile/creators.txt");
+        FileReader fr = new FileReader("./src/main/resources/iccprofile/creators.txt");
         BufferedReader br = new BufferedReader(fr);
         String line = br.readLine();
         while (line != null) {

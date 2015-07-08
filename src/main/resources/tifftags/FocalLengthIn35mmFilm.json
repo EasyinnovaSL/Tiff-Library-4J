@@ -1,0 +1,14 @@
+{
+  "id": 41989,
+  "name": "FocalLengthIn35mmFilm",
+  "type": [
+    "SHORT"
+  ],
+  "cardinality": "1",
+  "defaultValue": "",
+  "ifd": "",
+  "description": "",
+  "source": "",
+  "created": "18/05/2015",
+  "modified": "18/05/2015"
+}

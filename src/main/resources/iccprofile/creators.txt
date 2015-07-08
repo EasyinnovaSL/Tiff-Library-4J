@@ -1,0 +1,24 @@
+Adobe Systems, Inc.	41444245	Adobe CMM
+Agfa Graphics N.V.	41434D53	Agfa CMM
+Apple Computer	6170706C	Apple CMM
+Canon	43434D53	ColorGear CMM
+Canon	5543434D	ColorGear CMM Lite
+Canon	55434D53	ColorGear CMM C
+EFI	45464920	EFI CMM
+Fuji Film Electronic Imaging	46462020	Fuji Film CMM
+ExactCODE GmbH	45584143	ExactScan CMM
+Global Graphics Software Inc	48434d4d	Harlequin RIP CMM
+Graeme Gill	6172676C	Argyll CMS CMM
+GretagMacbeth	44676f53	LogoSync CMM
+Heidelberger Druckmaschinen AG	48444d20	Heidelberg CMM
+Hewlett Packard	6C636d73	Little CMS CMM
+Kodak	4b434d53	Kodak CMM
+Konica Minolta	4d434d44	Konica Minolta CMM
+Microsoft	57435320	Windows Color System CMM
+Mutoh	5349474E	Mutoh CMM
+Rolf Gierling Multitools	52474d53	DeviceLink CMM
+SampleICC	53494343	SampleICC CMM
+Toshiba TEC Corporation	54434d4d	Toshiba CMM
+the imaging factory	33324254	the imaging factory CMM
+Ware To Go	57544720	Ware to Go CMM
+Zoran Corporation	7a633030	Zoran CMM

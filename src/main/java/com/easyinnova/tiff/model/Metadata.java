@@ -30,7 +30,6 @@
  */
 package main.java.com.easyinnova.tiff.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -41,13 +40,13 @@ import java.util.Set;
 public class Metadata {
 
   /** The metadata. */
-  private HashMap<String, List<TiffObject>> metadata;
+  private HashMap<String, MetadataObject> metadata;
 
   /**
    * Instantiates a new metadata.
    */
   public Metadata() {
-    metadata = new HashMap<String, List<TiffObject>>();
+    metadata = new HashMap<String, MetadataObject>();
   }
 
   /**
@@ -57,9 +56,25 @@ public class Metadata {
    * @param value the value
    */
   public void add(String name, TiffObject value) {
-    if (!metadata.containsKey(name))
-      metadata.put(name, new ArrayList<TiffObject>());
-    metadata.get(name).add(value);
+    if (!metadata.containsKey(name)) {
+      metadata.put(name, new MetadataObject());
+    }
+    metadata.get(name).getObjectList().add(value);
+  }
+
+  /**
+   * Adds a metadata value to the dictionary.
+   *
+   * @param name the name
+   * @param value the value
+   * @param isDC the is dublin core
+   */
+  public void add(String name, TiffObject value, boolean isDC) {
+    if (!metadata.containsKey(name)) {
+      metadata.put(name, new MetadataObject());
+      metadata.get(name).setIsDublinCore(isDC);
+    }
+    metadata.get(name).getObjectList().add(value);
   }
 
   /**
@@ -79,7 +94,7 @@ public class Metadata {
    * @return the first
    */
   public TiffObject getFirst(String name) {
-    return metadata.get(name).get(0);
+    return metadata.get(name).getObjectList().get(0);
   }
 
   /**
@@ -89,6 +104,16 @@ public class Metadata {
    * @return the list
    */
   public List<TiffObject> getList(String name) {
+    return metadata.get(name).getObjectList();
+  }
+
+  /**
+   * Gets the metadata object.
+   *
+   * @param name the name
+   * @return the metadata object
+   */
+  public MetadataObject getMetadataObject(String name) {
     return metadata.get(name);
   }
 
@@ -109,7 +134,7 @@ public class Metadata {
   public void addMetadata(Metadata meta) {
     for (String k : meta.keySet()) {
       for (TiffObject to : meta.getList(k)) {
-        add(k, to);
+        add(k, to, meta.getMetadataObject(k).isDublinCore());
       }
     }
   }

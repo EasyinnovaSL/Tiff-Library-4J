@@ -31,6 +31,13 @@
  */
 package main.java.com.easyinnova.tiff.reader;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashSet;
+
 import main.java.com.easyinnova.tiff.io.TiffInputStream;
 import main.java.com.easyinnova.tiff.model.IccProfileCreators;
 import main.java.com.easyinnova.tiff.model.ReadIccConfigIOException;
@@ -42,13 +49,6 @@ import main.java.com.easyinnova.tiff.model.TiffTags;
 import main.java.com.easyinnova.tiff.model.ValidationResult;
 import main.java.com.easyinnova.tiff.model.types.IFD;
 import main.java.com.easyinnova.tiff.model.types.abstractTiffType;
-
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteOrder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashSet;
 
 /**
  * Reads and parses a Tiff file, storing it in an internal model.
@@ -500,6 +500,8 @@ public class TiffReader {
         } catch (IllegalArgumentException e) {
           validation.addError("Parse error getting tag " + id + " value");
         } catch (InvocationTargetException e) {
+          validation.addError("Parse error getting tag " + id + " value");
+        } catch (Exception e) {
           validation.addError("Parse error getting tag " + id + " value");
         }
       }

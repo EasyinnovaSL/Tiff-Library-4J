@@ -30,9 +30,10 @@
  */
 package main.java.com.easyinnova.tiff.model.types;
 
-import main.java.com.easyinnova.tiff.model.Metadata;
-
 import javax.xml.stream.XMLStreamReader;
+
+import main.java.com.easyinnova.tiff.model.Metadata;
+import main.java.com.easyinnova.tiff.model.TagValue;
 
 /**
  * The Class XMP.
@@ -42,9 +43,10 @@ public class XMP extends XmlType {
    * Creates the metadata.
    *
    * @return the hash map
+   * @throws Exception parsing exception
    */
   @Override
-  public Metadata createMetadata() {
+  public Metadata createMetadata() throws Exception {
     Metadata metadata = new Metadata();
     try {
       while (xmlModel.hasNext()) {
@@ -57,6 +59,10 @@ public class XMP extends XmlType {
             if (elementName.trim().length() > 0 && elementData.trim().length() > 0) {
               Text txt = new Text(elementData);
               metadata.add(elementName, txt);
+              if (xmlModel.getPrefix() != null && xmlModel.getPrefix().equalsIgnoreCase("dc")) {
+                // Dublin Core
+                metadata.getMetadataObject(elementName).setIsDublinCore(true);
+              }
             }
             break;
           default:
@@ -64,6 +70,7 @@ public class XMP extends XmlType {
         }
       }
     } catch (Exception ex) {
+      throw new Exception("Parse format");
     }
     return metadata;
   }
@@ -71,5 +78,17 @@ public class XMP extends XmlType {
   @Override
   public boolean containsMetadata() {
     return true;
+  }
+
+  /**
+   * Reads the XML.
+   *
+   * @param tv the TagValue containing the array of bytes of the ICCProfile
+   * @throws Exception parse exception
+   */
+  @Override
+  public void read(TagValue tv) throws Exception {
+    super.read(tv);
+    createMetadata();
   }
 }

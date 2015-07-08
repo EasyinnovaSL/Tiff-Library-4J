@@ -32,9 +32,6 @@
 
 package main.java.com.easyinnova.tiff.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,6 +45,9 @@ import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class TiffTags.
@@ -75,10 +75,10 @@ public class TiffTags {
     try {
       Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
 
-      Path path = Paths.get("./src/main/config");
+      Path path = Paths.get("./src/main/resources");
       if (Files.exists(path)) {
         // Look in current dir
-        File folder = new File("./src/main/config/tifftags/");
+        File folder = new File("./src/main/resources/tifftags/");
         for (final File fileEntry : folder.listFiles()) {
           try {
             BufferedReader br = new BufferedReader(new FileReader(fileEntry.toPath().toString()));

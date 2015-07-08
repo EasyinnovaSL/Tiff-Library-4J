@@ -30,13 +30,13 @@
  */
 package main.java.com.easyinnova.tiff.model.types;
 
-import main.java.com.easyinnova.tiff.model.TagValue;
-
 import java.io.StringReader;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import main.java.com.easyinnova.tiff.model.TagValue;
 
 /**
  * The Class XmlType.
@@ -85,9 +85,10 @@ public class XmlType extends abstractTiffType {
    * Reads the XML.
    * 
    * @param tv the TagValue containing the array of bytes of the ICCProfile
+   * @throws Exception parse exception
    */
   @Override
-  public void read(TagValue tv) {
+  public void read(TagValue tv) throws Exception {
     xml = "";
 
     for (int i = 0; i < tv.getCardinality(); i++) {

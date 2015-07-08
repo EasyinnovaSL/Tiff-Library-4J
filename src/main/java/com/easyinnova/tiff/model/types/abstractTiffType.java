@@ -86,8 +86,9 @@ public class abstractTiffType extends TiffObject {
    * Read.
    *
    * @param tv the tv
+   * @throws Exception parse exception
    */
-  public void read(TagValue tv) {
+  public void read(TagValue tv) throws Exception {
   }
 
   /**
@@ -133,8 +134,9 @@ public class abstractTiffType extends TiffObject {
    * Creates the metadata.
    *
    * @return the hash map
+   * @throws Exception Parsing exception
    */
-  public Metadata createMetadata() {
+  public Metadata createMetadata() throws Exception {
     return new Metadata();
   }
 }

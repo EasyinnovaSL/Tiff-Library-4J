@@ -31,11 +31,11 @@
  */
 package main.java.com.easyinnova.tiff.model;
 
-import main.java.com.easyinnova.tiff.model.types.IFD;
-import main.java.com.easyinnova.tiff.model.types.abstractTiffType;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import main.java.com.easyinnova.tiff.model.types.IFD;
+import main.java.com.easyinnova.tiff.model.types.abstractTiffType;
 
 /**
  * Modeling of the TIFF file with methods to access its IFDs and metadata.
@@ -259,8 +259,12 @@ public class TiffDocument {
         if (t.isIFD()) {
           addMetadataFromIFD((IFD) t, key);
         } else if (t.containsMetadata()) {
-          Metadata meta = t.createMetadata();
-          metadata.addMetadata(meta);
+          try {
+            Metadata meta = t.createMetadata();
+            metadata.addMetadata(meta);
+          } catch (Exception ex) {
+            // TODO: What?
+          }
         } else {
           metadata.add(tag.getName(), t);
         }
@@ -284,6 +288,8 @@ public class TiffDocument {
       String mult = "";
       if (getMetadataList(name).size() > 1)
         mult = "(x" + getMetadataList(name).size() + ")";
+      if (metadata.getMetadataObject(name).isDublinCore())
+        System.out.println("[DC]");
       System.out.println(name + mult + ": "
           + getMetadataSingleString(name));
     }
