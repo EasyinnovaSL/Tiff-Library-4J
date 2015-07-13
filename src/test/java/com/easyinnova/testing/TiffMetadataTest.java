@@ -34,7 +34,6 @@ package com.easyinnova.testing;
 import static org.junit.Assert.assertEquals;
 
 import com.easyinnova.tiff.model.ImageStrips;
-import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.types.IFD;
@@ -196,7 +195,6 @@ public class TiffMetadataTest {
 	to = tr.getModel();
 
 	
-	Metadata metadata=to.getMetadata();
 	assertEquals(null,to.getMetadata());
   }
   
