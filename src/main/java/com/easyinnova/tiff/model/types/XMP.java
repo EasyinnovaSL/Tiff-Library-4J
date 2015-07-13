@@ -39,6 +39,17 @@ import javax.xml.stream.XMLStreamReader;
  * The Class XMP.
  */
 public class XMP extends XmlType {
+
+  /** The metadata. */
+  private Metadata metadata;
+
+  /**
+   * Default constructor.
+   */
+  public XMP() {
+    metadata = null;
+  }
+
   /**
    * Creates the metadata.
    *
@@ -47,30 +58,32 @@ public class XMP extends XmlType {
    */
   @Override
   public Metadata createMetadata() throws Exception {
-    Metadata metadata = new Metadata();
-    try {
-      while (xmlModel.hasNext()) {
-        int eventType = xmlModel.next();
-        switch (eventType) {
-          case XMLStreamReader.START_ELEMENT:
-            String elementName = xmlModel.getLocalName();
-            eventType = xmlModel.next();
-            String elementData = xmlModel.getText();
-            if (elementName.trim().length() > 0 && elementData.trim().length() > 0) {
-              Text txt = new Text(elementData);
-              metadata.add(elementName, txt);
-              if (xmlModel.getPrefix() != null && xmlModel.getPrefix().equalsIgnoreCase("dc")) {
-                // Dublin Core
-                metadata.getMetadataObject(elementName).setIsDublinCore(true);
+    if (metadata == null) {
+      metadata = new Metadata();
+      try {
+        while (xmlModel.hasNext()) {
+          int eventType = xmlModel.next();
+          switch (eventType) {
+            case XMLStreamReader.START_ELEMENT:
+              String elementName = xmlModel.getLocalName();
+              eventType = xmlModel.next();
+              String elementData = xmlModel.getText();
+              if (elementName.trim().length() > 0 && elementData.trim().length() > 0) {
+                Text txt = new Text(elementData);
+                metadata.add(elementName, txt);
+                if (xmlModel.getPrefix() != null && xmlModel.getPrefix().equalsIgnoreCase("dc")) {
+                  // Dublin Core
+                  metadata.getMetadataObject(elementName).setIsDublinCore(true);
+                }
               }
-            }
-            break;
-          default:
-            break;
+              break;
+            default:
+              break;
+          }
         }
+      } catch (Exception ex) {
+        throw new Exception("Parse format");
       }
-    } catch (Exception ex) {
-      throw new Exception("Parse format");
     }
     return metadata;
   }
