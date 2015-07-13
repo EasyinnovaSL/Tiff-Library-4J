@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0004",
+  "decimal": 4,
+  "key": "Iptc.Application2.ObjectAttribute",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 4,
+  "maximum": 68,
+  "description": "The Object Attribute defines the nature of the object independent of the Subject. The first part is a number representing a language independent international reference to an Object Attribute followed by a colon separator. The second part",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

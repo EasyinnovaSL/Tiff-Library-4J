@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0098",
+  "decimal": 152,
+  "key": "Iptc.Application2.AudioResolution",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 2,
+  "maximum": 2,
+  "description": "Indicates the sampling resolution of an audio content.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

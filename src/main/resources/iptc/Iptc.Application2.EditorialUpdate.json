@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0008",
+  "decimal": 8,
+  "key": "Iptc.Application2.EditorialUpdate",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 2,
+  "maximum": 2,
+  "description": "Indicates the type of update that this object provides to a previous object. The link to the previous object is made using the tags \u003cARMIdentifier\u003e and \u003cARMVersion\u003e",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

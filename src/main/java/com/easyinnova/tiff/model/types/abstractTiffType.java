@@ -139,4 +139,14 @@ public class abstractTiffType extends TiffObject {
   public Metadata createMetadata() throws Exception {
     return new Metadata();
   }
+  
+  /**
+   * To byte.
+   *
+   * @return the byte
+   */
+  public byte toByte() {
+	byte b = new java.lang.Byte(this.toString());
+    return b;
+  }
 }

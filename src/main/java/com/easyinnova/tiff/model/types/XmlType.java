@@ -33,6 +33,7 @@ package com.easyinnova.tiff.model.types;
 import com.easyinnova.tiff.model.TagValue;
 
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -42,67 +43,65 @@ import javax.xml.stream.XMLStreamReader;
  * The Class XmlType.
  */
 public class XmlType extends abstractTiffType {
-  /** The xml. */
-  private String xml;
+	/** The xml. */
+	private String xml;
 
-  /** The xml model. */
-  protected XMLStreamReader xmlModel;
+	/** The xml model. */
+	protected XMLStreamReader xmlModel;
 
-  /**
-   * Default constructor.
-   */
-  public XmlType() {
-    xml = null;
-    xmlModel = null;
-  }
+	/**
+	 * Default constructor.
+	 */
+	public XmlType() {
+		xml = null;
+		xmlModel = null;
+	}
 
-  /**
-   * Load xml.
-   *
-   * @throws XMLStreamException the XML stream exception
-   */
-  private void loadXml() throws XMLStreamException {
-    final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-    final StringReader reader = new StringReader(xml);
-    xmlModel = inputFactory.createXMLStreamReader(reader);
-  }
+	/**
+	 * Load xml.
+	 *
+	 * @throws XMLStreamException the XML stream exception
+	 */
+	private void loadXml() throws XMLStreamException {
+		final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		final StringReader reader = new StringReader(xml);
+		xmlModel = inputFactory.createXMLStreamReader(reader);
+	}
 
-  /**
-   * Gets the xml model.
-   *
-   * @return the xml model
-   */
-  public XMLStreamReader getXmlModel() {
-    return xmlModel;
-  }
+	/**
+	 * Gets the xml model.
+	 *
+	 * @return the xml model
+	 */
+	public XMLStreamReader getXmlModel() {
+		return xmlModel;
+	}
 
-  @Override
-  public String toString() {
-    return xml.replace('\n', ' ');
-  }
+	@Override
+	public String toString() {
+		return xml.replace('\n', ' ');
+	}
 
-  /**
-   * Reads the XML.
-   * 
-   * @param tv the TagValue containing the array of bytes of the ICCProfile
-   * @throws Exception parse exception
-   */
-  @Override
-  public void read(TagValue tv) throws Exception {
-    xml = "";
+	/**
+	 * Reads the XML.
+	 * 
+	 * @param tv the TagValue containing the array of bytes of the ICCProfile
+	 */
+	@Override
+	public void read(TagValue tv) throws Exception {
+		xml = "";
 
-    for (int i = 0; i < tv.getCardinality(); i++) {
-      xml += (char) tv.getValue().get(i).toUint();
-    }
+		byte[] text = new byte[tv.getCardinality()];
 
-    try {
-      loadXml();
-    } catch (Exception ex) {
-      xmlModel = null;
-    }
+		for (int i = 0; i < tv.getCardinality(); i++) {
+			text[i]=tv.getValue().get(i).toByte();
+		}
+		xml = new String(text,"UTF-8");
 
-    tv.clear();
-    tv.add(this);
-  }
+		loadXml();
+
+		tv.clear();
+		tv.add(this);
+	}
 }
 

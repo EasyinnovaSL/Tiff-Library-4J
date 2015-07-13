@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0076",
+  "decimal": 118,
+  "key": "Iptc.Application2.Contact",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 0,
+  "maximum": 128,
+  "description": "Identifies the person or organisation which can provide further background information on the object data.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

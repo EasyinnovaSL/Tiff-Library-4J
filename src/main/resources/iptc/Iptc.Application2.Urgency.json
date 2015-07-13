@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x000a",
+  "decimal": 10,
+  "key": "Iptc.Application2.Urgency",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 1,
+  "maximum": 1,
+  "description": "Specifies the editorial urgency of content and not necessarily the envelope handling priority (see tag \u003cEnvelopePriority\u003e). The \"1\" is most urgent",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

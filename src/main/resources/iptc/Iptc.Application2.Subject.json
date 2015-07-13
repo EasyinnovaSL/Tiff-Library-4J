@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x000c",
+  "decimal": 12,
+  "key": "Iptc.Application2.Subject",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 13,
+  "maximum": 236,
+  "description": "The Subject Reference is a structured definition of the subject matter.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

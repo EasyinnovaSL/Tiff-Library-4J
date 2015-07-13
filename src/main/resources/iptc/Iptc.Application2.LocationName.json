@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x001b",
+  "decimal": 27,
+  "key": "Iptc.Application2.LocationName",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 0,
+  "maximum": 64,
+  "description": "Provides a full",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

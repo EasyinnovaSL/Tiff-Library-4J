@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x007d",
+  "decimal": 125,
+  "key": "Iptc.Application2.RasterizedCaption",
+  "type": "Undefined",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 7360,
+  "maximum": 7360,
+  "description": "Contains the rasterized object data description and is used where characters that have not been coded are required for the caption.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

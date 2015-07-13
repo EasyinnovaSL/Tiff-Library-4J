@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0082",
+  "decimal": 130,
+  "key": "Iptc.Application2.ImageType",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 2,
+  "maximum": 2,
+  "description": "Indicates the color components of an image.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

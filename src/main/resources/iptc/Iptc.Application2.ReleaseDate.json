@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x001e",
+  "decimal": 30,
+  "key": "Iptc.Application2.ReleaseDate",
+  "type": "Date",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 8,
+  "maximum": 8,
+  "description": "Designates in the form CCYYMMDD the earliest date the provider intends the object to be used. Follows ISO 8601 standard.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

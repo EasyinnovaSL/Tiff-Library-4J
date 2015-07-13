@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x00c8",
+  "decimal": 200,
+  "key": "Iptc.Application2.PreviewFormat",
+  "type": "Short",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 2,
+  "maximum": 2,
+  "description": "A binary number representing the file format of the object data preview. The file format must be registered with IPTC or NAA organizations with a unique number assigned to it.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

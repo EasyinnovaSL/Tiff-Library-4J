@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x007a",
+  "decimal": 122,
+  "key": "Iptc.Application2.Writer",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "Identification of the name of the person involved in the writing",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

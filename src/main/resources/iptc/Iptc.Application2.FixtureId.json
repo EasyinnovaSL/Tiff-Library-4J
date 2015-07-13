@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0016",
+  "decimal": 22,
+  "key": "Iptc.Application2.FixtureId",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "Identifies object data that recurs often and predictably. Enables users to immediately find or recall such an object.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

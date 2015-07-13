@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0007",
+  "decimal": 7,
+  "key": "Iptc.Application2.EditStatus",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 64,
+  "description": "Status of the object data",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

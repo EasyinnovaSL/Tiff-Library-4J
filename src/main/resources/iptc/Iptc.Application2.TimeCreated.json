@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x003c",
+  "decimal": 60,
+  "key": "Iptc.Application2.TimeCreated",
+  "type": "Time",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 11,
+  "maximum": 11,
+  "description": "Represented in the form HHMMSS:HHMM to designate the time the intellectual content of the object data current source material was created rather than the creation of the physical representation. Follows ISO 8601 standard.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

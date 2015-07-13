@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0014",
+  "decimal": 20,
+  "key": "Iptc.Application2.SuppCategory",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "Supplemental categories further refine the subject of an object data. A supplemental category may include any of the recognised categories as used in tag \u003cCategory\u003e. Otherwise",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

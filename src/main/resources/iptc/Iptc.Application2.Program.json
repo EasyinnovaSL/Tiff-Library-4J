@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0041",
+  "decimal": 65,
+  "key": "Iptc.Application2.Program",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "Identifies the type of program used to originate the object data.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

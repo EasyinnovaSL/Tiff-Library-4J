@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0064",
+  "decimal": 100,
+  "key": "Iptc.Application2.CountryCode",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 3,
+  "maximum": 3,
+  "description": "Indicates the code of the country/primary location where the intellectual property of the object data was created",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}
