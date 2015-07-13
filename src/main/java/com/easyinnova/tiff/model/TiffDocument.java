@@ -29,13 +29,13 @@
  * @since 14/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
+
+import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.types.abstractTiffType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import main.java.com.easyinnova.tiff.model.types.IFD;
-import main.java.com.easyinnova.tiff.model.types.abstractTiffType;
 
 /**
  * Modeling of the TIFF file with methods to access its IFDs and metadata.

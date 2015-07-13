@@ -28,12 +28,12 @@
  * @since 9/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.model.types;
+package com.easyinnova.tiff.model.types;
+
+import com.easyinnova.tiff.model.Metadata;
+import com.easyinnova.tiff.model.TagValue;
 
 import javax.xml.stream.XMLStreamReader;
-
-import main.java.com.easyinnova.tiff.model.Metadata;
-import main.java.com.easyinnova.tiff.model.TagValue;
 
 /**
  * The Class XMP.

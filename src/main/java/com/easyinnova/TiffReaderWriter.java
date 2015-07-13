@@ -29,17 +29,17 @@
  * @since 18/5/2015
  *
  */
-package main.java.com.easyinnova;
+package com.easyinnova;
 
-import main.java.com.easyinnova.tiff.model.ReadIccConfigIOException;
-import main.java.com.easyinnova.tiff.model.ReadTagsIOException;
-import main.java.com.easyinnova.tiff.model.TiffDocument;
-import main.java.com.easyinnova.tiff.model.TiffObject;
-import main.java.com.easyinnova.tiff.model.types.IFD;
-import main.java.com.easyinnova.tiff.profiles.BaselineProfile;
-import main.java.com.easyinnova.tiff.profiles.TiffEPProfile;
-import main.java.com.easyinnova.tiff.reader.TiffReader;
-import main.java.com.easyinnova.tiff.writer.TiffWriter;
+import com.easyinnova.tiff.model.ReadIccConfigIOException;
+import com.easyinnova.tiff.model.ReadTagsIOException;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.TiffObject;
+import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.profiles.BaselineProfile;
+import com.easyinnova.tiff.profiles.TiffEPProfile;
+import com.easyinnova.tiff.reader.TiffReader;
+import com.easyinnova.tiff.writer.TiffWriter;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,8 @@
-package test.java.com.easyinnova.testing;
+package com.easyinnova.testing;
 
 import static org.junit.Assert.assertEquals;
-import main.java.com.easyinnova.tiff.io.TiffInputStream;
+
+import com.easyinnova.tiff.io.TiffInputStream;
 
 import org.junit.After;
 import org.junit.AfterClass;

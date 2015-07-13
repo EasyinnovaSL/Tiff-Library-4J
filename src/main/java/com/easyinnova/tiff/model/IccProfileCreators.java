@@ -28,7 +28,7 @@
  * @since 8/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

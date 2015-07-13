@@ -28,13 +28,14 @@
  * @since 26/6/2015
  *
  */
-package test.java.com.easyinnova.testing;
+package com.easyinnova.testing;
 
 import static org.junit.Assert.assertEquals;
-import main.java.com.easyinnova.tiff.model.TagValue;
-import main.java.com.easyinnova.tiff.model.TiffDocument;
-import main.java.com.easyinnova.tiff.model.types.IFD;
-import main.java.com.easyinnova.tiff.reader.TiffReader;
+
+import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Before;
 import org.junit.Test;

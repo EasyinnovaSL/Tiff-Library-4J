@@ -30,7 +30,10 @@
  *
  */
 
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,9 +48,6 @@ import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * The Class TiffTags.

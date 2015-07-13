@@ -28,7 +28,7 @@
  * @since 1/7/2015
  *
  */
-package main.java.com.easyinnova.conformancechecker;
+package com.easyinnova.conformancechecker;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -46,7 +46,7 @@ import javax.xml.transform.stream.StreamResult;
 /**
  * The Class ConformanceChecker.
  */
-public class ConformanceChecker {
+public class TiffConformanceChecker {
 
   /**
    * Gets the conformance checker options.

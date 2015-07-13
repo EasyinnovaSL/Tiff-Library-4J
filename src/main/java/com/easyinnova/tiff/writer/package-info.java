@@ -29,4 +29,4 @@
  * @since 25/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.writer;
+package com.easyinnova.tiff.writer;

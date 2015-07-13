@@ -28,13 +28,13 @@
  * @since 17/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.profiles;
+package com.easyinnova.tiff.profiles;
 
-import main.java.com.easyinnova.tiff.model.IfdTags;
-import main.java.com.easyinnova.tiff.model.TiffDocument;
-import main.java.com.easyinnova.tiff.model.TiffObject;
-import main.java.com.easyinnova.tiff.model.TiffTags;
-import main.java.com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.IfdTags;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.TiffObject;
+import com.easyinnova.tiff.model.TiffTags;
+import com.easyinnova.tiff.model.types.IFD;
 
 /**
  * The Class TiffEPProfile.

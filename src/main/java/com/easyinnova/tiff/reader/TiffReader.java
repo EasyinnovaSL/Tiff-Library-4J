@@ -29,7 +29,19 @@
  * @since 28/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.reader;
+package com.easyinnova.tiff.reader;
+
+import com.easyinnova.tiff.io.TiffInputStream;
+import com.easyinnova.tiff.model.IccProfileCreators;
+import com.easyinnova.tiff.model.ReadIccConfigIOException;
+import com.easyinnova.tiff.model.ReadTagsIOException;
+import com.easyinnova.tiff.model.Tag;
+import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.TiffTags;
+import com.easyinnova.tiff.model.ValidationResult;
+import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.types.abstractTiffType;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -37,18 +49,6 @@ import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
-
-import main.java.com.easyinnova.tiff.io.TiffInputStream;
-import main.java.com.easyinnova.tiff.model.IccProfileCreators;
-import main.java.com.easyinnova.tiff.model.ReadIccConfigIOException;
-import main.java.com.easyinnova.tiff.model.ReadTagsIOException;
-import main.java.com.easyinnova.tiff.model.Tag;
-import main.java.com.easyinnova.tiff.model.TagValue;
-import main.java.com.easyinnova.tiff.model.TiffDocument;
-import main.java.com.easyinnova.tiff.model.TiffTags;
-import main.java.com.easyinnova.tiff.model.ValidationResult;
-import main.java.com.easyinnova.tiff.model.types.IFD;
-import main.java.com.easyinnova.tiff.model.types.abstractTiffType;
 
 /**
  * Reads and parses a Tiff file, storing it in an internal model.
@@ -470,8 +470,7 @@ public class TiffReader {
 
         try {
           abstractTiffType instanceOfMyClass =
-              (abstractTiffType) Class
-                  .forName("main.java.com.easyinnova.tiff.model.types." + tagclass)
+              (abstractTiffType) Class.forName("com.easyinnova.tiff.model.types." + tagclass)
                   .getConstructor().newInstance();
           if (instanceOfMyClass.isIFD()) {
             long ifdOffset = tv.getFirstNumericValue();

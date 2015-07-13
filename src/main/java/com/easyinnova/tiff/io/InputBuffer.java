@@ -28,7 +28,7 @@
  * @since 26/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.io;
+package com.easyinnova.tiff.io;
 
 import java.io.IOException;
 

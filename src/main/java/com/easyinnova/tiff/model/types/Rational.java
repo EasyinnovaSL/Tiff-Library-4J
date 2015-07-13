@@ -29,7 +29,7 @@
  * @since 27/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.model.types;
+package com.easyinnova.tiff.model.types;
 
 /**
  * The Class Rational.

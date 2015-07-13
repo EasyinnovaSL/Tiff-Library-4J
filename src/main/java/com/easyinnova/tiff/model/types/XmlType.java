@@ -28,15 +28,15 @@
  * @since 9/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.model.types;
+package com.easyinnova.tiff.model.types;
+
+import com.easyinnova.tiff.model.TagValue;
 
 import java.io.StringReader;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import main.java.com.easyinnova.tiff.model.TagValue;
 
 /**
  * The Class XmlType.

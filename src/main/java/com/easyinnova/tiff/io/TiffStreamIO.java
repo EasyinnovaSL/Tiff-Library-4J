@@ -29,20 +29,20 @@
  * @since 22/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.io;
+package com.easyinnova.tiff.io;
 
-import main.java.com.easyinnova.tiff.model.types.Ascii;
-import main.java.com.easyinnova.tiff.model.types.Byte;
-import main.java.com.easyinnova.tiff.model.types.Double;
-import main.java.com.easyinnova.tiff.model.types.Float;
-import main.java.com.easyinnova.tiff.model.types.Long;
-import main.java.com.easyinnova.tiff.model.types.Rational;
-import main.java.com.easyinnova.tiff.model.types.SByte;
-import main.java.com.easyinnova.tiff.model.types.SLong;
-import main.java.com.easyinnova.tiff.model.types.SRational;
-import main.java.com.easyinnova.tiff.model.types.SShort;
-import main.java.com.easyinnova.tiff.model.types.Short;
-import main.java.com.easyinnova.tiff.model.types.Undefined;
+import com.easyinnova.tiff.model.types.Ascii;
+import com.easyinnova.tiff.model.types.Byte;
+import com.easyinnova.tiff.model.types.Double;
+import com.easyinnova.tiff.model.types.Float;
+import com.easyinnova.tiff.model.types.Long;
+import com.easyinnova.tiff.model.types.Rational;
+import com.easyinnova.tiff.model.types.SByte;
+import com.easyinnova.tiff.model.types.SLong;
+import com.easyinnova.tiff.model.types.SRational;
+import com.easyinnova.tiff.model.types.SShort;
+import com.easyinnova.tiff.model.types.Short;
+import com.easyinnova.tiff.model.types.Undefined;
 
 import java.io.FilterInputStream;
 import java.io.IOException;

@@ -30,7 +30,7 @@
  *
  */
 
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
 import java.util.Date;
 import java.util.List;

@@ -29,18 +29,18 @@
  * @since 4/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.profiles;
+package com.easyinnova.tiff.profiles;
 
-import main.java.com.easyinnova.tiff.model.IfdTags;
-import main.java.com.easyinnova.tiff.model.ReadTagsIOException;
-import main.java.com.easyinnova.tiff.model.Tag;
-import main.java.com.easyinnova.tiff.model.TagValue;
-import main.java.com.easyinnova.tiff.model.TiffDocument;
-import main.java.com.easyinnova.tiff.model.TiffObject;
-import main.java.com.easyinnova.tiff.model.TiffTags;
-import main.java.com.easyinnova.tiff.model.types.IFD;
-import main.java.com.easyinnova.tiff.model.types.Rational;
-import main.java.com.easyinnova.tiff.model.types.abstractTiffType;
+import com.easyinnova.tiff.model.IfdTags;
+import com.easyinnova.tiff.model.ReadTagsIOException;
+import com.easyinnova.tiff.model.Tag;
+import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.TiffObject;
+import com.easyinnova.tiff.model.TiffTags;
+import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.types.Rational;
+import com.easyinnova.tiff.model.types.abstractTiffType;
 
 /**
  * Checks if the Tiff file complies with the Baseline 6.0.

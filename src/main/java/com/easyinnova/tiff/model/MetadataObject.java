@@ -28,7 +28,7 @@
  * @since 7/7/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
 import java.util.ArrayList;
 import java.util.List;

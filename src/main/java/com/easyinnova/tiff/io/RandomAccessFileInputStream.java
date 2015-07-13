@@ -28,7 +28,7 @@
  * @since 26/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.io;
+package com.easyinnova.tiff.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;

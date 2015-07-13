@@ -28,10 +28,10 @@
  * @since 17/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.profiles;
+package com.easyinnova.tiff.profiles;
 
-import main.java.com.easyinnova.tiff.model.TiffDocument;
-import main.java.com.easyinnova.tiff.model.ValidationResult;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.ValidationResult;
 
 /**
  * The Generic class for Profile validation.

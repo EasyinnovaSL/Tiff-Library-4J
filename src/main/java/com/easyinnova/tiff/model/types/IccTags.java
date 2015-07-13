@@ -29,10 +29,10 @@
  * @since 25/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.model.types;
+package com.easyinnova.tiff.model.types;
 
-import main.java.com.easyinnova.tiff.model.Tag;
-import main.java.com.easyinnova.tiff.model.TiffTags;
+import com.easyinnova.tiff.model.Tag;
+import com.easyinnova.tiff.model.TiffTags;
 
 import java.util.ArrayList;
 import java.util.HashMap;

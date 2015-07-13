@@ -29,7 +29,7 @@
  * @since 18/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
 /**
  * The object that contains an error in the validation of a Tiff file.

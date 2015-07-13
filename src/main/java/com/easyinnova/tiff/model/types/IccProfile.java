@@ -28,13 +28,13 @@
  * @since 25/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.model.types;
+package com.easyinnova.tiff.model.types;
 
-import main.java.com.easyinnova.tiff.io.TiffInputStream;
-import main.java.com.easyinnova.tiff.model.IccProfileCreator;
-import main.java.com.easyinnova.tiff.model.IccProfileCreators;
-import main.java.com.easyinnova.tiff.model.TagValue;
-import main.java.com.easyinnova.tiff.model.ValidationResult;
+import com.easyinnova.tiff.io.TiffInputStream;
+import com.easyinnova.tiff.model.IccProfileCreator;
+import com.easyinnova.tiff.model.IccProfileCreators;
+import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.ValidationResult;
 
 /**
  * The Class IccProfile.

@@ -28,7 +28,7 @@
  * @since 29/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
 /**
  * The Class ReadIccConfigIOException.

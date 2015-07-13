@@ -29,14 +29,14 @@
  * @since 2/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.reader;
+package com.easyinnova.tiff.reader;
 
-import main.java.com.easyinnova.tiff.model.ImageStrips;
-import main.java.com.easyinnova.tiff.model.ImageTiles;
-import main.java.com.easyinnova.tiff.model.Strip;
-import main.java.com.easyinnova.tiff.model.TiffTags;
-import main.java.com.easyinnova.tiff.model.Tile;
-import main.java.com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.ImageStrips;
+import com.easyinnova.tiff.model.ImageTiles;
+import com.easyinnova.tiff.model.Strip;
+import com.easyinnova.tiff.model.TiffTags;
+import com.easyinnova.tiff.model.Tile;
+import com.easyinnova.tiff.model.types.IFD;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -28,9 +28,8 @@
  * @since 8/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IccProfileCreator.
  */

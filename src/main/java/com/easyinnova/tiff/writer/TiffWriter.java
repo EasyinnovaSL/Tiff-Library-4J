@@ -29,13 +29,13 @@
  * @since 28/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.writer;
+package com.easyinnova.tiff.writer;
 
-import main.java.com.easyinnova.tiff.io.TiffStreamIO;
-import main.java.com.easyinnova.tiff.model.IfdTags;
-import main.java.com.easyinnova.tiff.model.TagValue;
-import main.java.com.easyinnova.tiff.model.TiffDocument;
-import main.java.com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.io.TiffStreamIO;
+import com.easyinnova.tiff.model.IfdTags;
+import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.types.IFD;
 
 import java.util.ArrayList;
 

@@ -28,7 +28,7 @@
  * @since 10/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
 import java.util.HashMap;
 import java.util.List;

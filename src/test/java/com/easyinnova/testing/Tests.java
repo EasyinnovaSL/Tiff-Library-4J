@@ -29,7 +29,7 @@
  * @since 21/5/2015
  *
  */
-package test.java.com.easyinnova.testing;
+package com.easyinnova.testing;
 
 import org.junit.Test;
 

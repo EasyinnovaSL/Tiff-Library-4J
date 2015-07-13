@@ -28,7 +28,7 @@
  * @since 18/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.profiles;
+package com.easyinnova.tiff.profiles;
 /**
  * The Interface Class Profile.
  */

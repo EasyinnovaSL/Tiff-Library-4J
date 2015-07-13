@@ -29,11 +29,11 @@
  * @since 26/5/2015
  *
  */
-package main.java.com.easyinnova.tiff.model.types;
+package com.easyinnova.tiff.model.types;
 
-import main.java.com.easyinnova.tiff.model.Metadata;
-import main.java.com.easyinnova.tiff.model.TagValue;
-import main.java.com.easyinnova.tiff.model.TiffObject;
+import com.easyinnova.tiff.model.Metadata;
+import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.TiffObject;
 
 /**
  * The generic class abstractTiffType.

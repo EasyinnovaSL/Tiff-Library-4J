@@ -29,7 +29,7 @@
  * @since 4/6/2015
  *
  */
-package main.java.com.easyinnova.tiff.model;
+package com.easyinnova.tiff.model;
 
 /**
  * The generic class TiffObject.

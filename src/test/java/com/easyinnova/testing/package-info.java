@@ -29,4 +29,4 @@
  * @since 25/5/2015
  *
  */
-package test.java.com.easyinnova.testing;
+package com.easyinnova.testing;
