@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0026",
+  "decimal": 38,
+  "key": "Iptc.Application2.ExpirationTime",
+  "type": "Time",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 11,
+  "maximum": 11,
+  "description": "Designates in the form HHMMSS:HHMM the latest time the provider or owner intends the object data to be used. Follows ISO 8601 standard.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

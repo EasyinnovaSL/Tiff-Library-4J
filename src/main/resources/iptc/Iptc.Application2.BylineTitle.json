@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0055",
+  "decimal": 85,
+  "key": "Iptc.Application2.BylineTitle",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "A by-line title is the title of the creator or creators of an object data. Where used",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

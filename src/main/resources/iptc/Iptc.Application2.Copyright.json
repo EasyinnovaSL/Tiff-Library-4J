@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0074",
+  "decimal": 116,
+  "key": "Iptc.Application2.Copyright",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 128,
+  "description": "Contains any necessary copyright notice.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

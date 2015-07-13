@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0065",
+  "decimal": 101,
+  "key": "Iptc.Application2.CountryName",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 64,
+  "description": "Provides full",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

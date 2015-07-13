@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x000f",
+  "decimal": 15,
+  "key": "Iptc.Application2.Category",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 3,
+  "description": "Identifies the subject of the object data in the opinion of the provider. A list of categories will be maintained by a regional registry",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

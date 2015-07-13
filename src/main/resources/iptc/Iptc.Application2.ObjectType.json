@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0003",
+  "decimal": 3,
+  "key": "Iptc.Application2.ObjectType",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 3,
+  "maximum": 67,
+  "description": "The Object Type is used to distinguish between different types of objects within the IIM. The first part is a number representing a language independent international reference to an Object Type followed by a colon separator. The second part",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

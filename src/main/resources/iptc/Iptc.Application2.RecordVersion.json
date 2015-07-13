@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0000",
+  "decimal": 0,
+  "key": "Iptc.Application2.RecordVersion",
+  "type": "Short",
+  "mandatory": true,
+  "repeatable": false,
+  "minimum": 2,
+  "maximum": 2,
+  "description": "A binary number identifying the version of the Information Interchange Model",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x004b",
+  "decimal": 75,
+  "key": "Iptc.Application2.ObjectCycle",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 1,
+  "maximum": 1,
+  "description": "Used to identify the editorial cycle of object data.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

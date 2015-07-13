@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0073",
+  "decimal": 115,
+  "key": "Iptc.Application2.Source",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "Identifies the original owner of the intellectual content of the object data. This could be an agency",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

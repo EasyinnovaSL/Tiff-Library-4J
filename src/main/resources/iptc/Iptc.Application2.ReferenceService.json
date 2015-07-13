@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x002d",
+  "decimal": 45,
+  "key": "Iptc.Application2.ReferenceService",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": true,
+  "minimum": 0,
+  "maximum": 10,
+  "description": "Identifies the Service Identifier of a prior envelope to which the current object refers.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

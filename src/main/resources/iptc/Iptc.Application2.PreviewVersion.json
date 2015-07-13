@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x00c9",
+  "decimal": 201,
+  "key": "Iptc.Application2.PreviewVersion",
+  "type": "Short",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 2,
+  "maximum": 2,
+  "description": "A binary number representing the particular version of the object data preview file format specified in tag \u003cPreviewFormat\u003e.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

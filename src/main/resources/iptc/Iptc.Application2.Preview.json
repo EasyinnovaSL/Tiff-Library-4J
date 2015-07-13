@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x00ca",
+  "decimal": 202,
+  "key": "Iptc.Application2.Preview",
+  "type": "Undefined",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 256000,
+  "description": "Binary image preview data.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

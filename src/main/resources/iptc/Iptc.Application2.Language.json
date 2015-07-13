@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0087",
+  "decimal": 135,
+  "key": "Iptc.Application2.Language",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 2,
+  "maximum": 3,
+  "description": "Describes the major national language of the object",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

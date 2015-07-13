@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0067",
+  "decimal": 103,
+  "key": "Iptc.Application2.TransmissionReference",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "A code representing the location of original transmission according to practices of the provider.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

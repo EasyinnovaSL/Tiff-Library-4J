@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x005c",
+  "decimal": 92,
+  "key": "Iptc.Application2.SubLocation",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 32,
+  "description": "Identifies the location within a city from which the object data originates",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

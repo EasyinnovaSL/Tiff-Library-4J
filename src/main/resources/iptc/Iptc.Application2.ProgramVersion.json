@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0046",
+  "decimal": 70,
+  "key": "Iptc.Application2.ProgramVersion",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 10,
+  "description": "Used to identify the version of the program mentioned in tag \u003cProgram\u003e.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

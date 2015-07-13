@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0097",
+  "decimal": 151,
+  "key": "Iptc.Application2.AudioRate",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 6,
+  "maximum": 6,
+  "description": "Indicates the sampling rate in Hertz of an audio content.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

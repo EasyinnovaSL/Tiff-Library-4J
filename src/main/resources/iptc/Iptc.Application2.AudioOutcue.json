@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x009a",
+  "decimal": 154,
+  "key": "Iptc.Application2.AudioOutcue",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 64,
+  "description": "Identifies the content of the end of an audio object data",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

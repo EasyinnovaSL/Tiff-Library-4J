@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0083",
+  "decimal": 131,
+  "key": "Iptc.Application2.ImageOrientation",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 1,
+  "maximum": 1,
+  "description": "Indicates the layout of an image.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

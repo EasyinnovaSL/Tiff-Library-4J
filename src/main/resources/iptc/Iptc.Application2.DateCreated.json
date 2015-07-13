@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0037",
+  "decimal": 55,
+  "key": "Iptc.Application2.DateCreated",
+  "type": "Date",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 8,
+  "maximum": 8,
+  "description": "Represented in the form CCYYMMDD to designate the date the intellectual content of the object data was created rather than the date of the creation of the physical representation. Follows ISO 8601 standard.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

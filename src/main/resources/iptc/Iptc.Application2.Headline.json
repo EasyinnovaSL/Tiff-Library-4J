@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x0069",
+  "decimal": 105,
+  "key": "Iptc.Application2.Headline",
+  "type": "String",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 0,
+  "maximum": 256,
+  "description": "A publishable entry providing a synopsis of the contents of the object data.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}

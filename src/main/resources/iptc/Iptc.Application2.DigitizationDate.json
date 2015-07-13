@@ -1,0 +1,13 @@
+{
+  "hexadecimal": "0x003e",
+  "decimal": 62,
+  "key": "Iptc.Application2.DigitizationDate",
+  "type": "Date",
+  "mandatory": false,
+  "repeatable": false,
+  "minimum": 8,
+  "maximum": 8,
+  "description": "Represented in the form CCYYMMDD to designate the date the digital representation of the object data was created. Follows ISO 8601 standard.",
+  "created": "01/07/2015",
+  "modified": "01/07/2015"
+}
