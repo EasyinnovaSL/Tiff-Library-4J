@@ -24,21 +24,20 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
  * @since 18/5/2015
  */
 
-package com.easyinnova.tiff.model;
+package com.easyinnova.iptc;
 
+import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.*;
+import java.lang.String;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,33 +50,43 @@ import java.util.zip.ZipInputStream;
 /**
  * The Class TiffTags.
  */
-public class TiffTags {
+public class IptcTags {
 
-    /** The singleton instance. */
-    private static TiffTags instance = null;
+    /**
+     * The singleton instance.
+     */
+    private static IptcTags instance = null;
 
-    /** The tag map. */
+    /**
+     * The tag map.
+     */
     public static HashMap<Integer, Tag> tagMap = new HashMap<Integer, Tag>();
 
-    /** The tag names. */
-    protected static HashMap<String, Tag> tagNames = new HashMap<String, Tag>();
+    /**
+     * The tag names.
+     */
+    protected static HashMap<java.lang.String, Tag> tagKeys = new HashMap<java.lang.String, Tag>();
 
-    /** The tag types. */
-    public static HashMap<Integer, String> tagTypes = new HashMap<Integer, String>();
+    /**
+     * The tag types.
+     */
+    public static HashMap<Integer, java.lang.String> tagTypes =
+        new HashMap<Integer, java.lang.String>();
 
     /**
      * Instantiates a new tiff tags.
-     *
-     * @throws ReadTagsIOException the read tags io exception
      */
-    protected TiffTags() throws ReadTagsIOException {
+    protected IptcTags() throws ReadTagsIOException {
         try {
+            String folderPath = "./src/main/resources/iptc/";
             Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
 
-            Path path = Paths.get("./src/main/resources");
+            Path path = Paths.get("./src/main/resources/iptc/");
+
+
             if (Files.exists(path)) {
                 // Look in current dir
-                File folder = new File("./src/main/resources/tifftags/");
+                File folder = new File(folderPath);
                 for (final File fileEntry : folder.listFiles()) {
                     try {
                         BufferedReader br =
@@ -85,28 +94,29 @@ public class TiffTags {
 
                         Tag tag = gson.fromJson(br, Tag.class);
 
-                        tagMap.put(tag.getId(), tag);
-                        tagNames.put(tag.getName(), tag);
+                        tagMap.put(tag.getDecimal(), tag);
+                        tagKeys.put(tag.getKey(), tag);
                     } catch (FileNotFoundException e) {
-                        throw new ReadTagsIOException();
+
+                        e.printStackTrace();
                     }
                 }
             } else {
                 // Look in JAR
-                CodeSource src = TiffTags.class.getProtectionDomain().getCodeSource();
+                CodeSource src = IptcTags.class.getProtectionDomain().getCodeSource();
                 if (src != null) {
                     URL jar = src.getLocation();
                     ZipInputStream zip = new ZipInputStream(jar.openStream());
                     ZipEntry zipFile;
                     while ((zipFile = zip.getNextEntry()) != null) {
                         String name = zipFile.getName();
-                        if (name.startsWith("tifftags/") && !name.equals("tifftags/")) {
+                        if (name.startsWith("iptc/") && !name.equals("iptc/")) {
                             try {
                                 BufferedReader in = new BufferedReader(new InputStreamReader(zip));
 
                                 Tag tag = gson.fromJson(in, Tag.class);
-                                tagMap.put(tag.getId(), tag);
-                                tagNames.put(tag.getName(), tag);
+                                tagMap.put(tag.getDecimal(), tag);
+                                tagKeys.put(tag.getKey(), tag);
                             } catch (Exception ex) {
                                 throw new ReadTagsIOException();
                             }
@@ -117,19 +127,12 @@ public class TiffTags {
                 }
             }
 
-            tagTypes.put(1, "BYTE");
-            tagTypes.put(2, "ASCII");
-            tagTypes.put(3, "SHORT");
-            tagTypes.put(4, "LONG");
-            tagTypes.put(5, "RATIONAL");
-            tagTypes.put(6, "SBYTE");
-            tagTypes.put(7, "UNDEFINED");
-            tagTypes.put(8, "SSHORT");
-            tagTypes.put(9, "SSHORT");
-            tagTypes.put(10, "SRATIONAL");
-            tagTypes.put(11, "FLOAT");
-            tagTypes.put(12, "DOUBLE");
-            tagTypes.put(13, "SUBIFD");
+
+            tagTypes.put(1, "SHORT");
+            tagTypes.put(2, "STRING");
+            tagTypes.put(3, "DATE");
+            tagTypes.put(4, "TIME");
+            tagTypes.put(5, "UNDEFINED");
         } catch (Exception ex) {
             throw new ReadTagsIOException();
         }
@@ -139,11 +142,10 @@ public class TiffTags {
      * Gets the tiff tags.
      *
      * @return the singleton instance
-     * @throws ReadTagsIOException the read tags io exception
      */
-    public static synchronized TiffTags getTiffTags() throws ReadTagsIOException {
+    public static synchronized IptcTags getIptcTags() throws ReadTagsIOException {
         if (instance == null) {
-            instance = new TiffTags();
+            instance = new IptcTags();
         }
         return instance;
     }
@@ -158,7 +160,7 @@ public class TiffTags {
         Tag t = null;
         try {
             if (instance == null)
-                getTiffTags();
+                getIptcTags();
         } catch (ReadTagsIOException e) {
         }
         if (tagMap.containsKey(identifier))
@@ -172,15 +174,15 @@ public class TiffTags {
      * @param name the name
      * @return the tag id
      */
-    public static int getTagId(String name) {
+    public static int getTagId(java.lang.String name) {
         int id = -1;
         try {
             if (instance == null)
-                getTiffTags();
+                getIptcTags();
         } catch (ReadTagsIOException e) {
         }
-        if (tagNames.containsKey(name))
-            id = tagNames.get(name).getId();
+        if (tagKeys.containsKey(name))
+            id = tagKeys.get(name).getDecimal();
         return id;
     }
 
@@ -191,6 +193,11 @@ public class TiffTags {
      * @return true, if successful
      */
     public static boolean hasTag(int id) {
+        try {
+            if (instance == null)
+                getIptcTags();
+        } catch (ReadTagsIOException e) {
+        }
         return tagMap.containsKey(id);
     }
 }
