@@ -1,6 +1,5 @@
 /**
- /**
- * <h1>DataByteOrderInputStream.java</h1>
+ * /** <h1>DataByteOrderInputStream.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -67,16 +66,17 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
 
   /**
    * Instantiates a new data byte order input stream.
+   * 
    * @param file file
    * @throws FileNotFoundException sdf
    */
   public TiffInputStream(File file) throws FileNotFoundException {
-  super(file);
+    super(file);
     byteOrder = ByteOrder.BIG_ENDIAN;
     fileOffset = 0;
     buffer = new InputBuffer(this);
   }
-  
+
   /**
    * Gets the byte order.
    *
@@ -134,11 +134,11 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
   public Byte readByte() throws IOException {
     int ch = readCurrentByte();
     if (ch < 0) {
-    throw new EOFException();
+      throw new EOFException();
     }
     return new Byte(ch);
   }
-  
+
   /**
    * Read ascii.
    *
@@ -155,16 +155,16 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
   public Ascii readAscii() throws IOException {
     int ch = readCurrentByte();
     if (ch < 0) {
-    throw new EOFException();
+      throw new EOFException();
     }
     return new Ascii(ch);
   }
-  
+
   /**
-   * Read s byte.
+   * Read SByte.
    *
    * @param position the position
-   * @return the s byte
+   * @return the sbyte
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public SByte readSByte(long position) throws IOException {
@@ -174,10 +174,10 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
 
   @Override
   public SByte readSByte() throws IOException {
-    
+
     int ch = readCurrentByte();
     if (ch < 0) {
-    throw new EOFException();
+      throw new EOFException();
     }
     return new SByte(ch);
   }
@@ -199,17 +199,17 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     int ch1 = readCurrentByte();
     int ch2 = readCurrentByte();
     if ((ch1 | ch2) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     short val;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val = (short)((ch1 << 8) + (ch2 << 0));
-    }else{
-      val = (short)((ch2 << 8) + (ch1 << 0));
-    }         
+      val = (short) ((ch1 << 8) + (ch2 << 0));
+    } else {
+      val = (short) ((ch2 << 8) + (ch1 << 0));
+    }
     return new Short(val);
   }
-  
+
   /**
    * Read s short.
    *
@@ -231,13 +231,13 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     }
     short val;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val = (short)((ch1 << 8) + (ch2 << 0));
-    }else{
-      val = (short)((ch2 << 8) + (ch1 << 0));
-    }         
+      val = (short) ((ch1 << 8) + (ch2 << 0));
+    } else {
+      val = (short) ((ch2 << 8) + (ch1 << 0));
+    }
     return new SShort(val);
   }
-  
+
   /**
    * Read long.
    *
@@ -252,23 +252,23 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
 
   @Override
   public Long readLong() throws IOException {
-    
+
     int ch1 = readCurrentByte();
     int ch2 = readCurrentByte();
     int ch3 = readCurrentByte();
     int ch4 = readCurrentByte();
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     int val;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val = (int)((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
-    }else{
-      val = (int)((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
-    }         
+      val = (int) ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    } else {
+      val = (int) ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
+    }
     return new Long(val);
   }
-  
+
   /**
    * Read s long.
    *
@@ -288,14 +288,14 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     int ch3 = readCurrentByte();
     int ch4 = readCurrentByte();
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     int val;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val = (int)((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
-    }else{
-      val = (int)((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
-    }         
+      val = (int) ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    } else {
+      val = (int) ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
+    }
     return new SLong(val);
   }
 
@@ -310,12 +310,12 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     seekOffset(position);
     return readUndefined();
   }
-  
+
   @Override
   public Undefined readUndefined() throws IOException {
     int ch = readCurrentByte();
     if (ch < 0) {
-    throw new EOFException();
+      throw new EOFException();
     }
     return new Undefined(ch);
   }
@@ -339,30 +339,30 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     int ch3 = readCurrentByte();
     int ch4 = readCurrentByte();
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     int val;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val = (int)((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
-    }else{
-      val = (int)((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
-    }     
-    
+      val = (int) ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    } else {
+      val = (int) ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
+    }
+
     ch1 = readCurrentByte();
     ch2 = readCurrentByte();
     ch3 = readCurrentByte();
     ch4 = readCurrentByte();
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     int val2;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val2 = (int)((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
-    }else{
-      val2 = (int)((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
-    }     
-    
-    return new Rational(val,val2);
+      val2 = (int) ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    } else {
+      val2 = (int) ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
+    }
+
+    return new Rational(val, val2);
   }
 
   /**
@@ -384,30 +384,30 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     int ch3 = readCurrentByte();
     int ch4 = readCurrentByte();
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     int val;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val = (int)((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
-    }else{
-      val = (int)((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
-    }     
-    
+      val = (int) ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    } else {
+      val = (int) ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
+    }
+
     ch1 = readCurrentByte();
     ch2 = readCurrentByte();
     ch3 = readCurrentByte();
     ch4 = readCurrentByte();
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     int val2;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      val2 = (int)((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
-    }else{
-      val2 = (int)((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
-    }     
-    
-    return new SRational(val,val2);
+      val2 = (int) ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    } else {
+      val2 = (int) ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
+    }
+
+    return new SRational(val, val2);
   }
 
   /**
@@ -429,15 +429,15 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     int ch3 = readCurrentByte();
     int ch4 = readCurrentByte();
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
-        throw new EOFException();
+      throw new EOFException();
     }
     int val;
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
       val = ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
-    }else{
+    } else {
       val = ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
-    }         
-    return new Float( java.lang.Float.intBitsToFloat(val));
+    }
+    return new Float(java.lang.Float.intBitsToFloat(val));
   }
 
   /**
@@ -454,7 +454,7 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
 
   @Override
   public Double readDouble() throws IOException {
-    
+
     int ch1 = readCurrentByte();
     int ch2 = readCurrentByte();
     int ch3 = readCurrentByte();
@@ -463,26 +463,28 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     int ch6 = readCurrentByte();
     int ch7 = readCurrentByte();
     int ch8 = readCurrentByte();
-    
-    if ((ch1 | ch2 | ch3 | ch4 | ch5 | ch6 | ch7 | ch8 ) < 0) {
-        throw new EOFException();
+
+    if ((ch1 | ch2 | ch3 | ch4 | ch5 | ch6 | ch7 | ch8) < 0) {
+      throw new EOFException();
     }
-    
+
     long val;
-    
+
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      
-     val= ((long)ch1 << 56) + ((long)(ch2 & 255) << 48) + ((long)(ch3 & 255) << 40) 
-       + ((long)(ch4 & 255) << 32) + ((long)(ch5 & 255) << 24) + ((long)(ch6 & 255) << 16) 
-       + ((long)(ch7 & 255) <<  8) + ((long)(ch8 & 255) <<  0);
- 
-    }else{
-      
-      val= ((long)ch8 << 56) + ((long)(ch7 & 255) << 48) + ((long)(ch6 & 255) << 40) 
-          + ((long)(ch5 & 255) << 32) + ((long)(ch4 & 255) << 24) + ((long)(ch3 & 255) << 16) 
-          + ((long)(ch2 & 255) <<  8) + ((long)(ch1 & 255) <<  0);
+
+      val =
+          ((long) ch1 << 56) + ((long) (ch2 & 255) << 48) + ((long) (ch3 & 255) << 40)
+              + ((long) (ch4 & 255) << 32) + ((long) (ch5 & 255) << 24)
+              + ((long) (ch6 & 255) << 16) + ((long) (ch7 & 255) << 8) + ((long) (ch8 & 255) << 0);
+
+    } else {
+
+      val =
+          ((long) ch8 << 56) + ((long) (ch7 & 255) << 48) + ((long) (ch6 & 255) << 40)
+              + ((long) (ch5 & 255) << 32) + ((long) (ch4 & 255) << 24)
+              + ((long) (ch3 & 255) << 16) + ((long) (ch2 & 255) << 8) + ((long) (ch1 & 255) << 0);
     }
-    
+
     return new Double(java.lang.Double.longBitsToDouble(val));
   }
 
