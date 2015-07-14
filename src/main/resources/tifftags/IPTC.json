@@ -5,6 +5,7 @@
     "UNDEFINED",
     "BYTE"
   ],
+  "typedef": IPTC,
   "cardinality": "N",
   "defaultValue": "",
   "ifd": "",

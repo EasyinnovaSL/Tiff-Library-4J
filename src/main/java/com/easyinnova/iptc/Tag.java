@@ -38,189 +38,312 @@ import java.util.Date;
  */
 public class Tag {
 
-    /**
-     * The hexadecimal value.
-     */
-    protected java.lang.String hexadecimal;
+  /**
+   * The hexadecimal value.
+   */
+  protected java.lang.String hexadecimal;
 
-    /**
-     * The decimal value.
-     */
-    protected Integer decimal;
+  /**
+   * The decimal value.
+   */
+  protected Integer decimal;
 
-    /**
-     * The key.
-     */
-    protected java.lang.String key;
+  /**
+   * The key.
+   */
+  protected java.lang.String key;
 
-    /**
-     * The type of the data.
-     */
-    protected java.lang.String type;
+  /**
+   * The type of the data.
+   */
+  protected java.lang.String type;
 
-    /**
-     * The mandatory flag.
-     */
-    protected Boolean mandatory;
+  /**
+   * The mandatory flag.
+   */
+  protected Boolean mandatory;
 
-    /**
-     * The repeatable flag.
-     */
-    protected Boolean repeatable;
+  /**
+   * The repeatable flag.
+   */
+  protected Boolean repeatable;
 
-    /**
-     * The minimum length.
-     */
-    protected Integer minimum;
+  /**
+   * The minimum length.
+   */
+  protected Integer minimum;
 
-    /**
-     * The maximum length.
-     */
-    protected Integer maximum;
+  /**
+   * The maximum length.
+   */
+  protected Integer maximum;
 
-    /**
-     * The description.
-     */
-    protected java.lang.String description;
+  /**
+   * The description.
+   */
+  protected java.lang.String description;
 
-    /**
-     * The created date.
-     */
-    protected Date created;
+  /**
+   * The created date.
+   */
+  protected Date created;
 
-    /**
-     * The modified date.
-     */
-    protected Date modified;
+  /**
+   * The modified date.
+   */
+  protected Date modified;
 
-    public java.lang.String getHexadecimal() {
-        return hexadecimal;
-    }
+  /**
+   * Gets the hexadecimal.
+   *
+   * @return the hexadecimal
+   */
+  public java.lang.String getHexadecimal() {
+    return hexadecimal;
+  }
 
-    public void setHexadecimal(java.lang.String hexadecimal) {
-        this.hexadecimal = hexadecimal;
-    }
+  /**
+   * Sets the hexadecimal.
+   *
+   * @param hexadecimal the new hexadecimal
+   */
+  public void setHexadecimal(java.lang.String hexadecimal) {
+    this.hexadecimal = hexadecimal;
+  }
 
-    public Integer getDecimal() {
-        return decimal;
-    }
+  /**
+   * Gets the decimal.
+   *
+   * @return the decimal
+   */
+  public Integer getDecimal() {
+    return decimal;
+  }
 
-    public void setDecimal(Integer decimal) {
-        this.decimal = decimal;
-    }
+  /**
+   * Sets the decimal.
+   *
+   * @param decimal the new decimal
+   */
+  public void setDecimal(Integer decimal) {
+    this.decimal = decimal;
+  }
 
-    public java.lang.String getKey() {
-        return key;
-    }
+  /**
+   * Gets the key.
+   *
+   * @return the key
+   */
+  public java.lang.String getKey() {
+    return key;
+  }
 
-    public void setKey(java.lang.String key) {
-        this.key = key;
-    }
+  /**
+   * Sets the key.
+   *
+   * @param key the new key
+   */
+  public void setKey(java.lang.String key) {
+    this.key = key;
+  }
 
-    public java.lang.String getType() {
-        return type;
-    }
+  /**
+   * Gets the type.
+   *
+   * @return the type
+   */
+  public java.lang.String getType() {
+    return type;
+  }
 
-    public void setType(java.lang.String type) {
-        this.type = type;
-    }
+  /**
+   * Sets the type.
+   *
+   * @param type the new type
+   */
+  public void setType(java.lang.String type) {
+    this.type = type;
+  }
 
-    public Boolean getMandatory() {
-        return mandatory;
-    }
+  /**
+   * Gets the mandatory.
+   *
+   * @return the mandatory
+   */
+  public Boolean getMandatory() {
+    return mandatory;
+  }
 
-    public void setMandatory(Boolean mandatory) {
-        this.mandatory = mandatory;
-    }
+  /**
+   * Sets the mandatory.
+   *
+   * @param mandatory the new mandatory
+   */
+  public void setMandatory(Boolean mandatory) {
+    this.mandatory = mandatory;
+  }
 
-    public Boolean getRepeatable() {
-        return repeatable;
-    }
+  /**
+   * Gets the repeatable.
+   *
+   * @return the repeatable
+   */
+  public Boolean getRepeatable() {
+    return repeatable;
+  }
 
-    public void setRepeatable(Boolean repeatable) {
-        this.repeatable = repeatable;
-    }
+  /**
+   * Sets the repeatable.
+   *
+   * @param repeatable the new repeatable
+   */
+  public void setRepeatable(Boolean repeatable) {
+    this.repeatable = repeatable;
+  }
 
-    public Integer getMinimum() {
-        return minimum;
-    }
+  /**
+   * Gets the minimum.
+   *
+   * @return the minimum
+   */
+  public Integer getMinimum() {
+    return minimum;
+  }
 
-    public void setMinimum(Integer minimum) {
-        this.minimum = minimum;
-    }
+  /**
+   * Sets the minimum.
+   *
+   * @param minimum the new minimum
+   */
+  public void setMinimum(Integer minimum) {
+    this.minimum = minimum;
+  }
 
-    public Integer getMaximum() {
-        return maximum;
-    }
+  /**
+   * Gets the maximum.
+   *
+   * @return the maximum
+   */
+  public Integer getMaximum() {
+    return maximum;
+  }
 
-    public void setMaximum(Integer maximum) {
-        this.maximum = maximum;
-    }
+  /**
+   * Sets the maximum.
+   *
+   * @param maximum the new maximum
+   */
+  public void setMaximum(Integer maximum) {
+    this.maximum = maximum;
+  }
 
-    public java.lang.String getDescription() {
-        return description;
-    }
+  /**
+   * Gets the description.
+   *
+   * @return the description
+   */
+  public java.lang.String getDescription() {
+    return description;
+  }
 
-    public void setDescription(java.lang.String description) {
-        this.description = description;
-    }
+  /**
+   * Sets the description.
+   *
+   * @param description the new description
+   */
+  public void setDescription(java.lang.String description) {
+    this.description = description;
+  }
 
-    public Date getCreated() {
-        return created;
-    }
+  /**
+   * Gets the created.
+   *
+   * @return the created
+   */
+  public Date getCreated() {
+    return created;
+  }
 
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+  /**
+   * Sets the created.
+   *
+   * @param created the new created
+   */
+  public void setCreated(Date created) {
+    this.created = created;
+  }
 
-    public Date getModified() {
-        return modified;
-    }
+  /**
+   * Gets the modified.
+   *
+   * @return the modified
+   */
+  public Date getModified() {
+    return modified;
+  }
 
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
+  /**
+   * Sets the modified.
+   *
+   * @param modified the new modified
+   */
+  public void setModified(Date modified) {
+    this.modified = modified;
+  }
 
-    public Tag(java.lang.String hexadecimal, Integer decimal, java.lang.String key,
-        java.lang.String type, Boolean mandatory, Boolean repeatable, Integer minimum,
-        Integer maximum, java.lang.String description) {
-        super();
-        this.hexadecimal = hexadecimal;
-        this.decimal = decimal;
-        this.key = key;
-        this.type = type;
-        this.mandatory = mandatory;
-        this.repeatable = repeatable;
-        this.minimum = minimum;
-        this.maximum = maximum;
-        this.description = description;
-        Date date = new Date();
-        this.created = date;
-        this.modified = date;
-    }
+  /**
+   * Instantiates a new tag.
+   *
+   * @param hexadecimal the hexadecimal
+   * @param decimal the decimal
+   * @param key the key
+   * @param type the type
+   * @param mandatory the mandatory
+   * @param repeatable the repeatable
+   * @param minimum the minimum
+   * @param maximum the maximum
+   * @param description the description
+   */
+  public Tag(java.lang.String hexadecimal, Integer decimal, java.lang.String key,
+      java.lang.String type, Boolean mandatory, Boolean repeatable, Integer minimum,
+      Integer maximum, java.lang.String description) {
+    super();
+    this.hexadecimal = hexadecimal;
+    this.decimal = decimal;
+    this.key = key;
+    this.type = type;
+    this.mandatory = mandatory;
+    this.repeatable = repeatable;
+    this.minimum = minimum;
+    this.maximum = maximum;
+    this.description = description;
+    Date date = new Date();
+    this.created = date;
+    this.modified = date;
+  }
 
 
-    /**
-     * Valid type.
-     *
-     * @param type the type
-     * @return true, if is valid
-     */
-    public boolean validType(java.lang.String type) {
-        boolean valid = false;
-        if (type.contains(type))
-            valid = true;
-        if (type == "LONG" && type.contains("UNDEFINED"))
-            valid = true;
-        return valid;
-    }
+  /**
+   * Valid type.
+   *
+   * @param type the type
+   * @return true, if is valid
+   */
+  public boolean validType(java.lang.String type) {
+    boolean valid = false;
+    if (type.contains(type))
+      valid = true;
+    if (type == "LONG" && type.contains("UNDEFINED"))
+      valid = true;
+    return valid;
+  }
 
-    /**
-     * Checks for typedef.
-     *
-     * @return true, if successful
-     */
-    public boolean hasType() {
-        return type != null;
-    }
+  /**
+   * Checks for typedef.
+   *
+   * @return true, if successful
+   */
+  public boolean hasType() {
+    return type != null;
+  }
 }

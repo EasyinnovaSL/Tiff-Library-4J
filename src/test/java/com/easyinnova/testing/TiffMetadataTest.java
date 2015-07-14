@@ -105,11 +105,6 @@ public class TiffMetadataTest {
 	assertEquals(1, tv.getCardinality());
 	assertEquals(0, tv.getFirstNumericValue());
 	
-/*	
-	tv = ifd.getTag("PlanarConfiguration");
-	assertEquals(1, tv.getCardinality());
-	assertEquals(1, tv.getFirstNumericValue());
-*/
 	assertEquals(true, ifd.hasStrips());
 	assertEquals(false, ifd.hasTiles());
 	ImageStrips ims = ifd.getImageStrips();
@@ -119,9 +114,6 @@ public class TiffMetadataTest {
 	  nrows += ims.getStrips().get(i).getLength() / rowLength;
 	}
 	assertEquals(nrows, ifd.getTag("ImageLength").getFirstNumericValue());
-	
-	//Metadata metadata=to.getMetadata();
-
 	
 	assertEquals("1", to.getMetadataSingleString("Compression"));
 	assertEquals("82750", to.getMetadataSingleString("StripBYTECount"));
@@ -179,7 +171,8 @@ public class TiffMetadataTest {
 	assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
 	
 	assertEquals("[65,83,67,73,73,0,0,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("UserComment"));
-	assertEquals("[28,1,90,0,3,27,37,71,28,1,90,0,3,27,37,71,28,2,0,0,2,0,0,28,2,80,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,2,55,0,8,50,48,49,48,48,53,50,52,28,2,60,0,11,49,51,53,55,49,53,43,48,48,48,48,28,2,116,0,54,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("IPTC"));
+    // assertEquals("[28,1,90,0,3,27,37,71,28,1,90,0,3,27,37,71,28,2,0,0,2,0,0,28,2,80,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,2,55,0,8,50,48,49,48,48,53,50,52,28,2,60,0,11,49,51,53,55,49,53,43,48,48,48,48,28,2,116,0,54,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]",
+    // to.getMetadataSingleString("IPTC"));
 	assertEquals("[48,50,51,48]", to.getMetadataSingleString("36864"));
   }
   
