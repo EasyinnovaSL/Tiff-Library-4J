@@ -45,7 +45,7 @@ import org.junit.Test;
 /**
  * The Class Iptc.
  */
-public class Iptc {
+public class IptcTest {
 
   /** The tr. */
   TiffReader tr;
@@ -112,8 +112,9 @@ public class Iptc {
       Metadata m = tv.getValue().get(0).createMetadata();
       assertEquals(2, m.getMetadataObject("Keywords").getObjectList().size());
       String k1 = m.getMetadataObject("Keywords").getObjectList().get(0).toString();
-      assertEquals("gray", k1);
-      assertEquals("sample", m.getMetadataObject("Keywords").getObjectList().get(1).toString());
+      String k2 = m.getMetadataObject("Keywords").getObjectList().get(1).toString();
+      assertEquals(true, k1.equals("sample") || k2.equals("sample"));
+      assertEquals(true, k1.equals("gray") || k2.equals("gray"));
       assertEquals("Spain", m.getMetadataObject("CountryName").getObjectList().get(0).toString());
       assertEquals("Parc Tecnologic", m.getMetadataObject("SubLocation").getObjectList().get(0)
           .toString());

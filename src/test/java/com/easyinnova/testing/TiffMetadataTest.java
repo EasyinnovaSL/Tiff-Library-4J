@@ -187,7 +187,6 @@ public class TiffMetadataTest {
 	assertEquals(false, tr.getValidation().correct);
 	to = tr.getModel();
 
-	
 	assertEquals(null,to.getMetadata());
   }
   
@@ -220,7 +219,6 @@ public class TiffMetadataTest {
 	assertEquals(1, tv.getCardinality());
 	assertEquals(2, tv.getFirstNumericValue());
 	
-	
 	tv = ifd.getTag("PlanarConfiguration");
 	assertEquals(1, tv.getCardinality());
 	assertEquals(1, tv.getFirstNumericValue());
@@ -235,9 +233,6 @@ public class TiffMetadataTest {
 	}
 	assertEquals(nrows, ifd.getTag("ImageLength").getFirstNumericValue());
 	
-	//Metadata metadata=to.getMetadata();
-
-	
 	assertEquals("1", to.getMetadataSingleString("Compression"));
 	assertEquals("[3072000,3072000,3072000,3072000,3072000,2640000]", to.getMetadataSingleString("StripBYTECount"));
 	assertEquals("1", to.getMetadataSingleString("PlanarConfiguration"));
@@ -248,8 +243,5 @@ public class TiffMetadataTest {
 	assertEquals("[8,3072008,6144008,9216008,12288008,15360008]", to.getMetadataSingleString("StripOffsets"));
 	assertEquals("1500", to.getMetadataSingleString("ImageLength"));
 	assertEquals("[16,16,16]", to.getMetadataSingleString("BitsPerSample"));
-	
   }
-
 }
-

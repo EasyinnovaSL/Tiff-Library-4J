@@ -33,7 +33,8 @@ package com.easyinnova.tiff.io;
 import java.io.IOException;
 
 /**
- * The Class InputBuffer.
+ * Buffered Tiff file stream. <br>
+ * Incorporates a buffer for minimizing the file reads.
  */
 public class InputBuffer {
   /** The internal buffer. */
@@ -122,6 +123,16 @@ public class InputBuffer {
       b = buffer[(int) (offset - bufferOffset)];
     }
     return b;
+  }
+
+  /**
+   * Seek successful.
+   *
+   * @param offset the offset
+   * @return true, if successful
+   */
+  public boolean seekSuccessful(long offset) {
+    return offset - bufferOffset >= 0 && offset - bufferOffset < currentBufferSize;
   }
 }
 

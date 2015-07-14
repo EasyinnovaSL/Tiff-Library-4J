@@ -94,4 +94,3 @@ public class TiffEPTest {
     assertEquals(0, bp.getValidation().warnings.size());
   }
 }
-

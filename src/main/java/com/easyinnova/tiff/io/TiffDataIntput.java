@@ -46,7 +46,7 @@ import com.easyinnova.tiff.model.types.Undefined;
 import java.io.IOException;
 
 /**
- * The Interface TiffDataIntput.
+ * The Interface TiffDataIntput for reading Tiff filestreams.
  */
 public interface TiffDataIntput {
   
