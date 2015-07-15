@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * Paged Buffered Tiff File Stream.<br>
- * Incorporates a set of pages (buffers) for minimizing the file reads all over the file.
+ * Incorporates a set of pages (set of buffers) for minimizing the file reads all over the file.
  */
 public class PagedInputBuffer {
 
