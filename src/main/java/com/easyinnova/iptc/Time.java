@@ -56,7 +56,7 @@ public class Time extends abstractIptcType {
   /**
    * Instantiates a new Time.
    *
-   * @param value the value represented in List<Byte>
+   * @param value the value
    */
   public void read(List<Byte> value) {
     this.value = "";

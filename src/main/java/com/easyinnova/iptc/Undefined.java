@@ -56,7 +56,7 @@ public class Undefined extends abstractIptcType {
   /**
    * Instantiates a new Undefined.
    *
-   * @param value the value represented in List<Byte>
+   * @param value the value
    */
   public void read(List<Byte> value) {
     this.value = new byte[value.size()];

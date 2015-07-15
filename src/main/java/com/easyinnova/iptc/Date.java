@@ -57,7 +57,7 @@ public class Date extends abstractIptcType {
   /**
    * Instantiates a new Date.
    *
-   * @param value the value represented in List<Byte>
+   * @param value the value
    */
   public void read(List<Byte> value) {
     this.value = "";
