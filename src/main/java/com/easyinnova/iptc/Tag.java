@@ -26,7 +26,7 @@
  *
  * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 18/5/2015
+ * @since 6/7/2015
  */
 
 package com.easyinnova.iptc;
@@ -210,7 +210,7 @@ public class Tag {
         boolean valid = false;
         if (type.contains(type))
             valid = true;
-        if (type == "LONG" && type.contains("UNDEFINED"))
+        if (type.equals("LONG") && type.contains("UNDEFINED"))
             valid = true;
         return valid;
     }

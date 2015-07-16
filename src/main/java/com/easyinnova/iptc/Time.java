@@ -1,5 +1,5 @@
 /**
- * <h1>Short.java</h1>
+ * <h1>Time.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,9 +23,9 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 27/5/2015
+ * @since 6/7/2015
  */
 package com.easyinnova.iptc;
 
@@ -34,7 +34,7 @@ import java.util.List;
 import com.easyinnova.tiff.model.types.Byte;
 
 /**
- * The Class Short.
+ * The Class Time.
  */
 public class Time extends abstractIptcType {
 
@@ -59,8 +59,8 @@ public class Time extends abstractIptcType {
      */
     public void read(List<Byte> value) {
         this.value = "";
-        for (int j = 0; j < value.size(); j++) {
-            this.value += (char) value.get(j).toByte();
+        for (Byte b: value) {
+            this.value += (char) b.toByte();
         }
 
     }

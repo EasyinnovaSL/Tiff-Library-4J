@@ -23,9 +23,9 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 27/5/2015
+ * @since 6/7/2015
  */
 package com.easyinnova.iptc;
 
@@ -71,7 +71,7 @@ public class Short extends abstractIptcType {
      * @return the value
      */
     public int getValue() {
-        return (int) (value & 0xffff);
+        return (value & 0xffff);
     }
 
     /**
@@ -84,7 +84,7 @@ public class Short extends abstractIptcType {
     }
 
     @Override public java.lang.String toString() {
-        return "" + (int) (value & 0xffff);
+        return "" + (value & 0xffff);
     }
 
 }

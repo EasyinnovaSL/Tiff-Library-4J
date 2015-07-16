@@ -1,5 +1,5 @@
 /**
- * <h1>TiffDataIntput.java</h1> 
+ * <h1>RandomAccessFileInputStream.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,7 +26,6 @@
  * @author Xavier Tarrés Bonet
  * @version 1.0
  * @since 26/5/2015
- *
  */
 package com.easyinnova.tiff.io;
 
@@ -37,11 +36,13 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 
 /**
- * The Class TiffFileInputStream.
+ * The Class RandomAccessFileInputStream.
  */
-public class RandomAccessFileInputStream extends InputStream{
+public class RandomAccessFileInputStream extends InputStream {
 
-  /** The random access file. */
+  /**
+   * The random access file.
+   */
   private final RandomAccessFile randomAccessFile;
   /**
    * Absolute position in file to finish reading on (exclusive)
@@ -55,39 +56,34 @@ public class RandomAccessFileInputStream extends InputStream{
    * @throws FileNotFoundException the file not found exception
    */
   public RandomAccessFileInputStream(File file) throws FileNotFoundException {
-    randomAccessFile=new RandomAccessFile(file, "r");
+    randomAccessFile = new RandomAccessFile(file, "r");
   }
 
-  @Override
-  public int read() throws IOException {
-      return randomAccessFile.read();
+  @Override public int read() throws IOException {
+    return randomAccessFile.read();
   }
 
-  @Override
-  public int read(byte[] b) throws IOException {
-      return randomAccessFile.read(b);
+  @Override public int read(byte[] b) throws IOException {
+    return randomAccessFile.read(b);
   }
 
-  @Override
-  public int read(byte[] b, int off, int len) throws IOException {
-      return randomAccessFile.read(b, off, len);
+  @Override public int read(byte[] b, int off, int len) throws IOException {
+    return randomAccessFile.read(b, off, len);
   }
 
-  @Override
-  public int available() throws IOException {
-      long a = (limit >= 0 ? Math.min(limit, randomAccessFile.length()) : randomAccessFile.length()) - randomAccessFile.getFilePointer();
-      return (int) Math.min(Integer.MAX_VALUE, Math.max(a, 0));
+  @Override public int available() throws IOException {
+    long a = (limit >= 0 ? Math.min(limit, randomAccessFile.length()) : randomAccessFile.length())
+        - randomAccessFile.getFilePointer();
+    return (int) Math.min(Integer.MAX_VALUE, Math.max(a, 0));
   }
 
-  @Override
-  public synchronized void reset() throws IOException {
-      limit = -1;
-      randomAccessFile.seek(0);
+  @Override public synchronized void reset() throws IOException {
+    limit = -1;
+    randomAccessFile.seek(0);
   }
 
-  @Override
-  public void close() throws IOException {
-      randomAccessFile.close();
+  @Override public void close() throws IOException {
+    randomAccessFile.close();
   }
 
   /**
@@ -97,7 +93,7 @@ public class RandomAccessFileInputStream extends InputStream{
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void seek(long pos) throws IOException {
-      randomAccessFile.seek(pos);
+    randomAccessFile.seek(pos);
   }
 
   /**
@@ -106,7 +102,7 @@ public class RandomAccessFileInputStream extends InputStream{
    * @param limit the limit
    */
   public void limit(long limit) {
-      this.limit = limit;
+    this.limit = limit;
   }
 
   /**
@@ -116,7 +112,7 @@ public class RandomAccessFileInputStream extends InputStream{
    */
   public long size() {
     try {
-    return randomAccessFile.length();
+      return randomAccessFile.length();
     } catch (Exception ex) {
       return 0;
     }

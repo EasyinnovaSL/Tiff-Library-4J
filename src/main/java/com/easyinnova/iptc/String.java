@@ -1,5 +1,5 @@
 /**
- * <h1>Short.java</h1>
+ * <h1>String.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,9 +23,9 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 27/5/2015
+ * @since 6/7/2015
  */
 package com.easyinnova.iptc;
 
@@ -67,6 +67,7 @@ public class String extends abstractIptcType {
 
             this.value = new java.lang.String(arrayContent, "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            System.err.println("Error encoding value");
         }
     }
 

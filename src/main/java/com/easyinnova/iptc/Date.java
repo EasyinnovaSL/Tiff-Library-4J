@@ -23,7 +23,7 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
  * @since 27/5/2015
  */
@@ -60,8 +60,8 @@ public class Date extends abstractIptcType {
      */
     public void read(List<Byte> value) {
         this.value = "";
-        for (int j = 0; j < value.size(); j++) {
-            this.value += (char) value.get(j).toByte();
+        for (Byte b: value) {
+            this.value += (char) b.toByte();
         }
     }
 

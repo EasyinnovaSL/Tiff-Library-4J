@@ -1,5 +1,5 @@
 /**
- * <h1>abstractTiffTag.java</h1>
+ * <h1>package-info.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,62 +26,7 @@
  *
  * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 26/5/2015
+ * @since 6/7/2015
+ *
  */
 package com.easyinnova.iptc;
-
-import java.util.List;
-
-import com.easyinnova.tiff.model.types.Byte;
-
-/**
- * The generic class abstractTiffType.
- */
-public class abstractIptcType {
-
-    /**
-     * The tag size in bytes.
-     */
-    private int type;
-
-    /**
-     * Instantiates a new abstract tiff type.
-     */
-    public abstractIptcType() {
-        type = 0; // Undefined
-    }
-
-    /**
-     * Instantiates a new abstract tiff type.
-     */
-    public abstractIptcType(List<Byte> tv) {
-        type = 0; // Undefined
-    }
-
-    /**
-     * Sets the type size in bytes.
-     *
-     * @param size the new type size
-     */
-    public void setType(int size) {
-        type = size;
-    }
-
-    /**
-     * Gets the type size in bytes.
-     *
-     * @return the type size
-     */
-    public int getTypeSize() {
-        return type;
-    }
-
-    /**
-     * Read.
-     *
-     * @param tv the tv
-     */
-    public void read(List<Byte> tv) {
-    }
-
-}
