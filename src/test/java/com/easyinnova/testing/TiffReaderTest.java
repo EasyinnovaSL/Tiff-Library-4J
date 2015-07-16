@@ -31,15 +31,14 @@
  */
 package com.easyinnova.testing;
 
-import static org.junit.Assert.assertEquals;
-
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.reader.TiffReader;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * JUnit Tests for the class TiffReader.

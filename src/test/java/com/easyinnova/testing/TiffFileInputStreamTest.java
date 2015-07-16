@@ -1,18 +1,13 @@
 package com.easyinnova.testing;
 
-import static org.junit.Assert.assertEquals;
-
 import com.easyinnova.tiff.io.TiffInputStream;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteOrder;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * The Class TiffFileInputStreamTest.
