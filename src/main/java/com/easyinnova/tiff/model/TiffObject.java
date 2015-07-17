@@ -36,5 +36,34 @@ package com.easyinnova.tiff.model;
  */
 public class TiffObject {
 
+  /**
+   * The container element of this tiff object (EXIF, XMP, IPTC...)
+   */
+  String container;
+
+  /**
+   * Instantiates a new tiff object.
+   */
+  public TiffObject() {
+    container = null;
+  }
+
+  /**
+   * Gets the container element of this tiff object.<br> For example EXIF, XMP, IPTC.
+   *
+   * @return the container.
+   */
+  public String getContainer() {
+    return container;
+  }
+
+  /**
+   * Sets the container.
+   *
+   * @param container the new container
+   */
+  public void setContainer(String container) {
+    this.container = container;
+  }
 }
 

@@ -215,7 +215,7 @@ public class TiffDocument {
     if (metadata == null)
       createMetadataDictionary();
     if (metadata.contains(name))
-      s = metadata.getFirst(name).toString();
+      s = metadata.get(name).toString();
     return s;
   }
 
@@ -240,7 +240,7 @@ public class TiffDocument {
   public void createMetadataDictionary() {
     metadata = new Metadata();
     if (firstIFD != null) {
-      addMetadataFromIFD(firstIFD, "IFD");
+      addMetadataFromIFD(firstIFD, "IFD", false);
     }
   }
 
@@ -249,15 +249,16 @@ public class TiffDocument {
    *
    * @param ifd the ifd
    * @param key the key
+   * @param exif the exif
    * @the tiff tags io exception
    */
-  private void addMetadataFromIFD(IFD ifd, String key) {
+  private void addMetadataFromIFD(IFD ifd, String key, boolean exif) {
     metadata.add(key, ifd);
     for (TagValue tag : ifd.getMetadata().getTags()) {
       if (tag.getCardinality() == 1) {
         abstractTiffType t = tag.getValue().get(0);
         if (t.isIFD()) {
-          addMetadataFromIFD((IFD) t, key);
+          addMetadataFromIFD((IFD) t, key, true);
         } else if (t.containsMetadata()) {
           try {
             Metadata meta = t.createMetadata();
@@ -266,14 +267,18 @@ public class TiffDocument {
             // TODO: What?
           }
         } else {
+          if (exif)
+            t.setContainer("EXIF");
           metadata.add(tag.getName(), t);
         }
       } else {
+        if (exif)
+          tag.setContainer("EXIF");
         metadata.add(tag.getName(), tag);
       }
     }
     if (ifd.hasNextIFD()) {
-      addMetadataFromIFD(ifd.getNextIFD(), key);
+      addMetadataFromIFD(ifd.getNextIFD(), key, false);
     }
   }
 

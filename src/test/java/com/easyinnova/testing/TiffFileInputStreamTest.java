@@ -61,7 +61,7 @@ public class TiffFileInputStreamTest {
 
   /**
    * Test.
-   * 
+   *
    * @throws IOException zxc
    */
   @Test

@@ -88,12 +88,42 @@ public class Metadata {
   }
 
   /**
+   * Gets a metadata value.
+   *
+   * @param name the name of the metadata.
+   * @return the tiff object with the value of the metadata.
+   */
+  public TiffObject get(String name) {
+    TiffObject result = null;
+    String container = null;
+    if (contains(name)) {
+      if (metadata.get(name).getObjectList().size() == 1) {
+        result = getFirst(name);
+      } else {
+        for (TiffObject to : metadata.get(name).getObjectList()) {
+          if (result == null) {
+            result = to;
+            container = to.getContainer();
+          } else if (to.getContainer() != null) {
+            if (container == null || to.getContainer().equals("EXIF")
+                || (to.getContainer().equals("XMP") && container.equals("IPTC"))) {
+              result = to;
+              container = to.getContainer();
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
    * Gets the first metadata object of the fiven metadata name.
    *
    * @param name the name
    * @return the first
    */
-  public TiffObject getFirst(String name) {
+  private TiffObject getFirst(String name) {
     return metadata.get(name).getObjectList().get(0);
   }
 

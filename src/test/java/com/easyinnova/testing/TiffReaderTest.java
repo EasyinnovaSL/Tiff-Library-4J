@@ -1,6 +1,6 @@
 /**
- * <h1>SpeedTest.java</h1> <p> This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software
+ * <h1>TiffReaderTest.java</h1> <p> This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later version; or, at your
  * choice, under the terms of the Mozilla Public License, v. 2.0. SPDX GPL-3.0+ or MPL-2.0+. </p>
  * <p> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -14,7 +14,7 @@
  *
  * @author Víctor Muñoz Solà
  * @version 1.0
- * @since 26/6/2015
+ * @since 2/6/2015
  */
 package com.easyinnova.testing;
 
@@ -29,23 +29,33 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * The Class SpeedTest.
+ * JUnit Tests for the class TiffReader.
  */
-public class SpeedTest {
+public class TiffReaderTest {
 
-  /** The tr. */
+  /**
+   * The tr.
+   */
   TiffReader tr;
 
-  /** The to. */
+  /**
+   * The to.
+   */
   TiffDocument to;
 
-  /** The tv. */
+  /**
+   * The tv.
+   */
   TagValue tv;
 
-  /** The ifd. */
+  /**
+   * The ifd.
+   */
   IFD ifd;
 
-  /** The result. */
+  /**
+   * The result.
+   */
   int result;
 
   /**
@@ -63,17 +73,35 @@ public class SpeedTest {
   }
 
   /**
-   * Test.
+   * Test 1.
    */
   @Test
-  public void Test() {
-    for (int i = 0; i < 1000; i++) {
-      result = tr.readFile("tests\\Big\\Grey_stripped.tif");
-      result = tr.readFile("tests\\Big\\Grey.tif");
-      result = tr.readFile("tests\\Big\\Bilevel.tif");
-      result = tr.readFile("tests\\Big\\Indexed.tif");
-      result = tr.readFile("tests\\Big\\RGB.tif");
-      result = tr.readFile("tests\\Big\\RGB_stripped.tif");
-    }
+  public void Test1() {
+    // Image 1
+  }
+
+  /**
+   * Test2.
+   */
+  @Test
+  public void Test2() {
+    // Image 2
+  }
+
+  /**
+   * Test3.
+   */
+  @Test
+  public void Test3() {
+    // Image 3
+  }
+
+  /**
+   * Test4.
+   */
+  @Test
+  public void Test4() {
+    // Image 3
   }
 }
+

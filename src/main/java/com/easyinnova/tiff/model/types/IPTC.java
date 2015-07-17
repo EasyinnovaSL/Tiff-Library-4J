@@ -74,6 +74,7 @@ public class IPTC extends abstractTiffType {
             if (keydesc.lastIndexOf(".") > -1)
               keydesc = keydesc.substring(keydesc.lastIndexOf(".") + 1);
           }
+          txt.setContainer("IPTC");
           metadata.add(keydesc, txt);
         }
       }
