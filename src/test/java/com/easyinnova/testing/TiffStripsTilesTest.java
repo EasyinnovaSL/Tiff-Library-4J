@@ -113,7 +113,7 @@ public class TiffStripsTilesTest {
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();
-    assertEquals(2, to.getIfdCount());
+    assertEquals(1, to.getIfdCount());
     ifd = to.getFirstIFD();
 
     assertNull(ifd.getImageTiles());
