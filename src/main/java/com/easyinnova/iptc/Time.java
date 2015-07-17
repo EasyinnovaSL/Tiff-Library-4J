@@ -13,8 +13,9 @@
  * </p>
  * <p>
  * You should have received a copy of the GNU General Public License and the Mozilla Public License
- * along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at
- * <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
+ * along with this program. If not, see <a
+ * href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at <a
+ * href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
  * </p>
  * <p>
  * NB: for the © statement, include Easy Innova SL or other company/Person contributing the code.
@@ -29,62 +30,71 @@
  */
 package com.easyinnova.iptc;
 
-import java.util.List;
-
 import com.easyinnova.tiff.model.types.Byte;
+
+import java.util.List;
 
 /**
  * The Class Short.
  */
 public class Time extends abstractIptcType {
 
-    /**
-     * The value.
-     */
-    private java.lang.String value;
+  /**
+   * The value.
+   */
+  private java.lang.String value;
 
-    /**
-     * Instantiates a new Time.
-     */
-    public Time() {
-        super();
-        this.value = "";
-        setType(4);
+  /**
+   * Instantiates a new Time.
+   */
+  public Time() {
+    super();
+    this.value = "";
+    setType(4);
+  }
+
+  /**
+   * Instantiates a new Time.
+   *
+   * @param value the value
+   */
+  public void read(List<Byte> value) {
+    this.value = "";
+    for (int j = 0; j < value.size(); j++) {
+      this.value += (char) value.get(j).toByte();
     }
 
-    /**
-     * Instantiates a new Time.
-     *
-     * @param value the value represented in List<Byte>
-     */
-    public void read(List<Byte> value) {
-        this.value = "";
-        for (int j = 0; j < value.size(); j++) {
-            this.value += (char) value.get(j).toByte();
-        }
+  }
+
+  /**
+   * Gets the value.
+   *
+   * @return the value
+   */
+  public java.lang.String getValue() {
+    return value;
+  }
+
+  /**
+   * Sets the value.
+   *
+   * @param value the new value
+   */
+  public void setValue(java.lang.String value) {
+    this.value = value;
+  }
+
+  @Override
+  public java.lang.String toString() {
+    java.lang.String svalue = value;
+    try {
+      svalue =
+          value.substring(0, 2) + ":" + value.substring(2, 4) + ":" + value.substring(4, 6) + " "
+              + value.substring(7, 9) + ":" + value.substring(9, 11);
+    } catch (Exception e) {
 
     }
-
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public java.lang.String getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the value.
-     *
-     * @param value the new value
-     */
-    public void setValue(java.lang.String value) {
-        this.value = value;
-    }
-
-    @Override public java.lang.String toString() {
-        return value;
-    }
+    return svalue;
+  }
 
 }

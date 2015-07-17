@@ -13,8 +13,9 @@
  * </p>
  * <p>
  * You should have received a copy of the GNU General Public License and the Mozilla Public License
- * along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at
- * <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
+ * along with this program. If not, see <a
+ * href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at <a
+ * href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
  * </p>
  * <p>
  * NB: for the © statement, include Easy Innova SL or other company/Person contributing the code.
@@ -29,67 +30,68 @@
  */
 package com.easyinnova.iptc;
 
+import com.easyinnova.tiff.model.types.Byte;
+
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-
-import com.easyinnova.tiff.model.types.Byte;
 
 /**
  * The Class String.
  */
 public class String extends abstractIptcType {
 
-    /**
-     * The value.
-     */
-    private java.lang.String value;
+  /**
+   * The value.
+   */
+  private java.lang.String value;
 
-    /**
-     * Instantiates a new String.
-     */
-    public String() {
-        super();
-        this.value = "";
-        setType(2);
+  /**
+   * Instantiates a new String.
+   */
+  public String() {
+    super();
+    this.value = "";
+    setType(2);
+  }
+
+  /**
+   * Instantiates a new String.
+   *
+   * @param value the value
+   */
+  public void read(List<Byte> value) {
+    try {
+      byte[] arrayContent = new byte[value.size()];
+      for (int j = 0; j < value.size(); j++) {
+        arrayContent[j] = value.get(j).toByte();
+      }
+
+      this.value = new java.lang.String(arrayContent, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
     }
+  }
 
-    /**
-     * Instantiates a new String.
-     *
-     * @param value the value represented in List<Byte>
-     */
-    public void read(List<Byte> value) {
-        try {
-            byte[] arrayContent = new byte[value.size()];
-            for (int j = 0; j < value.size(); j++) {
-                arrayContent[j] = value.get(j).toByte();
-            }
+  /**
+   * Gets the value.
+   *
+   * @return the value
+   */
+  public java.lang.String getValue() {
+    return value;
+  }
 
-            this.value = new java.lang.String(arrayContent, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-        }
-    }
+  /**
+   * Sets the value.
+   *
+   * @param value the new value
+   */
+  public void setValue(java.lang.String value) {
+    this.value = value;
+  }
 
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public java.lang.String getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the value.
-     *
-     * @param value the new value
-     */
-    public void setValue(java.lang.String value) {
-        this.value = value;
-    }
-
-    @Override public java.lang.String toString() {
-        return value;
-    }
+  @Override
+  public java.lang.String toString() {
+    return value;
+  }
 
 }

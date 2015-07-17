@@ -77,19 +77,13 @@ public class SpeedTest {
    */
   @Test
   public void Test() {
-    result = tr.readFile("tests\\L1004220.DNG");
-    result = tr.readFile("tests\\Big\\Grey_stripped.tif");
-    result = tr.readFile("tests\\Big\\Grey.tif");
-    result = tr.readFile("tests\\Big\\Bilevel.tif");
-    result = tr.readFile("tests\\Big\\Indexed.tif");
-    result = tr.readFile("tests\\Big\\RGB.tif");
-    result = tr.readFile("tests\\Big\\RGB_stripped.tif");
-    result = tr.readFile("tests\\AH_tiff\\008368.tif");
-    result = tr.readFile("tests\\AH_tiff\\008392.tif");
-    result = tr.readFile("tests\\AH_tiff\\008408.tif");
-    result = tr.readFile("tests\\AH_tiff\\008419.tif");
-    result = tr.readFile("tests\\AH_tiff\\008440.tif");
+    for (int i = 0; i < 1000; i++) {
+      result = tr.readFile("tests\\Big\\Grey_stripped.tif");
+      result = tr.readFile("tests\\Big\\Grey.tif");
+      result = tr.readFile("tests\\Big\\Bilevel.tif");
+      result = tr.readFile("tests\\Big\\Indexed.tif");
+      result = tr.readFile("tests\\Big\\RGB.tif");
+      result = tr.readFile("tests\\Big\\RGB_stripped.tif");
+    }
   }
-
 }
-

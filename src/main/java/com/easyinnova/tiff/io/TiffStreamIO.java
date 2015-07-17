@@ -53,7 +53,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * The Class TiffStreamReader.
+ * The Class TiffStreamReader. Reads a Tiff file stream.
  * 
  * @deprecated use {TiffInputStream} instead.
  */

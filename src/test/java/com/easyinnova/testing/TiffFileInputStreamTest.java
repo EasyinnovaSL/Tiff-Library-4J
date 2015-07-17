@@ -19,7 +19,6 @@ import java.nio.ByteOrder;
  */
 public class TiffFileInputStreamTest {
 
-
   /**
    * Sets the up before class.
    *
@@ -27,7 +26,6 @@ public class TiffFileInputStreamTest {
    */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-
 
   }
 
@@ -38,7 +36,6 @@ public class TiffFileInputStreamTest {
    */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
-
 
   }
 
@@ -60,13 +57,11 @@ public class TiffFileInputStreamTest {
   @After
   public void tearDown() throws Exception {
 
-
   }
-
 
   /**
    * Test.
-   *
+   * 
    * @throws IOException zxc
    */
   @Test
@@ -87,7 +82,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void ReadAscii() throws IOException {
-
     TiffInputStream asci = new TiffInputStream(new File("src/test/resources/io/asciiTest.hex"));
     assertEquals("A", asci.readAscii().toString());
     assertEquals("s", asci.readAscii().toString());
@@ -112,7 +106,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readSByte() throws IOException {
-
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/ByteTest.hex"));
     assertEquals("127", stream.readSByte().toString());
     assertEquals("-128", stream.readSByte().toString());
@@ -128,7 +121,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readShort() throws IOException {
-
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/ShortTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("32767", stream.readShort().toString());
@@ -142,7 +134,6 @@ public class TiffFileInputStreamTest {
     assertEquals("0", stream.readShort().toString());
     assertEquals("65535", stream.readShort().toString());
     stream.close();
-
   }
 
   /**
@@ -152,7 +143,7 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readSShort() throws IOException {
-
+    
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/ShortTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("32767", stream.readSShort().toString());
@@ -166,7 +157,6 @@ public class TiffFileInputStreamTest {
     assertEquals("0", stream.readSShort().toString());
     assertEquals("-1", stream.readSShort().toString());
     stream.close();
-
   }
 
   /**
@@ -176,7 +166,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readLong() throws IOException {
-
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/LongTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("2147483647", stream.readLong().toString());
@@ -190,7 +179,6 @@ public class TiffFileInputStreamTest {
     assertEquals("0", stream.readLong().toString());
     assertEquals("4294967295", stream.readLong().toString());
     stream.close();
-
   }
 
   /**
@@ -200,7 +188,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readSSLong() throws IOException {
-
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/LongTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("2147483647", stream.readSLong().toString());
@@ -214,7 +201,6 @@ public class TiffFileInputStreamTest {
     assertEquals("0", stream.readSLong().toString());
     assertEquals("-1", stream.readSLong().toString());
     stream.close();
-
   }
 
   /**
@@ -224,7 +210,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readFloat() throws IOException {
-
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/FloatTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("0.0", stream.readFloat().toString());
@@ -251,7 +236,6 @@ public class TiffFileInputStreamTest {
     assertEquals("NaN", stream.readFloat().toString());
 
     stream.close();
-
   }
 
   /**
@@ -261,7 +245,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readDouble() throws IOException {
-
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/DoubleTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("0.0", stream.readDouble().toString());
@@ -287,7 +270,6 @@ public class TiffFileInputStreamTest {
     assertEquals("NaN", stream.readDouble().toString());
     assertEquals("NaN", stream.readDouble().toString());
     stream.close();
-
   }
 
   /**
@@ -297,7 +279,6 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readRacional() throws IOException {
-
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/DoubleTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("0.0", stream.readDouble().toString());
@@ -323,8 +304,5 @@ public class TiffFileInputStreamTest {
     assertEquals("NaN", stream.readDouble().toString());
     assertEquals("NaN", stream.readDouble().toString());
     stream.close();
-
   }
-
-
 }
