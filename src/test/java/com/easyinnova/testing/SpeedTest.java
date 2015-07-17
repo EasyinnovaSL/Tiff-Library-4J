@@ -1,5 +1,5 @@
 /**
- * <h1>SpeedTest.java</h1> 
+ * <h1>SpeedTest.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,9 +26,10 @@
  * @author Víctor Muñoz Solà
  * @version 1.0
  * @since 26/6/2015
- *
  */
 package com.easyinnova.testing;
+
+import static org.junit.Assert.assertEquals;
 
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffDocument;
@@ -37,33 +38,40 @@ import com.easyinnova.tiff.reader.TiffReader;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * The Class SpeedTest.
  */
 public class SpeedTest {
 
-  /** The tr. */
+  /**
+   * The tr.
+   */
   TiffReader tr;
 
-  /** The to. */
+  /**
+   * The to.
+   */
   TiffDocument to;
 
-  /** The tv. */
+  /**
+   * The tv.
+   */
   TagValue tv;
 
-  /** The ifd. */
+  /**
+   * The ifd.
+   */
   IFD ifd;
 
-  /** The result. */
+  /**
+   * The result.
+   */
   int result;
 
   /**
    * Pre test.
    */
-  @Before
-  public void PreTest() {
+  @Before public void PreTest() {
     boolean ok = true;
     try {
       tr = new TiffReader();
@@ -76,8 +84,7 @@ public class SpeedTest {
   /**
    * Test.
    */
-  @Test
-  public void Test() {
+  @Test public void Test() {
     result = tr.readFile("tests\\L1004220.DNG");
     result = tr.readFile("tests\\Big\\Grey_stripped.tif");
     result = tr.readFile("tests\\Big\\Grey.tif");
