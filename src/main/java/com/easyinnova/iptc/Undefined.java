@@ -24,9 +24,9 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 27/5/2015
+ * @since 6/7/2015
  */
 package com.easyinnova.iptc;
 
@@ -83,15 +83,14 @@ public class Undefined extends abstractIptcType {
     this.value = value;
   }
 
-  @Override
-  public java.lang.String toString() {
-    java.lang.String result = "";
-    try {
-      result = "U" + new java.lang.String(value, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+    @Override public java.lang.String toString() {
+        java.lang.String result = "";
+        try {
+            result = new java.lang.String(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            System.err.println("Error encoding value");
+        }
+        return result;
     }
-    return result;
-  }
 
 }

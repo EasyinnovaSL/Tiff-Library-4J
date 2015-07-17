@@ -24,9 +24,9 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 27/5/2015
+ * @since 6/7/2015
  */
 package com.easyinnova.iptc;
 

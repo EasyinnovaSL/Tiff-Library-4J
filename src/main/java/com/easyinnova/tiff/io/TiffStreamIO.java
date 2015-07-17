@@ -1,5 +1,5 @@
 /**
- * <h1>TiffStreamReader.java</h1>
+ * <h1>TiffStreamIO.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -53,7 +53,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * The Class TiffStreamReader. Reads a Tiff file stream.
+ * The Class TiffStreamIO.
  * 
  * @deprecated use {TiffInputStream} instead.
  */
@@ -139,6 +139,7 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
       channel.close();
       aFile.close();
     } catch (Exception ex) {
+      /*everything is ok*/
     }
   }
 
@@ -272,7 +273,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readByte()
    */
-  @Override
   public Byte readByte() throws IOException {
     return null;
   }
@@ -282,7 +282,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readAscii()
    */
-  @Override
   public Ascii readAscii() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -293,7 +292,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readShort()
    */
-  @Override
   public Short readShort() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -304,7 +302,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readLong()
    */
-  @Override
   public Long readLong() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -315,7 +312,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readRational()
    */
-  @Override
   public Rational readRational() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -326,7 +322,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readSByte()
    */
-  @Override
   public SByte readSByte() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -337,7 +332,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readUndefined()
    */
-  @Override
   public Undefined readUndefined() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -348,7 +342,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readSShort()
    */
-  @Override
   public SShort readSShort() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -359,7 +352,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readSLong()
    */
-  @Override
   public SLong readSLong() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -370,7 +362,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readSRational()
    */
-  @Override
   public SRational readSRational() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -381,7 +372,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readFloat()
    */
-  @Override
   public Float readFloat() throws IOException {
     // TODO Auto-generated method stub
     return null;
@@ -392,7 +382,6 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
    * 
    * @see com.easyinnova.tiff.io.TiffDataIntput#readDouble()
    */
-  @Override
   public Double readDouble() throws IOException {
     // TODO Auto-generated method stub
     return null;

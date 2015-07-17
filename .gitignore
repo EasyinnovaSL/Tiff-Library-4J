@@ -8,3 +8,5 @@ out.tif
 target/
 tifflibrary4j_fat.jar
 .idea/
+Tiff-Library-4J.iml
+out/

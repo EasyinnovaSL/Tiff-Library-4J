@@ -24,9 +24,9 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Víctor Muñoz Solà
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 9/6/2015
+ * @since 6/7/2015
  */
 package com.easyinnova.tiff.model.types;
 
@@ -35,12 +35,14 @@ import com.easyinnova.iptc.Tag;
 import com.easyinnova.iptc.abstractIptcType;
 import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.ValidationResult;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Class IPTC.
@@ -54,6 +56,18 @@ public class IPTC extends abstractTiffType {
   private HashMap<Byte, List<abstractIptcType>> content;
 
   /**
+   * The validation result.
+   */
+  public ValidationResult validation;
+
+  /**
+   * Instantiates a new IPTC.
+   */
+  public IPTC() {
+    validation = new ValidationResult();
+  }
+  
+  /**
    * Creates the metadata.
    *
    * @return the hash map
@@ -63,8 +77,8 @@ public class IPTC extends abstractTiffType {
     Metadata metadata = new Metadata();
     try {
       Iterator<Byte> it = content.keySet().iterator();
-      while (it.hasNext()) {
-        Byte b = it.next();
+      for (Map.Entry<Byte, List<abstractIptcType>> entry : content.entrySet()) {
+        Byte b = entry.getKey();
         List<abstractIptcType> valueList = content.get(b);
         for (int i = 0; i < valueList.size(); i++) {
           Text txt = new Text(valueList.get(i).toString());
@@ -79,6 +93,7 @@ public class IPTC extends abstractTiffType {
         }
       }
     } catch (Exception ex) {
+      /* No problem */
     }
     return metadata;
   }
@@ -107,6 +122,7 @@ public class IPTC extends abstractTiffType {
         }
       }
     } catch (Exception ex) {
+      /* No problem */
     }
     return result.toString();
   }
@@ -142,20 +158,23 @@ public class IPTC extends abstractTiffType {
               if (t.hasType()) {
                 String tagclass = t.getType();
                 try {
-                  object =
-                      (abstractIptcType) Class.forName("com.easyinnova.iptc." + tagclass)
-                          .getConstructor().newInstance();
+                  object = (abstractIptcType) Class.forName("com.easyinnova.iptc." + tagclass)
+                      .getConstructor().newInstance();
                   object.read(value);
                 } catch (ClassNotFoundException e) {
-                  e.printStackTrace();
-                  // validation.addError("Parse error getting tag " + id + " value");
-                } catch (NoSuchMethodException | SecurityException e) {
-                  e.printStackTrace();
-                  // validation.addError("Parse error getting tag " + id + " value");
-                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                  e.printStackTrace();
-                  // validation.addError("Parse error getting tag " + id + " value");
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                } catch (NoSuchMethodException e) {
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                } catch (SecurityException e) {
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                } catch (InstantiationException e) {
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                } catch (IllegalAccessException e) {
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                } catch (IllegalArgumentException e) {
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                } catch (InvocationTargetException e) {
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
                 }
               }
             }

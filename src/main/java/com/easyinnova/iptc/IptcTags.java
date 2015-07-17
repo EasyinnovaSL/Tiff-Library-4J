@@ -26,12 +26,13 @@
  *
  * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 18/5/2015
+ * @since 6/7/2015
  */
 
 package com.easyinnova.iptc;
 
 import com.easyinnova.tiff.model.ReadTagsIOException;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -40,6 +41,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.lang.String;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,7 +52,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * The Class TiffTags.
+ * The Class IptcTags.
  */
 public class IptcTags {
 
@@ -75,71 +77,66 @@ public class IptcTags {
   public static HashMap<Integer, java.lang.String> tagTypes =
       new HashMap<Integer, java.lang.String>();
 
-  /**
-   * Instantiates a new tiff tags.
-   *
-   * @throws ReadTagsIOException the read tags io exception
-   */
-  protected IptcTags() throws ReadTagsIOException {
-    try {
-      java.lang.String folderPath = "./src/main/resources/iptc/";
-      Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+    /**
+     * Instantiates a new iptc tags.
+     */
+    protected IptcTags() throws ReadTagsIOException {
+        try {
+            String folderPath = "./src/main/resources/iptc/";
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+            File folder = new File(folderPath);
 
-      Path path = Paths.get("./src/main/resources/iptc/");
+            if (folder.exists() && folder.isDirectory()) {
+                // Look in current dir
+                for (final File fileEntry : folder.listFiles()) {
+                    try {
+                        BufferedReader br =
+                            new BufferedReader(new FileReader(fileEntry.toPath().toString()));
 
+                        Tag tag = gson.fromJson(br, Tag.class);
 
-      if (Files.exists(path)) {
-        // Look in current dir
-        File folder = new File(folderPath);
-        for (final File fileEntry : folder.listFiles()) {
-          try {
-            BufferedReader br = new BufferedReader(new FileReader(fileEntry.toPath().toString()));
+                        tagMap.put(tag.getDecimal(), tag);
+                        tagKeys.put(tag.getKey(), tag);
+                    } catch (FileNotFoundException e) {
+                        throw new ReadTagsIOException();
+                    }
+                }
+            } else {
+                // Look in JAR
+                CodeSource src = IptcTags.class.getProtectionDomain().getCodeSource();
+                if (src != null) {
+                    URL jar = src.getLocation();
+                    ZipInputStream zip = new ZipInputStream(jar.openStream());
+                    ZipEntry zipFile;
+                    while ((zipFile = zip.getNextEntry()) != null) {
+                        String name = zipFile.getName();
+                        if (name.startsWith("iptc/") && !name.equals("iptc/")) {
+                            try {
+                                BufferedReader in = new BufferedReader(new InputStreamReader(zip));
 
-            Tag tag = gson.fromJson(br, Tag.class);
-
-            tagMap.put(tag.getDecimal(), tag);
-            tagKeys.put(tag.getKey(), tag);
-          } catch (FileNotFoundException e) {
-
-            e.printStackTrace();
-          }
-        }
-      } else {
-        // Look in JAR
-        CodeSource src = IptcTags.class.getProtectionDomain().getCodeSource();
-        if (src != null) {
-          URL jar = src.getLocation();
-          ZipInputStream zip = new ZipInputStream(jar.openStream());
-          ZipEntry zipFile;
-          while ((zipFile = zip.getNextEntry()) != null) {
-            java.lang.String name = zipFile.getName();
-            if (name.startsWith("iptc/") && !name.equals("iptc/")) {
-              try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(zip));
-
-                Tag tag = gson.fromJson(in, Tag.class);
-                tagMap.put(tag.getDecimal(), tag);
-                tagKeys.put(tag.getKey(), tag);
-              } catch (Exception ex) {
-                throw new ReadTagsIOException();
-              }
+                                Tag tag = gson.fromJson(in, Tag.class);
+                                tagMap.put(tag.getDecimal(), tag);
+                                tagKeys.put(tag.getKey(), tag);
+                            } catch (Exception ex) {
+                                throw new ReadTagsIOException();
+                            }
+                        }
+                    }
+                } else {
+                    throw new ReadTagsIOException();
+                }
             }
-          }
-        } else {
-          throw new ReadTagsIOException();
+
+
+            tagTypes.put(1, "SHORT");
+            tagTypes.put(2, "STRING");
+            tagTypes.put(3, "DATE");
+            tagTypes.put(4, "TIME");
+            tagTypes.put(5, "UNDEFINED");
+        } catch (Exception ex) {
+            throw new ReadTagsIOException();
         }
-      }
-
-
-      tagTypes.put(1, "SHORT");
-      tagTypes.put(2, "STRING");
-      tagTypes.put(3, "DATE");
-      tagTypes.put(4, "TIME");
-      tagTypes.put(5, "UNDEFINED");
-    } catch (Exception ex) {
-      throw new ReadTagsIOException();
     }
-  }
 
   /**
    * Gets the tiff tags.
@@ -154,54 +151,57 @@ public class IptcTags {
     return instance;
   }
 
-  /**
-   * Gets tag information.
-   *
-   * @param identifier Tag id
-   * @return the tag or null if the identifier does not exist
-   */
-  public static Tag getTag(int identifier) {
-    Tag t = null;
-    try {
-      if (instance == null)
-        getIptcTags();
-    } catch (ReadTagsIOException e) {
+    /**
+     * Gets tag information.
+     *
+     * @param identifier Tag id
+     * @return the tag or null if the identifier does not exist
+     */
+    public static Tag getTag(int identifier) {
+        Tag t = null;
+        try {
+            if (instance == null)
+                getIptcTags();
+        } catch (ReadTagsIOException e) {
+            /*Nothing to be shown*/
+        }
+        if (tagMap.containsKey(identifier))
+            t = tagMap.get(identifier);
+        return t;
     }
-    if (tagMap.containsKey(identifier))
-      t = tagMap.get(identifier);
-    return t;
-  }
 
-  /**
-   * Gets the tag id.
-   *
-   * @param name the name
-   * @return the tag id
-   */
-  public static int getTagId(java.lang.String name) {
-    int id = -1;
-    try {
-      if (instance == null)
-        getIptcTags();
-    } catch (ReadTagsIOException e) {
+    /**
+     * Gets the tag id.
+     *
+     * @param name the name
+     * @return the tag id
+     */
+    public static int getTagId(java.lang.String name) {
+        int id = -1;
+        try {
+            if (instance == null)
+                getIptcTags();
+        } catch (ReadTagsIOException e) {
+            /*Nothing to be shown*/
+        }
+        if (tagKeys.containsKey(name))
+            id = tagKeys.get(name).getDecimal();
+        return id;
     }
-    if (tagKeys.containsKey(name))
-      id = tagKeys.get(name).getDecimal();
-    return id;
-  }
 
-  /**
-   * Checks for tag.
-   *
-   * @param id the id
-   * @return true, if successful
-   */
-  public static boolean hasTag(int id) {
-    try {
-      if (instance == null)
-        getIptcTags();
-    } catch (ReadTagsIOException e) {
+    /**
+     * Checks for tag.
+     *
+     * @param id the id
+     * @return true, if successful
+     */
+    public static boolean hasTag(int id) {
+        try {
+            if (instance == null)
+                getIptcTags();
+        } catch (ReadTagsIOException e) {
+            /*Nothing to be shown*/
+        }
+        return tagMap.containsKey(id);
     }
-    return tagMap.containsKey(id);
-  }
 }

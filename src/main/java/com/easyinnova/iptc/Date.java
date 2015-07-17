@@ -24,7 +24,7 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
  * @since 27/5/2015
  */
@@ -54,17 +54,17 @@ public class Date extends abstractIptcType {
     setType(3);
   }
 
-  /**
-   * Instantiates a new Date.
-   *
-   * @param value the value
-   */
-  public void read(List<Byte> value) {
-    this.value = "";
-    for (int j = 0; j < value.size(); j++) {
-      this.value += (char) value.get(j).toByte();
+    /**
+     * Instantiates a new Date.
+     *
+     * @param value the value represented in List<Byte>
+     */
+    public void read(List<Byte> value) {
+        this.value = "";
+        for (Byte b: value) {
+            this.value += (char) b.toByte();
+        }
     }
-  }
 
   /**
    * Gets the value.

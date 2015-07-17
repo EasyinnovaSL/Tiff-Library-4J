@@ -1,5 +1,5 @@
 /**
- * <h1>Short.java</h1>
+ * <h1>Time.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,18 +24,18 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 27/5/2015
+ * @since 6/7/2015
  */
 package com.easyinnova.iptc;
 
-import com.easyinnova.tiff.model.types.Byte;
-
 import java.util.List;
 
+import com.easyinnova.tiff.model.types.Byte;
+
 /**
- * The Class Short.
+ * The Class Time.
  */
 public class Time extends abstractIptcType {
 
@@ -44,57 +44,57 @@ public class Time extends abstractIptcType {
    */
   private java.lang.String value;
 
-  /**
-   * Instantiates a new Time.
-   */
-  public Time() {
-    super();
-    this.value = "";
-    setType(4);
-  }
-
-  /**
-   * Instantiates a new Time.
-   *
-   * @param value the value
-   */
-  public void read(List<Byte> value) {
-    this.value = "";
-    for (int j = 0; j < value.size(); j++) {
-      this.value += (char) value.get(j).toByte();
+    /**
+     * Instantiates a new Time.
+     */
+    public Time() {
+        super();
+        this.value = "";
+        setType(4);
     }
 
-  }
-
-  /**
-   * Gets the value.
-   *
-   * @return the value
-   */
-  public java.lang.String getValue() {
-    return value;
-  }
-
-  /**
-   * Sets the value.
-   *
-   * @param value the new value
-   */
-  public void setValue(java.lang.String value) {
-    this.value = value;
-  }
-
-  @Override
-  public java.lang.String toString() {
-    java.lang.String svalue = value;
-    try {
-      svalue =
-          value.substring(0, 2) + ":" + value.substring(2, 4) + ":" + value.substring(4, 6) + " "
-              + value.substring(7, 9) + ":" + value.substring(9, 11);
-    } catch (Exception e) {
+    /**
+     * Instantiates a new Time.
+     *
+     * @param value the value represented in List<Byte>
+     */
+    public void read(List<Byte> value) {
+        this.value = "";
+        for (Byte b: value) {
+            this.value += (char) b.toByte();
+        }
 
     }
-    return svalue;
-  }
+
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public java.lang.String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value.
+     *
+     * @param value the new value
+     */
+    public void setValue(java.lang.String value) {
+        this.value = value;
+    }
+
+    @Override
+    public java.lang.String toString() {
+        java.lang.String svalue = value;
+        try {
+            svalue =
+                value.substring(0, 2) + ":" + value.substring(2, 4) + ":" + value.substring(4, 6) + " "
+                    + value.substring(7, 9) + ":" + value.substring(9, 11);
+        } catch (Exception e) {
+
+        }
+        return svalue;
+    }
 
 }
