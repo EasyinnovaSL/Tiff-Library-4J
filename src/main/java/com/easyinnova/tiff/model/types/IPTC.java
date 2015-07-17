@@ -40,7 +40,6 @@ import com.easyinnova.tiff.model.ValidationResult;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -49,16 +48,16 @@ import java.util.Map;
  */
 public class IPTC extends abstractTiffType {
 
-  /** The Constant SEGMENT_MARKER. */
+  /**
+   * The Constant SEGMENT_MARKER.
+   */
   public static final int[] SEGMENT_MARKER = {28, 2};
-
-  /** The content. */
-  private HashMap<Byte, List<abstractIptcType>> content;
-
   /**
    * The validation result.
    */
   public ValidationResult validation;
+  /** The content. */
+  private HashMap<Byte, List<abstractIptcType>> content;
 
   /**
    * Instantiates a new IPTC.
@@ -66,7 +65,7 @@ public class IPTC extends abstractTiffType {
   public IPTC() {
     validation = new ValidationResult();
   }
-  
+
   /**
    * Creates the metadata.
    *
@@ -76,56 +75,26 @@ public class IPTC extends abstractTiffType {
   public Metadata createMetadata() {
     Metadata metadata = new Metadata();
     try {
-      Iterator<Byte> it = content.keySet().iterator();
       for (Map.Entry<Byte, List<abstractIptcType>> entry : content.entrySet()) {
         Byte b = entry.getKey();
-        List<abstractIptcType> valueList = content.get(b);
-        for (int i = 0; i < valueList.size(); i++) {
-          Text txt = new Text(valueList.get(i).toString());
-          String keydesc = b.toString();
-          if (IptcTags.hasTag(b.toInt())) {
-            keydesc = IptcTags.getTag(b.toInt()).getKey();
-            if (keydesc.lastIndexOf(".") > -1)
-              keydesc = keydesc.substring(keydesc.lastIndexOf(".") + 1);
-          }
-          txt.setContainer("IPTC");
-          metadata.add(keydesc, txt);
+        List<abstractIptcType> valueList = entry.getValue();
+        for (abstractIptcType element : valueList) {
+          Text txt = new Text(element.toString());
+          metadata.add(b.toString(), txt);
         }
       }
     } catch (Exception ex) {
-      /* No problem */
+      /*Nothing to be shown*/
     }
+
     return metadata;
   }
 
   @Override
   public String toString() {
-    HashMap<String, List<abstractIptcType>> result = new HashMap<String, List<abstractIptcType>>();
-    try {
-      Iterator<Byte> it = content.keySet().iterator();
-      while (it.hasNext()) {
-        Byte b = it.next();
-        List<abstractIptcType> valueList = content.get(b);
-        for (int i = 0; i < valueList.size(); i++) {
-          List<abstractIptcType> list = result.get(b.toString());
-          if (list == null) {
-            list = new ArrayList<abstractIptcType>();
-          }
-          list.add(valueList.get(i));
-          String keydesc = b.toString();
-          if (IptcTags.hasTag(b.toInt())) {
-            keydesc = IptcTags.getTag(b.toInt()).getKey();
-            if (keydesc.lastIndexOf(".") > -1)
-              keydesc = keydesc.substring(keydesc.lastIndexOf(".") + 1);
-          }
-          result.put(keydesc, list);
-        }
-      }
-    } catch (Exception ex) {
-      /* No problem */
-    }
-    return result.toString();
+    return content.toString();
   }
+
 
   /**
    * Reads the IPTC.
@@ -135,45 +104,37 @@ public class IPTC extends abstractTiffType {
   @Override
   public void read(TagValue tv) {
     content = new HashMap<Byte, List<abstractIptcType>>();
+
     for (int i = 0; i < tv.getCardinality(); i++) {
       if (tv.getValue().get(i).toInt() == SEGMENT_MARKER[0]) {
-        /* check if segment contains type, size and content */
-        if ((i + 5) < tv.getCardinality() && tv.getValue().get(i + 1).toInt() == SEGMENT_MARKER[1]) {
+                /*check if segment contains type, size and content*/
+        if ((i + 5) < tv.getCardinality()
+            && tv.getValue().get(i + 1).toInt() == SEGMENT_MARKER[1]) {
           Byte type = new Byte(0);
           type.setValue(tv.getValue().get(i + 2).toByte());
           int size =
-              ((tv.getValue().get(i + 3).toByte() & 0xff) << 8)
-                  | (tv.getValue().get(i + 4).toByte() & 0xff);
+              ((tv.getValue().get(i + 3).toByte() & 0xff) << 8) | (tv.getValue().get(i + 4).toByte()
+                  & 0xff);
           if ((i + 4 + size) < tv.getCardinality()) {
             List<Byte> value = new ArrayList<Byte>();
-            /* read the value of the tag */
+                        /*read the value of the tag*/
             for (int j = (i + 5); j <= (i + 4 + size); j++) {
               Byte current = new Byte(0);
               current.setValue(tv.getValue().get(j).toByte());
               value.add(current);
             }
+
             abstractIptcType object = null;
             if (IptcTags.hasTag(type.getValue())) {
               Tag t = IptcTags.getTag(type.getValue());
               if (t.hasType()) {
-                String tagclass = t.getType();
+                String tagClass = t.getType();
+
                 try {
-                  object = (abstractIptcType) Class.forName("com.easyinnova.iptc." + tagclass)
+                  object = (abstractIptcType) Class.forName("com.easyinnova.iptc." + tagClass)
                       .getConstructor().newInstance();
                   object.read(value);
-                } catch (ClassNotFoundException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
-                } catch (NoSuchMethodException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
-                } catch (SecurityException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
-                } catch (InstantiationException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
-                } catch (IllegalAccessException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
-                } catch (IllegalArgumentException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
-                } catch (InvocationTargetException e) {
+                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                   validation.addError("Parse error getting IPTC tag " + type.toString());
                 }
               }
@@ -186,12 +147,13 @@ public class IPTC extends abstractTiffType {
               list.add(object);
               content.put(type, list);
             }
-            // jump to the end of readed tag
+            /*jump to the end of readed tag*/
             i = i + 4 + size;
           }
         }
       }
     }
+
 
     tv.clear();
     tv.add(this);
@@ -201,4 +163,6 @@ public class IPTC extends abstractTiffType {
   public boolean containsMetadata() {
     return true;
   }
+
 }
+

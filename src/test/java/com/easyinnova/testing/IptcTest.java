@@ -34,19 +34,29 @@ import org.junit.Test;
  */
 public class IptcTest {
 
-  /** The tr. */
+  /**
+   * The tr.
+   */
   TiffReader tr;
 
-  /** The to. */
+  /**
+   * The to.
+   */
   TiffDocument to;
 
-  /** The tv. */
+  /**
+   * The tv.
+   */
   TagValue tv;
 
-  /** The ifd. */
+  /**
+   * The ifd.
+   */
   IFD ifd;
 
-  /** The result. */
+  /**
+   * The result.
+   */
   int result;
 
   /**
@@ -70,7 +80,7 @@ public class IptcTest {
   public void test1() {
     result = tr.readFile("src\\test\\resources\\Small\\Bilevel.tif");
     to = tr.getModel();
-    ifd = (IFD) to.getFirstIFD();
+    ifd = to.getFirstIFD();
     tv = ifd.getTag("IPTC");
     assertEquals(true, tv.getValue().get(0).containsMetadata());
     try {
@@ -92,7 +102,7 @@ public class IptcTest {
   public void test2() {
     result = tr.readFile("src\\test\\resources\\IPTC\\IPTC.tif");
     to = tr.getModel();
-    ifd = (IFD) to.getFirstIFD();
+    ifd = to.getFirstIFD();
     tv = ifd.getTag("IPTC");
     assertEquals(true, tv.getValue().get(0).containsMetadata());
     try {

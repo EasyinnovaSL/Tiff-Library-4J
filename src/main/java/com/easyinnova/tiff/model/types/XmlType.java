@@ -42,11 +42,12 @@ import javax.xml.stream.XMLStreamReader;
  * The Class XmlType.
  */
 public class XmlType extends abstractTiffType {
-	/** The xml. */
-	private String xml;
-
 	/** The xml model. */
 	protected XMLStreamReader xmlModel;
+	/**
+	 * The xml.
+	 */
+	private String xml;
 
 	/**
 	 * Default constructor.

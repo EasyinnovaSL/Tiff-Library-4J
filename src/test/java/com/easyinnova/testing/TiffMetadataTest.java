@@ -81,34 +81,17 @@ public class TiffMetadataTest {
   @Test
   public void Test1() {
     // Image 1
-    result = tr.readFile("src\\test\\resources\\Small\\Bilevel.tif");
-    assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
-    to = tr.getModel();
-    assertEquals(2, to.getIfdCount());
+	result = tr.readFile("src\\test\\resources\\Small\\Bilevel.tif");
+	assertEquals(0, result);
+	assertEquals(true, tr.getValidation().correct);
+	to = tr.getModel();
+	assertEquals(2, to.getIfdCount());
     ifd = (IFD) to.getFirstIFD();
 
     tv = ifd.getTag("ImageWidth");
-    assertEquals(1, tv.getCardinality());
-    assertEquals(999, tv.getFirstNumericValue());
-
-    tv = ifd.getTag("ImageLength");
-    assertEquals(1, tv.getCardinality());
-    assertEquals(662, tv.getFirstNumericValue());
-
-    tv = ifd.getTag("BitsPerSample");
-    assertEquals(1, tv.getCardinality());
-    assertEquals(1, tv.getFirstNumericValue());
-
-    tv = ifd.getTag("PhotometricInterpretation");
-    assertEquals(1, tv.getCardinality());
-    assertEquals(0, tv.getFirstNumericValue());
-
-/*	
-	tv = ifd.getTag("PlanarConfiguration");
 	assertEquals(1, tv.getCardinality());
 	assertEquals(1, tv.getFirstNumericValue());
-*/
+
     assertEquals(true, ifd.hasStrips());
     assertEquals(false, ifd.hasTiles());
     ImageStrips ims = ifd.getImageStrips();
@@ -121,64 +104,29 @@ public class TiffMetadataTest {
 
     //Metadata metadata=to.getMetadata();
 
-
-    assertEquals("1", to.getMetadataSingleString("Compression"));
-    assertEquals("82750", to.getMetadataSingleString("StripBYTECount"));
-    assertEquals("[48,49,48,48]", to.getMetadataSingleString("FlashPixVersion"));
-    assertEquals("11/5", to.getMetadataSingleString("42240"));
-    assertEquals("xmp.iid:D501C27D082068118C14F1C6AB6A9EEE", to.getMetadataSingleString("InstanceID"));
-    assertEquals("3", to.getMetadataSingleString("ExposureProgram"));
-
-    assertEquals("65535", to.getMetadataSingleString("ColorSpace"));
-    assertEquals("0", to.getMetadataSingleString("ColorMode"));
-    assertEquals("2010-05-24T13:57:15", to.getMetadataSingleString("CreateDate"));
-    assertEquals("2015-05-20T23:20:53+02:00", to.getMetadataSingleString("when"));
-    assertEquals("1", to.getMetadataSingleString("BitsPerSample"));
-    assertEquals("2015:05:20 23:28:35", to.getMetadataSingleString("DateTime"));
-
-    assertEquals("720000/10000", to.getMetadataSingleString("YResolution"));
-    assertEquals("80", to.getMetadataSingleString("SubSecTimeOriginal"));
-    assertEquals("2", to.getMetadataSingleString("34864"));
-    assertEquals("0", to.getMetadataSingleString("ExposureMode"));
-    assertEquals("999", to.getMetadataSingleString("ImageWidth"));
-    assertEquals("1/320", to.getMetadataSingleString("ExposureTime"));
-
-    assertEquals("saved", to.getMetadataSingleString("action"));
-    assertEquals("0", to.getMetadataSingleString("NewSubfileType"));
-    assertEquals("80", to.getMetadataSingleString("SubSecTime"));
-    assertEquals("5/1", to.getMetadataSingleString("FNumber"));
-    assertEquals("0/1", to.getMetadataSingleString("FlashCompensation"));
-    assertEquals("999", to.getMetadataSingleString("PixelXDimension"));
-
-    assertEquals("3", to.getMetadataSingleString("FileSource"));
-    assertEquals("image/tiff", to.getMetadataSingleString("format"));
-    assertEquals("xmp.did:F77F1174072068118C14F1C6AB6A9EEE", to.getMetadataSingleString("DocumentID"));
-    assertEquals("123", to.getMetadataSingleString("FocalLengthIn35mmFilm"));
-    assertEquals("NIKON CORPORATION", to.getMetadataSingleString("Make"));
-    assertEquals("4/1", to.getMetadataSingleString("CompressedBitsPerPixel"));
-
-    assertEquals("1", to.getMetadataSingleString("Orientation"));
-    assertEquals("0", to.getMetadataSingleString("Contrast"));
-    assertEquals("xmp.iid:F77F1174072068118C14F1C6AB6A9EEE", to.getMetadataSingleString("instanceID"));
-    assertEquals("2010:05:24 13:57:15", to.getMetadataSingleString("DateTimeDigitized"));
-    assertEquals("720000/10000", to.getMetadataSingleString("XResolution"));
-
-    assertEquals("6073340", to.getMetadataSingleString("SerialNumber"));
-    assertEquals("5", to.getMetadataSingleString("MeteringMode"));
-    assertEquals("82/1", to.getMetadataSingleString("FocalLength"));
-    assertEquals("AF-S DX VR Zoom-Nikkor 18-200mm f/3.5-5.6G IF-ED [II]", to.getMetadataSingleString("Lens"));
-    assertEquals("0", to.getMetadataSingleString("GainControl"));
-    assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
-
-    assertEquals("6073340", to.getMetadataSingleString("SerialNumber"));
-    assertEquals("5", to.getMetadataSingleString("MeteringMode"));
-    assertEquals("82/1", to.getMetadataSingleString("FocalLength"));
-    assertEquals("AF-S DX VR Zoom-Nikkor 18-200mm f/3.5-5.6G IF-ED [II]", to.getMetadataSingleString("Lens"));
-    assertEquals("0", to.getMetadataSingleString("GainControl"));
-    assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
-
-    assertEquals("[65,83,67,73,73,0,0,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("UserComment"));
-    //assertEquals("[28,1,90,0,3,27,37,71,28,1,90,0,3,27,37,71,28,2,0,0,2,0,0,28,2,80,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,2,55,0,8,50,48,49,48,48,53,50,52,28,2,60,0,11,49,51,53,55,49,53,43,48,48,48,48,28,2,116,0,54,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("IPTC"));
+	assertEquals("1", to.getMetadataSingleString("Orientation"));
+	assertEquals("0", to.getMetadataSingleString("Contrast"));
+	assertEquals("xmp.iid:F77F1174072068118C14F1C6AB6A9EEE", to.getMetadataSingleString("instanceID"));
+	assertEquals("2010:05:24 13:57:15", to.getMetadataSingleString("DateTimeDigitized"));
+	assertEquals("720000/10000", to.getMetadataSingleString("XResolution"));
+	
+	assertEquals("6073340", to.getMetadataSingleString("SerialNumber"));
+	assertEquals("5", to.getMetadataSingleString("MeteringMode"));
+	assertEquals("82/1", to.getMetadataSingleString("FocalLength"));
+	assertEquals("AF-S DX VR Zoom-Nikkor 18-200mm f/3.5-5.6G IF-ED [II]", to.getMetadataSingleString("Lens"));
+	assertEquals("0", to.getMetadataSingleString("GainControl"));
+	assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
+	
+	assertEquals("6073340", to.getMetadataSingleString("SerialNumber"));
+	assertEquals("5", to.getMetadataSingleString("MeteringMode"));
+	assertEquals("82/1", to.getMetadataSingleString("FocalLength"));
+	assertEquals("AF-S DX VR Zoom-Nikkor 18-200mm f/3.5-5.6G IF-ED [II]", to.getMetadataSingleString("Lens"));
+	assertEquals("0", to.getMetadataSingleString("GainControl"));
+	assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
+	
+	assertEquals("[65,83,67,73,73,0,0,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("UserComment"));
+    // assertEquals("[28,1,90,0,3,27,37,71,28,1,90,0,3,27,37,71,28,2,0,0,2,0,0,28,2,80,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,2,55,0,8,50,48,49,48,48,53,50,52,28,2,60,0,11,49,51,53,55,49,53,43,48,48,48,48,28,2,116,0,54,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]",
+    // to.getMetadataSingleString("IPTC"));
     assertEquals("[48,50,51,48]", to.getMetadataSingleString("36864"));
   }
   
@@ -203,12 +151,32 @@ public class TiffMetadataTest {
   @Test
   public void Test3() {
     // Image 1
-    result = tr.readFile("src\\test\\resources\\Header\\Classic Motorola.tif");
-    assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
-    to = tr.getModel();
-    assertEquals(1, to.getIfdCount());
+	result = tr.readFile("src\\test\\resources\\Header\\Classic Motorola.tif");
+	assertEquals(0, result);
+	assertEquals(true, tr.getValidation().correct);
+	to = tr.getModel();
+	assertEquals(1, to.getIfdCount());
     ifd = (IFD) to.getFirstIFD();
+
+    tv = ifd.getTag("ImageWidth");
+	assertEquals(1, tv.getCardinality());
+	assertEquals(2000, tv.getFirstNumericValue());
+	
+	tv = ifd.getTag("ImageLength");
+	assertEquals(1, tv.getCardinality());
+	assertEquals(1500, tv.getFirstNumericValue());
+	
+	tv = ifd.getTag("BitsPerSample");
+	assertEquals(3, tv.getCardinality());
+	assertEquals(16, tv.getFirstNumericValue());
+	
+	tv = ifd.getTag("PhotometricInterpretation");
+	assertEquals(1, tv.getCardinality());
+	assertEquals(2, tv.getFirstNumericValue());
+	
+	tv = ifd.getTag("PlanarConfiguration");
+	assertEquals(1, tv.getCardinality());
+	assertEquals(1, tv.getFirstNumericValue());
 
     tv = ifd.getTag("ImageWidth");
     assertEquals(1, tv.getCardinality());

@@ -33,8 +33,7 @@ package com.easyinnova.tiff.io;
 import java.io.IOException;
 
 /**
- * Buffered Tiff file stream. <br>
- * Incorporates a buffer for minimizing the file reads.
+ * The Class InputBuffer.
  */
 public class InputBuffer {
   /** The internal buffer. */
