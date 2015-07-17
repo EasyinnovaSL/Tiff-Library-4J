@@ -1,16 +1,28 @@
 /**
- * <h1>TiffReaderTest.java</h1> <p> This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later version; or, at your
- * choice, under the terms of the Mozilla Public License, v. 2.0. SPDX GPL-3.0+ or MPL-2.0+. </p>
- * <p> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License and the Mozilla Public License for more details. </p> <p> You should
- * have received a copy of the GNU General Public License and the Mozilla Public License along with
- * this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>
- * and at <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> . </p> <p> NB: for the
- * © statement, include Easy Innova SL or other company/Person contributing the code. </p> <p> ©
- * 2015 Easy Innova, SL </p>
+ * <h1>TiffReaderTest.java</h1>
+ * <p>
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version; or, at your choice, under the terms of the
+ * Mozilla Public License, v. 2.0. SPDX GPL-3.0+ or MPL-2.0+.
+ * </p>
+ * <p>
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License and the Mozilla Public License for more details.
+ * </p>
+ * <p>
+ * You should have received a copy of the GNU General Public License and the Mozilla Public License
+ * along with this program. If not, see <a
+ * href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at <a
+ * href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
+ * </p>
+ * <p>
+ * NB: for the © statement, include Easy Innova SL or other company/Person contributing the code.
+ * </p>
+ * <p>
+ * © 2015 Easy Innova, SL
+ * </p>
  *
  * @author Víctor Muñoz Solà
  * @version 1.0
@@ -92,6 +104,11 @@ public class TiffMetadataTest {
     assertEquals(1, tv.getCardinality());
     assertEquals(0, tv.getFirstNumericValue());
 
+/*	
+	tv = ifd.getTag("PlanarConfiguration");
+	assertEquals(1, tv.getCardinality());
+	assertEquals(1, tv.getFirstNumericValue());
+*/
     assertEquals(true, ifd.hasStrips());
     assertEquals(false, ifd.hasTiles());
     ImageStrips ims = ifd.getImageStrips();
@@ -101,6 +118,9 @@ public class TiffMetadataTest {
       nrows += ims.getStrips().get(i).getLength() / rowLength;
     }
     assertEquals(nrows, ifd.getTag("ImageLength").getFirstNumericValue());
+
+    //Metadata metadata=to.getMetadata();
+
 
     assertEquals("1", to.getMetadataSingleString("Compression"));
     assertEquals("82750", to.getMetadataSingleString("StripBYTECount"));
@@ -158,11 +178,10 @@ public class TiffMetadataTest {
     assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
 
     assertEquals("[65,83,67,73,73,0,0,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("UserComment"));
-    // assertEquals("[28,1,90,0,3,27,37,71,28,1,90,0,3,27,37,71,28,2,0,0,2,0,0,28,2,80,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,2,55,0,8,50,48,49,48,48,53,50,52,28,2,60,0,11,49,51,53,55,49,53,43,48,48,48,48,28,2,116,0,54,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]",
-    // to.getMetadataSingleString("IPTC"));
+    assertEquals("[28,1,90,0,3,27,37,71,28,1,90,0,3,27,37,71,28,2,0,0,2,0,0,28,2,80,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,2,55,0,8,50,48,49,48,48,53,50,52,28,2,60,0,11,49,51,53,55,49,53,43,48,48,48,48,28,2,116,0,54,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("IPTC"));
     assertEquals("[48,50,51,48]", to.getMetadataSingleString("36864"));
   }
-
+  
   /**
    * Test 2.
    */
@@ -173,6 +192,7 @@ public class TiffMetadataTest {
     assertEquals(0, result);
     assertEquals(false, tr.getValidation().correct);
     to = tr.getModel();
+
 
     assertEquals(null, to.getMetadata());
   }
@@ -206,6 +226,7 @@ public class TiffMetadataTest {
     assertEquals(1, tv.getCardinality());
     assertEquals(2, tv.getFirstNumericValue());
 
+
     tv = ifd.getTag("PlanarConfiguration");
     assertEquals(1, tv.getCardinality());
     assertEquals(1, tv.getFirstNumericValue());
@@ -220,6 +241,9 @@ public class TiffMetadataTest {
     }
     assertEquals(nrows, ifd.getTag("ImageLength").getFirstNumericValue());
 
+    //Metadata metadata=to.getMetadata();
+
+
     assertEquals("1", to.getMetadataSingleString("Compression"));
     assertEquals("[3072000,3072000,3072000,3072000,3072000,2640000]", to.getMetadataSingleString("StripBYTECount"));
     assertEquals("1", to.getMetadataSingleString("PlanarConfiguration"));
@@ -230,5 +254,8 @@ public class TiffMetadataTest {
     assertEquals("[8,3072008,6144008,9216008,12288008,15360008]", to.getMetadataSingleString("StripOffsets"));
     assertEquals("1500", to.getMetadataSingleString("ImageLength"));
     assertEquals("[16,16,16]", to.getMetadataSingleString("BitsPerSample"));
+
   }
+
 }
+

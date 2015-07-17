@@ -33,19 +33,29 @@ import org.junit.Test;
  */
 public class SpeedTest {
 
-  /** The tr. */
+  /**
+   * The tr.
+   */
   TiffReader tr;
 
-  /** The to. */
+  /**
+   * The to.
+   */
   TiffDocument to;
 
-  /** The tv. */
+  /**
+   * The tv.
+   */
   TagValue tv;
 
-  /** The ifd. */
+  /**
+   * The ifd.
+   */
   IFD ifd;
 
-  /** The result. */
+  /**
+   * The result.
+   */
   int result;
 
   /**
