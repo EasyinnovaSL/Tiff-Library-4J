@@ -1,5 +1,5 @@
 /**
- * <h1>TiffObject.java</h1>
+ * <h1>TiffReaderTest.java</h1>
  * <p>
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,44 +26,85 @@
  *
  * @author Víctor Muñoz Solà
  * @version 1.0
- * @since 4/6/2015
+ * @since 2/6/2015
  *
  */
-package com.easyinnova.tiff.model;
+package com.easyinnova.testing;
+
+import static org.junit.Assert.assertEquals;
+
+import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.reader.TiffReader;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * The generic class TiffObject.
+ * JUnit Tests for the class TiffReader.
  */
-public class TiffObject {
+public class TiffReaderTest {
+
+  /** The tr. */
+  TiffReader tr;
+
+  /** The to. */
+  TiffDocument to;
+
+  /** The tv. */
+  TagValue tv;
+
+  /** The ifd. */
+  IFD ifd;
+
+  /** The result. */
+  int result;
 
   /**
-   * The container element of this tiff object (EXIF, XMP, IPTC...)
+   * Pre test.
    */
-  String container;
-
-  /**
-   * Instantiates a new tiff object.
-   */
-  public TiffObject() {
-    container = null;
+  @Before
+  public void PreTest() {
+    boolean ok = true;
+    try {
+      tr = new TiffReader();
+    } catch (Exception e) {
+      ok = false;
+    }
+    assertEquals(ok, true);
   }
 
   /**
-   * Gets the container element of this tiff object.<br> For example EXIF, XMP, IPTC.
-   *
-   * @return the container.
+   * Test 1.
    */
-  public String getContainer() {
-    return container;
+  @Test
+  public void Test1() {
+    // Image 1
   }
 
   /**
-   * Sets the container.
-   *
-   * @param container the new container
+   * Test2.
    */
-  public void setContainer(String container) {
-    this.container = container;
+  @Test
+  public void Test2() {
+    // Image 2
+  }
+
+  /**
+   * Test3.
+   */
+  @Test
+  public void Test3() {
+    // Image 3
+  }
+
+  /**
+   * Test4.
+   */
+  @Test
+  public void Test4() {
+    // Image 3
   }
 }
 

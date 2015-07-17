@@ -70,6 +70,7 @@ public class XMP extends XmlType {
               String elementData = xmlModel.getText();
               if (elementName.trim().length() > 0 && elementData.trim().length() > 0) {
                 Text txt = new Text(elementData);
+                txt.setContainer("XMP");
                 metadata.add(elementName, txt);
                 if (xmlModel.getPrefix() != null && xmlModel.getPrefix().equalsIgnoreCase("dc")) {
                   // Dublin Core

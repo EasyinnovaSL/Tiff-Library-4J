@@ -61,7 +61,7 @@ public class TiffFileInputStreamTest {
 
   /**
    * Test.
-   * 
+   *
    * @throws IOException zxc
    */
   @Test
@@ -143,6 +143,7 @@ public class TiffFileInputStreamTest {
    */
   @Test
   public void readSShort() throws IOException {
+    
     TiffInputStream stream = new TiffInputStream(new File("src/test/resources/io/ShortTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
     assertEquals("32767", stream.readSShort().toString());
