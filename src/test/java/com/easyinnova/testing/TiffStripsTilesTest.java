@@ -109,11 +109,11 @@ public class TiffStripsTilesTest {
    */
   @Test
   public void Test2() {
-    result = tr.readFile("src\\test\\resources\\Organization\\Planar multistrip.tif");
+    result = tr.readFile("src\\test\\resources\\Small\\RGB_stripped.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();
-    assertEquals(2, to.getIfdCount());
+    assertEquals(1, to.getIfdCount());
     ifd = to.getFirstIFD();
 
     assertNull(ifd.getImageTiles());
@@ -122,12 +122,18 @@ public class TiffStripsTilesTest {
     ImageStrips imgStrps = ifd.getImageStrips();
     long rowsStrip = imgStrps.getRowsPerStrip();
 
-    assertEquals(64, rowsStrip);
+    assertEquals(21, rowsStrip);
 
-    for (Strip str : imgStrps.getStrips()) {
+//    for (Strip str : imgStrps.getStrips()) {
+//      assertEquals(str.getStripRows(), rowsStrip);
+//    }
+
+    for (int i = 0; i < imgStrps.getStrips().size() - 1; i++) {
+      Strip str = imgStrps.getStrips().get(i);
       assertEquals(str.getStripRows(), rowsStrip);
     }
-
+    Strip str = imgStrps.getStrips().get(imgStrps.getStrips().size() - 1);
+    assertEquals(str.getStripRows(), 11);
   }
 
   /**
@@ -144,7 +150,6 @@ public class TiffStripsTilesTest {
 
     assertNull(ifd.getImageStrips());
 
-
     ImageTiles imgTls = ifd.getImageTiles();
     long width = imgTls.getTileWidth();
     long height = imgTls.getTileHeight();
@@ -153,8 +158,8 @@ public class TiffStripsTilesTest {
     assertEquals(256, height);
 
     for (Tile tle : imgTls.getTiles()) {
-      assertEquals(width,tle.getWidth());
-      assertEquals(height,tle.getHeight());
+      assertEquals(width, tle.getWidth());
+      assertEquals(height, tle.getHeight());
     }
 
   }
