@@ -13,8 +13,9 @@
  * </p>
  * <p>
  * You should have received a copy of the GNU General Public License and the Mozilla Public License
- * along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at
- * <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
+ * along with this program. If not, see <a
+ * href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at <a
+ * href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
  * </p>
  * <p>
  * NB: for the © statement, include Easy Innova SL or other company/Person contributing the code.
@@ -38,10 +39,10 @@ import com.easyinnova.tiff.model.types.Byte;
  */
 public class Time extends abstractIptcType {
 
-    /**
-     * The value.
-     */
-    private java.lang.String value;
+  /**
+   * The value.
+   */
+  private java.lang.String value;
 
     /**
      * Instantiates a new Time.
@@ -83,8 +84,17 @@ public class Time extends abstractIptcType {
         this.value = value;
     }
 
-    @Override public java.lang.String toString() {
-        return value;
+    @Override
+    public java.lang.String toString() {
+        java.lang.String svalue = value;
+        try {
+            svalue =
+                value.substring(0, 2) + ":" + value.substring(2, 4) + ":" + value.substring(4, 6) + " "
+                    + value.substring(7, 9) + ":" + value.substring(9, 11);
+        } catch (Exception e) {
+
+        }
+        return svalue;
     }
 
 }

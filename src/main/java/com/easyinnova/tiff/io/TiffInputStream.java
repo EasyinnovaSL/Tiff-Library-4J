@@ -62,7 +62,7 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
   private long fileOffset;
 
   /** The buffer. */
-  private InputBuffer buffer;
+  private PagedInputBuffer buffer;
 
   /**
    * Instantiates a new data byte order input stream.
@@ -73,7 +73,7 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
   super(file);
     byteOrder = ByteOrder.BIG_ENDIAN;
     fileOffset = 0;
-    buffer = new InputBuffer(this);
+    buffer = new PagedInputBuffer(this);
   }
   
   /**

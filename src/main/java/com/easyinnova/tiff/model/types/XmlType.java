@@ -33,7 +33,6 @@ package com.easyinnova.tiff.model.types;
 import com.easyinnova.tiff.model.TagValue;
 
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;

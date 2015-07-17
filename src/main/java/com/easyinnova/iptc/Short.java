@@ -13,8 +13,9 @@
  * </p>
  * <p>
  * You should have received a copy of the GNU General Public License and the Mozilla Public License
- * along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at
- * <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
+ * along with this program. If not, see <a
+ * href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at <a
+ * href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
  * </p>
  * <p>
  * NB: for the © statement, include Easy Innova SL or other company/Person contributing the code.
@@ -29,62 +30,62 @@
  */
 package com.easyinnova.iptc;
 
-import java.util.List;
-
 import com.easyinnova.tiff.model.types.Byte;
+
+import java.util.List;
 
 /**
  * The Class Short.
  */
 public class Short extends abstractIptcType {
 
-    /**
-     * The value.
-     */
-    private int value;
+  /**
+   * The value.
+   */
+  private int value;
 
 
-    /**
-     * Instantiates a new Short.
-     */
-    public Short() {
-        super();
-        this.value = 0;
-        setType(1);
+  /**
+   * Instantiates a new Short.
+   */
+  public Short() {
+    super();
+    this.value = 0;
+    setType(1);
+  }
+
+  /**
+   * Instantiates a new Short.
+   *
+   * @param value the value
+   */
+  public void read(List<Byte> value) {
+    if (value.size() == 2) {
+      this.value = ((value.get(0).toInt() << 8) & 0x0000ff00) | (value.get(1).toInt() & 0x000000ff);
     }
+  }
 
-    /**
-     * Instantiates a new Short.
-     *
-     * @param value the value represented in List<Byte>
-     */
-    public void read(List<Byte> value) {
-        if (value.size() == 2) {
-            this.value =
-                ((value.get(0).toInt() << 8) & 0x0000ff00) | (value.get(1).toInt() & 0x000000ff);
-        }
-    }
+  /**
+   * Gets the value.
+   *
+   * @return the value
+   */
+  public int getValue() {
+    return (int) (value & 0xffff);
+  }
 
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public int getValue() {
-        return (value & 0xffff);
-    }
+  /**
+   * Sets the value.
+   *
+   * @param value the new value
+   */
+  public void setValue(short value) {
+    this.value = value;
+  }
 
-    /**
-     * Sets the value.
-     *
-     * @param value the new value
-     */
-    public void setValue(short value) {
-        this.value = value;
-    }
-
-    @Override public java.lang.String toString() {
-        return "" + (value & 0xffff);
-    }
+  @Override
+  public java.lang.String toString() {
+    return "" + (int) (value & 0xffff);
+  }
 
 }

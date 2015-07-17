@@ -30,58 +30,59 @@
  */
 package com.easyinnova.iptc;
 
-import java.util.List;
-
 import com.easyinnova.tiff.model.types.Byte;
+
+import java.util.List;
 
 /**
  * The generic class abstractTiffType.
  */
 public class abstractIptcType {
 
-    /**
-     * The tag size in bytes.
-     */
-    private int type;
+  /**
+   * The tag size in bytes.
+   */
+  private int type;
 
-    /**
-     * Instantiates a new abstract tiff type.
-     */
-    public abstractIptcType() {
-        type = 0; // Undefined
-    }
+  /**
+   * Instantiates a new abstract tiff type.
+   */
+  public abstractIptcType() {
+    type = 0; // Undefined
+  }
 
-    /**
-     * Instantiates a new abstract tiff type.
-     */
-    public abstractIptcType(List<Byte> tv) {
-        type = 0; // Undefined
-    }
+  /**
+   * Instantiates a new abstract tiff type.
+   *
+   * @param tv the tv
+   */
+  public abstractIptcType(List<Byte> tv) {
+    type = 0; // Undefined
+  }
 
-    /**
-     * Sets the type size in bytes.
-     *
-     * @param size the new type size
-     */
-    public void setType(int size) {
-        type = size;
-    }
+  /**
+   * Sets the type size in bytes.
+   *
+   * @param size the new type size
+   */
+  public void setType(int size) {
+    type = size;
+  }
 
-    /**
-     * Gets the type size in bytes.
-     *
-     * @return the type size
-     */
-    public int getTypeSize() {
-        return type;
-    }
+  /**
+   * Gets the type size in bytes.
+   *
+   * @return the type size
+   */
+  public int getTypeSize() {
+    return type;
+  }
 
-    /**
-     * Read.
-     *
-     * @param tv the tv
-     */
-    public void read(List<Byte> tv) {
-    }
+  /**
+   * Read.
+   *
+   * @param tv the tv
+   */
+  public void read(List<Byte> tv) {}
 
 }

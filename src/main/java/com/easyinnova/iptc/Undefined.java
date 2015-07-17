@@ -13,8 +13,9 @@
  * </p>
  * <p>
  * You should have received a copy of the GNU General Public License and the Mozilla Public License
- * along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at
- * <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
+ * along with this program. If not, see <a
+ * href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at <a
+ * href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
  * </p>
  * <p>
  * NB: for the © statement, include Easy Innova SL or other company/Person contributing the code.
@@ -29,58 +30,58 @@
  */
 package com.easyinnova.iptc;
 
+import com.easyinnova.tiff.model.types.Byte;
+
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-
-import com.easyinnova.tiff.model.types.Byte;
 
 /**
  * The Class Undefined.
  */
 public class Undefined extends abstractIptcType {
-    /**
-     * The value.
-     */
-    private byte[] value;
+  /**
+   * The value.
+   */
+  private byte[] value;
 
-    /**
-     * Instantiates a new Undefined.
-     */
-    public Undefined() {
-        super();
-        this.value = new byte[0];
-        setType(5);
-    }
+  /**
+   * Instantiates a new Undefined.
+   */
+  public Undefined() {
+    super();
+    this.value = new byte[0];
+    setType(5);
+  }
 
-    /**
-     * Instantiates a new Undefined.
-     *
-     * @param value the value represented in List<Byte>
-     */
-    public void read(List<Byte> value) {
-        this.value = new byte[value.size()];
-        for (int j = 0; j < value.size(); j++) {
-            this.value[j] = value.get(j).toByte();
-        }
+  /**
+   * Instantiates a new Undefined.
+   *
+   * @param value the value
+   */
+  public void read(List<Byte> value) {
+    this.value = new byte[value.size()];
+    for (int j = 0; j < value.size(); j++) {
+      this.value[j] = value.get(j).toByte();
     }
+  }
 
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public byte[] getValue() {
-        return value;
-    }
+  /**
+   * Gets the value.
+   *
+   * @return the value
+   */
+  public byte[] getValue() {
+    return value;
+  }
 
-    /**
-     * Sets the value.
-     *
-     * @param value the new value
-     */
-    public void setValue(byte[] value) {
-        this.value = value;
-    }
+  /**
+   * Sets the value.
+   *
+   * @param value the new value
+   */
+  public void setValue(byte[] value) {
+    this.value = value;
+  }
 
     @Override public java.lang.String toString() {
         java.lang.String result = "";
