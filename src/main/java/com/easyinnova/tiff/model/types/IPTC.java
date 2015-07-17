@@ -48,19 +48,15 @@ import java.util.Map;
  */
 public class IPTC extends abstractTiffType {
 
-  /** The Constant SEGMENT_MARKER. */
+  /**
+   * The Constant SEGMENT_MARKER.
+   */
   public static final int[] SEGMENT_MARKER = {28, 2};
-
-  /** The content. */
-  private HashMap<Byte, List<abstractIptcType>> content;
-
   /**
    * The validation result.
    */
   public ValidationResult validation;
-  /**
-   * The content.
-   */
+  /** The content. */
   private HashMap<Byte, List<abstractIptcType>> content;
 
   /**
