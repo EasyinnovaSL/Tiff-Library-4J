@@ -6,7 +6,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   
   <groupId>com.easyinnova</groupId>
   <artifactId>tifflibrary4java</artifactId>
-  <version>0.4</version>
+  <version>0.5</version>
   <packaging>jar</packaging>
   <name>Tiff Library 4 Java</name>
   <description>A library to read and give access to Tiff files.</description>
@@ -131,6 +131,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
           </execution>
         </executions>
       </plugin>
+
     </plugins>
   </build>
 </project>
