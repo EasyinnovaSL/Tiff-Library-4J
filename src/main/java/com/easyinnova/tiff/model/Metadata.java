@@ -88,7 +88,7 @@ public class Metadata {
   }
 
   /**
-   * Gets a metadata value.
+   * Gets a metadata value, returning the appropriate value when multiple are found.
    *
    * @param name the name of the metadata.
    * @return the tiff object with the value of the metadata.
