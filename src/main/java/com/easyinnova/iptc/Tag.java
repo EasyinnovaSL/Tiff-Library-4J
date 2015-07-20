@@ -158,6 +158,15 @@ public class Tag {
     }
 
     /**
+     * Gets the short name.
+     *
+     * @return the short name
+     */
+    public java.lang.String getShortName() {
+        return key.substring(key.lastIndexOf(".") + 1);
+    }
+
+    /**
      * Sets the key.
      *
      * @param key the new key

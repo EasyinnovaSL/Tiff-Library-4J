@@ -19,17 +19,15 @@
 
 package com.easyinnova.iptc;
 
+import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import com.easyinnova.tiff.model.ReadTagsIOException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.lang.String;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.HashMap;
@@ -61,10 +59,12 @@ public class IptcTags {
 
   /**
    * Instantiates a new iptc tags.
+   *
+   * @throws ReadTagsIOException the read tags io exception
    */
   protected IptcTags() throws ReadTagsIOException {
     try {
-      String folderPath = "./src/main/resources/iptc/";
+      java.lang.String folderPath = "./src/main/resources/iptc/";
       Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
       File folder = new File(folderPath);
 
@@ -91,7 +91,7 @@ public class IptcTags {
           ZipInputStream zip = new ZipInputStream(jar.openStream());
           ZipEntry zipFile;
           while ((zipFile = zip.getNextEntry()) != null) {
-            String name = zipFile.getName();
+            java.lang.String name = zipFile.getName();
             if (name.startsWith("iptc/") && !name.equals("iptc/")) {
               try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(zip));

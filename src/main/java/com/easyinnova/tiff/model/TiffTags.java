@@ -67,7 +67,7 @@ public class TiffTags {
     try {
       Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
 
-      Path path = Paths.get("./src/main/resources");
+      Path path = Paths.get("./src/main/resources/tifftags");
       if (Files.exists(path)) {
         // Look in current dir
         File folder = new File("./src/main/resources/tifftags/");

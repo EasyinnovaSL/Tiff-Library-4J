@@ -61,7 +61,7 @@ public class IccProfileCreators {
    */
   protected IccProfileCreators() throws ReadIccConfigIOException {
     try {
-      Path path = Paths.get("./src/main/resources");
+      Path path = Paths.get("./src/main/resources/iccprofile");
       if (Files.exists(path)) {
         // Look in current dir
         FileReader fr = new FileReader("./src/main/resources/iccprofile/creators.txt");

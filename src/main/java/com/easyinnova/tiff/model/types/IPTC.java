@@ -80,7 +80,8 @@ public class IPTC extends abstractTiffType {
         List<abstractIptcType> valueList = entry.getValue();
         for (abstractIptcType element : valueList) {
           Text txt = new Text(element.toString());
-          metadata.add(b.toString(), txt);
+          String tagName = IptcTags.tagMap.get(Integer.parseInt(b.toString())).getShortName();
+          metadata.add(tagName, txt);
         }
       }
     } catch (Exception ex) {

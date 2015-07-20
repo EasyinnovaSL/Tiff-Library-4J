@@ -45,7 +45,7 @@ public class String extends abstractIptcType {
   /**
    * Instantiates a new String.
    *
-   * @param value the value represented in List<Byte>
+   * @param value the value
    */
   public void read(List<Byte> value) {
     try {
