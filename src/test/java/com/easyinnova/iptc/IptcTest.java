@@ -16,7 +16,7 @@
  * @version 1.0
  * @since 14/7/2015
  */
-package com.easyinnova.testing;
+package com.easyinnova.iptc;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,6 +28,8 @@ import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * The Class Iptc.
@@ -78,7 +80,8 @@ public class IptcTest {
    */
   @Test
   public void test1() {
-    result = tr.readFile("src\\test\\resources\\Small\\Bilevel.tif");
+    result = tr.readFile("src" + File.separator + "test" + File.separator + "resources" + File.separator + "Small" + File.separator + "Bilevel.tif");
+    assertEquals(result, 0);
     to = tr.getModel();
     ifd = to.getFirstIFD();
     tv = ifd.getTag("IPTC");
@@ -100,7 +103,8 @@ public class IptcTest {
    */
   @Test
   public void test2() {
-    result = tr.readFile("src\\test\\resources\\IPTC\\IPTC.tif");
+    result = tr.readFile("src" + File.separator + "test" + File.separator + "resources" + File.separator + "IPTC" + File.separator + "IPTC.tif");
+    assertEquals(result, 0);
     to = tr.getModel();
     ifd = to.getFirstIFD();
     tv = ifd.getTag("IPTC");
@@ -108,8 +112,8 @@ public class IptcTest {
     try {
       Metadata m = tv.getValue().get(0).createMetadata();
       assertEquals(2, m.getMetadataObject("Keywords").getObjectList().size());
-      String k1 = m.getMetadataObject("Keywords").getObjectList().get(0).toString();
-      String k2 = m.getMetadataObject("Keywords").getObjectList().get(1).toString();
+      java.lang.String k1 = m.getMetadataObject("Keywords").getObjectList().get(0).toString();
+      java.lang.String k2 = m.getMetadataObject("Keywords").getObjectList().get(1).toString();
       assertEquals(true, k1.equals("sample") || k2.equals("sample"));
       assertEquals(true, k1.equals("gray") || k2.equals("gray"));
       assertEquals("Spain", m.getMetadataObject("CountryName").getObjectList().get(0).toString());

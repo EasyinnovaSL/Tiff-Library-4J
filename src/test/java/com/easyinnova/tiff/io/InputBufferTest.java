@@ -18,10 +18,14 @@
  */
 package com.easyinnova.tiff.io;
 
+import static java.io.File.*;
+
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.reader.TiffReader;
 
 import junit.framework.TestCase;
+
+import java.io.File;
 
 /**
  * JUnit Tests for the class InputBufferTest.
@@ -31,7 +35,7 @@ public class InputBufferTest extends TestCase {
   public void testSeek() throws Exception {
 
     TiffReader tr = new TiffReader();
-    int result = tr.readFile("src/test/resources/io/io.tif");
+    int result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "io" + separator + "io.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     TiffDocument to = tr.getModel();
@@ -40,7 +44,7 @@ public class InputBufferTest extends TestCase {
 
   public void testRead() throws Exception {
     TiffReader tr = new TiffReader();
-    int result = tr.readFile("src/test/resources/io/io.tif");
+    int result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "io" + separator + "io.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     TiffDocument to = tr.getModel();

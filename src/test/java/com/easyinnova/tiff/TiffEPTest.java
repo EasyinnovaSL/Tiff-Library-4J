@@ -16,8 +16,9 @@
  * @version 1.0
  * @since 18/6/2015
  */
-package com.easyinnova.testing;
+package com.easyinnova.tiff;
 
+import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 
 import com.easyinnova.tiff.model.TagValue;
@@ -28,6 +29,8 @@ import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * The Class TiffEPTest.
@@ -69,7 +72,7 @@ public class TiffEPTest {
   @Test
   public void invalidTest() {
     // Image 1
-    result = tr.readFile("src\\test\\resources\\Small\\Grey_stripped.tif");
+    result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Grey_stripped.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();

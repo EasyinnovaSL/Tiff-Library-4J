@@ -29,8 +29,9 @@
  * @since 2/6/2015
  *
  */
-package com.easyinnova.testing;
+package com.easyinnova.tiff;
 
+import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 
 import com.easyinnova.tiff.model.ImageStrips;
@@ -41,6 +42,8 @@ import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * JUnit Tests for the class TiffReader.
@@ -82,7 +85,7 @@ public class TiffMetadataTest {
   @Test
   public void Test1() {
     // Image 1
-    result = tr.readFile("src\\test\\resources\\Small\\Bilevel.tif");
+    result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();
@@ -189,7 +192,7 @@ public class TiffMetadataTest {
   @Test
   public void Test2() {
     // Image 1
-    result = tr.readFile("src\\test\\resources\\Header\\Incorrect bigconst E.tif");
+    result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Incorrect bigconst E.tif");
     assertEquals(0, result);
     assertEquals(false, tr.getValidation().correct);
     to = tr.getModel();
@@ -204,7 +207,7 @@ public class TiffMetadataTest {
   @Test
   public void Test3() {
     // Image 1
-    result = tr.readFile("src\\test\\resources\\Header\\Classic Motorola.tif");
+    result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Classic Motorola.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();
