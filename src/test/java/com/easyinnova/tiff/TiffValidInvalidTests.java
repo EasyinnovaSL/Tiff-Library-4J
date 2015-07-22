@@ -16,13 +16,16 @@
  * @version 1.0
  * @since 21/5/2015
  */
-package com.easyinnova.testing;
+package com.easyinnova.tiff;
 
+import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 
 import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * Testing class.
@@ -39,63 +42,63 @@ public class TiffValidInvalidTests {
     try {
       tr = new TiffReader();
 
-      result = tr.readFile("src\\test\\resources\\Header\\Classic Intel.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Classic Intel.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Header\\Classic Motorola.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Classic Motorola.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Colorspace\\F32.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Colorspace" + separator + "F32.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\IFD tree\\Recommended list.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD tree" + separator + "Recommended list.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\IFD tree\\Old school E.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD tree" + separator + "Old school E.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Organization\\Chunky multistrip.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Chunky multistrip.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Organization\\Chunky singlestrip.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Chunky singlestrip.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Organization\\Chunky tile.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Chunky tile.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Organization\\Planar multistrip.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Planar multistrip.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Organization\\Planar singlestrip.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Planar singlestrip.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Organization\\Planar tile.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Planar tile.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Compression\\Motorola nopred nocomp.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Compression" + separator + "Motorola nopred nocomp.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Compression\\Motorola pred nocomp.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Compression" + separator + "Motorola pred nocomp.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Compression\\Intel nopred nocomp.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Compression" + separator + "Intel nopred nocomp.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\Compression\\Intel pred nocomp.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Compression" + separator + "Intel pred nocomp.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getValidation().isCorrect());
 
@@ -115,27 +118,27 @@ public class TiffValidInvalidTests {
     try {
       tr = new TiffReader();
 
-      result = tr.readFile("src\\test\\resources\\Header\\Nonsense byteorder E.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Nonsense byteorder E.TIF");
       assertEquals(0, result);
       assertEquals(false, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\IFD Struct\\Insane tag count E.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD Struct" + separator + "Insane tag count E.TIF");
       assertEquals(0, result);
       assertEquals(false, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\IFD Struct\\Circular E.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD Struct" + separator + "Circular E.TIF");
       assertEquals(0, result);
       assertEquals(false, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\IFD Struct\\Circular Short E.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD Struct" + separator + "Circular Short E.TIF");
       assertEquals(0, result);
       assertEquals(false, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\IFD Struct\\Beyond EOF E.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD Struct" + separator + "Beyond EOF E.TIF");
       assertEquals(0, result);
       assertEquals(false, tr.getValidation().isCorrect());
 
-      result = tr.readFile("src\\test\\resources\\IFD Struct\\Premature EOF E.TIF");
+      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD Struct" + separator + "Premature EOF E.TIF");
       assertEquals(0, result);
       assertEquals(false, tr.getValidation().isCorrect());
     } catch (Exception e) {

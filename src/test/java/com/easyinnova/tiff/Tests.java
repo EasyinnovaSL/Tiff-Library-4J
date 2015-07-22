@@ -29,7 +29,7 @@
  * @since 21/5/2015
  *
  */
-package com.easyinnova.testing;
+package com.easyinnova.tiff;
 
 import org.junit.Test;
 

@@ -16,8 +16,9 @@
  * @version 1.0
  * @since 2/6/2015
  */
-package com.easyinnova.testing;
+package com.easyinnova.tiff;
 
+import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -32,6 +33,8 @@ import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * JUnit Tests for the class TiffReader.
@@ -83,7 +86,7 @@ public class TiffStripsTilesTest {
   @Test
   public void Test1() {
     // Image 1
-    result = tr.readFile("src\\test\\resources\\Small\\Bilevel.tif");
+    result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();
@@ -109,7 +112,7 @@ public class TiffStripsTilesTest {
    */
   @Test
   public void Test2() {
-    result = tr.readFile("src\\test\\resources\\Small\\RGB_stripped.tif");
+    result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "RGB_stripped.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();
@@ -141,7 +144,7 @@ public class TiffStripsTilesTest {
    */
   @Test
   public void Test3() {
-    result = tr.readFile("src\\test\\resources\\Organization\\Planar tile.tif");
+    result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Planar tile.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getValidation().correct);
     to = tr.getModel();
