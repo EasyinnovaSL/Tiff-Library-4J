@@ -14,7 +14,7 @@
  *
  * @author Antonio Manuel Lopez Arjona
  * @version 1.0
- * @since 17/7/2015
+ * @since 22/7/2015
  */
 package com.easyinnova.tiff.io;
 
@@ -25,9 +25,9 @@ import junit.framework.TestCase;
 import java.io.File;
 
 /**
- * JUnit Tests for the class InputBufferTest.
+ * The type Paged input buffer test.
  */
-public class InputBufferTest extends TestCase {
+public class PagedInputBufferTest extends TestCase {
 
   /**
    * Test read.
@@ -36,7 +36,7 @@ public class InputBufferTest extends TestCase {
    */
   public void testRead() throws Exception {
     TiffInputStream ascii = new TiffInputStream(new File("src" + separator + "test" + separator + "resources" + separator + "io" + separator + "asciiTest.hex"));
-    InputBuffer input = new InputBuffer(ascii);
+    PagedInputBuffer input = new PagedInputBuffer(ascii);
     assertEquals(99, input.read(2));
   }
 }
