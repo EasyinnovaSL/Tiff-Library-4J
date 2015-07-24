@@ -25,8 +25,6 @@ import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Test;
 
-import java.io.File;
-
 /**
  * Testing class.
  */

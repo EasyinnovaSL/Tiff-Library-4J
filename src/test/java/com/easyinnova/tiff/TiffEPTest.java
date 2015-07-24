@@ -30,8 +30,6 @@ import com.easyinnova.tiff.reader.TiffReader;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
 /**
  * The Class TiffEPTest.
  */

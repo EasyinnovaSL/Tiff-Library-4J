@@ -18,7 +18,7 @@
  */
 package com.easyinnova.tiff;
 
-import static java.io.File.*;
+import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 
 import com.easyinnova.tiff.model.TagValue;
@@ -28,8 +28,6 @@ import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * The Class SpeedTest.

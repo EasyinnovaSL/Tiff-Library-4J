@@ -103,7 +103,7 @@ public class TiffReaderWriter {
         try {
           TiffReader tr = new TiffReader();
           int result = tr.readFile(filename);
-          reportResults(tr, result, output_file);
+          reportResults(tr, result, filename, output_file);
   
           TiffWriter tw = new TiffWriter();
           tw.SetModel(tr.getModel());
@@ -122,10 +122,11 @@ public class TiffReaderWriter {
    *
    * @param tiffReader the tiff reader
    * @param result the result
+   * @param filename the filename
    * @param output_file the output_file
    */
-  private static void reportResults(TiffReader tiffReader, int result, String output_file) {
-    String filename = tiffReader.getFilename();
+  private static void reportResults(TiffReader tiffReader, int result, String filename,
+      String output_file) {
     TiffDocument to = tiffReader.getModel();
     if (output_file != null) {
       // TODO: Create xml file with report
