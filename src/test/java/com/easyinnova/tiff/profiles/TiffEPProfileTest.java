@@ -1,6 +1,6 @@
 /**
- * <h1>TiffEPTest.java</h1> <p> This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software
+ * <h1>TiffEPProfileTest.java</h1> <p> This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later version; or, at your
  * choice, under the terms of the Mozilla Public License, v. 2.0. SPDX GPL-3.0+ or MPL-2.0+. </p>
  * <p> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -16,7 +16,7 @@
  * @version 1.0
  * @since 18/6/2015
  */
-package com.easyinnova.tiff;
+package com.easyinnova.tiff.profiles;
 
 import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
@@ -24,32 +24,39 @@ import static org.junit.Assert.assertEquals;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.types.IFD;
-import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
 /**
- * The Class TiffEPTest.
+ * The Class TiffEPProfileTest.
  */
-public class TiffEPTest {
+public class TiffEPProfileTest {
 
-  /** The tr. */
+  /**
+   * The tr.
+   */
   TiffReader tr;
 
-  /** The to. */
+  /**
+   * The to.
+   */
   TiffDocument to;
 
-  /** The tv. */
+  /**
+   * The tv.
+   */
   TagValue tv;
 
-  /** The ifd. */
+  /**
+   * The ifd.
+   */
   IFD ifd;
 
-  /** The result. */
+  /**
+   * The result.
+   */
   int result;
 
   /**
