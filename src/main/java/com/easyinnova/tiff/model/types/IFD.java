@@ -141,7 +141,7 @@ public class IFD extends abstractTiffType {
    * @return true, if successful
    */
   public boolean hasSubIFD() {
-    return tags.containsTagId(13);
+    return tags.containsTagId(330);
   }
 
   /**
@@ -152,7 +152,7 @@ public class IFD extends abstractTiffType {
   public List<IFD> getSubIFD() {
     List<IFD> l = new ArrayList<IFD>();
     if (hasSubIFD()) {
-      for (abstractTiffType o : tags.get(13).getValue()) {
+      for (abstractTiffType o : tags.get(330).getValue()) {
         l.add((IFD) o);
       }
     }

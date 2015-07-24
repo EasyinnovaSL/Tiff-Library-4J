@@ -58,9 +58,6 @@ public class TiffReader {
   /** The model containing the Tiff data. */
   TiffDocument tiffModel;
 
-  /** The filename. */
-  String filename;
-
   /** The stream to get data from the file. */
   TiffInputStream data;
 
@@ -98,7 +95,6 @@ public class TiffReader {
    */
   public TiffReader() throws ReadTagsIOException, ReadIccConfigIOException {
     tiffModel = null;
-    filename = null;
     TiffTags.getTiffTags();
     IccProfileCreators.getIccProfileCreators();
   }
@@ -110,15 +106,6 @@ public class TiffReader {
    */
   public TiffDocument getModel() {
     return tiffModel;
-  }
-
-  /**
-   * Gets the filename.
-   *
-   * @return the filename
-   */
-  public String getFilename() {
-    return filename;
   }
 
   /**
@@ -138,7 +125,6 @@ public class TiffReader {
    */
   public int readFile(String filename) {
     int result = 0;
-    this.filename = filename;
 
     try {
       if (Files.exists(Paths.get(filename))) {
@@ -218,7 +204,7 @@ public class TiffReader {
   /**
    * Read the IFDs contained in the Tiff file.
    */
-  public void readIFDs() {
+  private void readIFDs() {
     int offset0 = 0;
     try {
       // The pointer to the first IFD is located in bytes 4-7
@@ -286,7 +272,7 @@ public class TiffReader {
    * @param isImage the is image
    * @return the ifd reading result
    */
-  IfdReader readIFD(int offset, boolean isImage) {
+  private IfdReader readIFD(int offset, boolean isImage) {
     IFD ifd = new IFD(isImage);
     IfdReader ir = new IfdReader();
     ir.setIfd(ifd);
@@ -307,6 +293,9 @@ public class TiffReader {
             tagid = data.readShort(index).toInt();
             int tagType = data.readShort(index + 2).toInt();
             int tagN = data.readLong(index + 4).toInt();
+            if (tagType == 13) {
+              tagType = 13;
+            }
             TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd);
             if (ifd.containsTagId(tagid)) {
               if (duplicateTagTolerance > 0)
@@ -359,7 +348,7 @@ public class TiffReader {
    * @param parentIFD the parent ifd
    * @return the tag value object
    */
-  public TagValue getValue(int tagtype, int n, int id, int beginOffset, IFD parentIFD) {
+  protected TagValue getValue(int tagtype, int n, int id, int beginOffset, IFD parentIFD) {
     int type = tagtype;
     if (id == 330 && type != 13)
       type = 13;
