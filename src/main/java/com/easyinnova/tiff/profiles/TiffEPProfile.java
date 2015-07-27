@@ -1,32 +1,20 @@
 /**
- * <h1>TiffEPProfile.java</h1> 
- * <p>
- * This program is free software: you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version; or, at your choice, under the terms of the
- * Mozilla Public License, v. 2.0. SPDX GPL-3.0+ or MPL-2.0+.
- * </p>
- * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License and the Mozilla Public License for more details.
- * </p>
- * <p>
- * You should have received a copy of the GNU General Public License and the Mozilla Public License
- * along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> and at
- * <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> .
- * </p>
- * <p>
- * NB: for the © statement, include Easy Innova SL or other company/Person contributing the code.
- * </p>
- * <p>
- * © 2015 Easy Innova, SL
- * </p>
+ * <h1>TiffEPProfile.java</h1> <p> This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later version; or, at your
+ * choice, under the terms of the Mozilla Public License, v. 2.0. SPDX GPL-3.0+ or MPL-2.0+. </p>
+ * <p> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License and the Mozilla Public License for more details. </p> <p> You should
+ * have received a copy of the GNU General Public License and the Mozilla Public License along with
+ * this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>
+ * and at <a href="http://mozilla.org/MPL/2.0">http://mozilla.org/MPL/2.0</a> . </p> <p> NB: for the
+ * © statement, include Easy Innova SL or other company/Person contributing the code. </p> <p> ©
+ * 2015 Easy Innova, SL </p>
  *
  * @author Víctor Muñoz Solà
  * @version 1.0
  * @since 17/6/2015
- *
  */
 package com.easyinnova.tiff.profiles;
 
@@ -91,13 +79,13 @@ public class TiffEPProfile extends GenericProfile implements Profile {
     checkRequiredTag(metadata, "DateTimeOriginal", 20);
     checkRequiredTag(metadata, "DateTime", 20);
     checkRequiredTag(metadata, "TIFFEPStandardID", 4);
-    if (checkRequiredTag(metadata, "NewSubfileType", 1, new long[] {0, 1})) {
+    if (checkRequiredTag(metadata, "NewSubfileType", 1, new long[]{0, 1})) {
       int nst = (int) metadata.get("NewSubfileType").getFirstNumericValue();
       if (nst != 0) {
         checkRequiredTag(metadata, "SubIFDs", -1);
       }
     }
-    if (checkRequiredTag(metadata, "PhotometricInterpretation", 1, new long[] {1, 2, 6, 32803,
+    if (checkRequiredTag(metadata, "PhotometricInterpretation", 1, new long[]{1, 2, 6, 32803,
         32767})) {
       int photo = (int) metadata.get("PhotometricInterpretation").getFirstNumericValue();
       if (photo == 6) {
@@ -119,10 +107,10 @@ public class TiffEPProfile extends GenericProfile implements Profile {
         }
       }
     }
-    checkRequiredTag(metadata, "PlanarConfiguration", 1, new long[] {1, 2});
-    checkRequiredTag(metadata, "ResolutionUnit", 1, new long[] {1, 2, 3});
+    checkRequiredTag(metadata, "PlanarConfiguration", 1, new long[]{1, 2});
+    checkRequiredTag(metadata, "ResolutionUnit", 1, new long[]{1, 2, 3});
     if (metadata.containsTagId(TiffTags.getTagId("Orientation")))
-      checkRequiredTag(metadata, "Orientation", 1, new long[] {1, 3, 6, 8, 9});
+      checkRequiredTag(metadata, "Orientation", 1, new long[]{1, 3, 6, 8, 9});
 
     if (ifd.hasStrips()) {
       checkRequiredTag(metadata, "StripBYTECount", -1);
@@ -173,14 +161,14 @@ public class TiffEPProfile extends GenericProfile implements Profile {
   /**
    * Check required tag is present, and its cardinality and value is correct.
    *
-   * @param metadata the metadata
-   * @param tagName the name of the mandatory tag
-   * @param cardinality the mandatory cardinality
+   * @param metadata       the metadata
+   * @param tagName        the name of the mandatory tag
+   * @param cardinality    the mandatory cardinality
    * @param possibleValues the possible tag values
    * @return true, if tag is found
    */
   private boolean checkRequiredTag(IfdTags metadata, String tagName, int cardinality,
-      long[] possibleValues) {
+                                   long[] possibleValues) {
     boolean ok = true;
     int tagid = TiffTags.getTagId(tagName);
     if (!metadata.containsTagId(tagid)) {
@@ -206,8 +194,8 @@ public class TiffEPProfile extends GenericProfile implements Profile {
   /**
    * Check a required tag is present.
    *
-   * @param metadata the metadata
-   * @param tagName the name of the mandatory tag
+   * @param metadata    the metadata
+   * @param tagName     the name of the mandatory tag
    * @param cardinality the mandatory cardinality
    * @return true, if tag is present
    */
@@ -219,7 +207,7 @@ public class TiffEPProfile extends GenericProfile implements Profile {
    * Check a forbidden tag is not present.
    *
    * @param metadata the metadata
-   * @param tagName the tag name
+   * @param tagName  the tag name
    */
   private void checkForbiddenTag(IfdTags metadata, String tagName) {
     int tagid = TiffTags.getTagId(tagName);
