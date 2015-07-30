@@ -43,6 +43,7 @@ import com.easyinnova.tiff.model.ValidationResult;
 import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 import com.easyinnova.tiff.profiles.BaselineProfile;
+import com.easyinnova.tiff.profiles.TiffEPProfile;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -116,6 +117,17 @@ public class TiffReader {
    */
   public ValidationResult getBaselineValidation() {
     return validation;
+  }
+
+  /**
+   * Gets the result of the validation.
+   *
+   * @return the validation result
+   */
+  public ValidationResult getTiffEPValidation() {
+    TiffEPProfile bpep = new TiffEPProfile(tiffModel);
+    bpep.validate();
+    return bpep.getValidation();
   }
 
   /**
