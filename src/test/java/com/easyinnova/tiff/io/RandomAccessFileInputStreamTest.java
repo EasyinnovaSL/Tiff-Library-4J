@@ -20,9 +20,9 @@ package com.easyinnova.tiff.io;
 
 import static java.io.File.separator;
 
-import junit.framework.TestCase;
-
 import java.io.File;
+
+import junit.framework.TestCase;
 
 /**
  * The type Random access file input stream test.
@@ -37,6 +37,7 @@ public class RandomAccessFileInputStreamTest extends TestCase {
   public void testRead() throws Exception {
     RandomAccessFileInputStream ascii = new RandomAccessFileInputStream(new File("src" + separator + "test" + separator + "resources" + separator + "io" + separator + "asciiTest.hex"));
     assertEquals(65, ascii.read());
+    ascii.close();
   }
 
   /**
@@ -48,6 +49,7 @@ public class RandomAccessFileInputStreamTest extends TestCase {
     RandomAccessFileInputStream ascii = new RandomAccessFileInputStream(new File("src" + separator + "test" + separator + "resources" + separator + "io" + separator + "asciiTest.hex"));
     byte[] data = {(byte) 2, (byte) 1, (byte) 0};
     assertEquals(3, ascii.read(data));
+    ascii.close();
   }
 
   /**
@@ -61,6 +63,7 @@ public class RandomAccessFileInputStreamTest extends TestCase {
 
     assertEquals(1, ascii.read(data, 0, 1));
     assertEquals(2, ascii.read(data, 1, 2));
+    ascii.close();
   }
 
   /**
@@ -71,5 +74,6 @@ public class RandomAccessFileInputStreamTest extends TestCase {
   public void testAvailable() throws Exception {
     RandomAccessFileInputStream ascii = new RandomAccessFileInputStream(new File("src" + separator + "test" + separator + "resources" + separator + "io" + separator + "asciiTest.hex"));
     assertEquals(ascii.size(), ascii.available());
+    ascii.close();
   }
 }

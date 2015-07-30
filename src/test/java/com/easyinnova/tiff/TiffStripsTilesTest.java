@@ -86,7 +86,7 @@ public class TiffStripsTilesTest {
     // Image 1
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel.tif");
     assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
+    assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
     assertEquals(2, to.getIfdCount());
     ifd = to.getFirstIFD();
@@ -112,7 +112,7 @@ public class TiffStripsTilesTest {
   public void Test2() {
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "RGB_stripped.tif");
     assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
+    assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
     assertEquals(1, to.getIfdCount());
     ifd = to.getFirstIFD();
@@ -144,7 +144,7 @@ public class TiffStripsTilesTest {
   public void Test3() {
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Organization" + separator + "Planar tile.tif");
     assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
+    assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
     assertEquals(1, to.getIfdCount());
     ifd = to.getFirstIFD();

@@ -36,7 +36,6 @@ import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.TiffObject;
 import com.easyinnova.tiff.model.types.IFD;
-import com.easyinnova.tiff.profiles.BaselineProfile;
 import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.reader.TiffReader;
 import com.easyinnova.tiff.writer.TiffWriter;
@@ -140,16 +139,13 @@ public class TiffReaderWriter {
           System.out.println("IO Exception in file '" + filename + "'");
           break;
         case 0:
-          if (tiffReader.getValidation().correct) {
+          if (tiffReader.getBaselineValidation().correct) {
             // The file is correct
             System.out.println("Everything ok in file '" + filename + "'");
             System.out.println("IFDs: " + to.getIfdCount());
             System.out.println("SubIFDs: " + to.getSubIfdCount());
             
             to.printMetadata();
-            BaselineProfile bp = new BaselineProfile(to);
-            bp.validate();
-            bp.getValidation().printErrors();
             TiffEPProfile bpep = new TiffEPProfile(to);
             bpep.validate();
             bpep.getValidation().printErrors();
@@ -179,12 +175,10 @@ public class TiffReaderWriter {
               
               // int index = 0;
               to.printMetadata();
-              BaselineProfile bp = new BaselineProfile(to);
-              bp.validate();
             }
-            tiffReader.getValidation().printErrors();
+            tiffReader.getBaselineValidation().printErrors();
           }
-          tiffReader.getValidation().printWarnings();
+          tiffReader.getBaselineValidation().printWarnings();
           break;
         default:
           System.out.println("Unknown result (" + result + ") in file '" + filename + "'");

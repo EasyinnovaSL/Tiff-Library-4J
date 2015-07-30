@@ -42,6 +42,7 @@ import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.ValidationResult;
 import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.abstractTiffType;
+import com.easyinnova.tiff.profiles.BaselineProfile;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -113,7 +114,7 @@ public class TiffReader {
    *
    * @return the validation result
    */
-  public ValidationResult getValidation() {
+  public ValidationResult getBaselineValidation() {
     return validation;
   }
 
@@ -139,6 +140,10 @@ public class TiffReader {
           validation.addError("Big tiff file not yet supported");
         } else if (validation.isCorrect()) {
           readIFDs();
+
+          BaselineProfile bp = new BaselineProfile(tiffModel);
+          bp.validate();
+          getBaselineValidation().add(bp.getValidation());
         }
 
         data.close();

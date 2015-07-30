@@ -450,7 +450,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
     // Check Resolution Unit
     id = TiffTags.getTagId("ResolutionUnit");
     if (!metadata.containsTagId(id)) {
-      validation.addError("Missing required field", TiffTags.getTag(id).getName());
+      // validation.addError("Missing required field", TiffTags.getTag(id).getName());
     } else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val != 1 && val != 2 && val != 3)

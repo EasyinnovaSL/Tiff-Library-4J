@@ -161,14 +161,14 @@ public class TiffEPProfile extends GenericProfile implements Profile {
   /**
    * Check required tag is present, and its cardinality and value is correct.
    *
-   * @param metadata       the metadata
-   * @param tagName        the name of the mandatory tag
-   * @param cardinality    the mandatory cardinality
+   * @param metadata the metadata
+   * @param tagName the name of the mandatory tag
+   * @param cardinality the mandatory cardinality
    * @param possibleValues the possible tag values
    * @return true, if tag is found
    */
   private boolean checkRequiredTag(IfdTags metadata, String tagName, int cardinality,
-                                   long[] possibleValues) {
+      long[] possibleValues) {
     boolean ok = true;
     int tagid = TiffTags.getTagId(tagName);
     if (!metadata.containsTagId(tagid)) {
@@ -194,8 +194,8 @@ public class TiffEPProfile extends GenericProfile implements Profile {
   /**
    * Check a required tag is present.
    *
-   * @param metadata    the metadata
-   * @param tagName     the name of the mandatory tag
+   * @param metadata the metadata
+   * @param tagName the name of the mandatory tag
    * @param cardinality the mandatory cardinality
    * @return true, if tag is present
    */
@@ -207,7 +207,7 @@ public class TiffEPProfile extends GenericProfile implements Profile {
    * Check a forbidden tag is not present.
    *
    * @param metadata the metadata
-   * @param tagName  the tag name
+   * @param tagName the tag name
    */
   private void checkForbiddenTag(IfdTags metadata, String tagName) {
     int tagid = TiffTags.getTagId(tagName);

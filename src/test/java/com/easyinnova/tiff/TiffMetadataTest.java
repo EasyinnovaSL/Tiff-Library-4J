@@ -85,7 +85,7 @@ public class TiffMetadataTest {
     // Image 1
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel.tif");
     assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
+    assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
     assertEquals(2, to.getIfdCount());
     ifd = (IFD) to.getFirstIFD();
@@ -192,7 +192,7 @@ public class TiffMetadataTest {
     // Image 1
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Incorrect bigconst E.tif");
     assertEquals(0, result);
-    assertEquals(false, tr.getValidation().correct);
+    assertEquals(false, tr.getBaselineValidation().correct);
     to = tr.getModel();
 
 
@@ -207,7 +207,7 @@ public class TiffMetadataTest {
     // Image 1
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Classic Motorola.tif");
     assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
+    assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
     assertEquals(1, to.getIfdCount());
     ifd = (IFD) to.getFirstIFD();

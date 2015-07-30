@@ -81,7 +81,7 @@ public class TiffEPProfileTest {
     // Image 1
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Grey_stripped.tif");
     assertEquals(0, result);
-    assertEquals(true, tr.getValidation().correct);
+    assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
 
     TiffEPProfile bp = new TiffEPProfile(to);

@@ -56,7 +56,7 @@ public class SubIfdTest {
           tr.readFile("src" + separator + "test" + separator + "resources" + separator
               + "IFDStruct" + separator + "SubIFDslist.tif");
       assertEquals(0, result);
-      assertEquals(true, tr.getValidation().isCorrect());
+      assertEquals(true, tr.getBaselineValidation().isCorrect());
       assertEquals(true, tr.getModel().getFirstIFD().hasSubIFD());
       assertEquals(1, tr.getModel().getFirstIFD().getSubIFD().size());
       assertEquals(tr.getModel().getFirstIFD().getsubIFD(), tr.getModel().getFirstIFD().getSubIFD()
