@@ -101,21 +101,12 @@ public class TiffStreamIO extends FilterInputStream implements TiffDataIntput {
   }
 
   /**
-   * Writes the header.
+   * Gets the byte order.
+   *
+   * @return the byteorder
    */
-  public void writeHeader() {
-    if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
-      data.put((byte) 'I');
-      data.put((byte) 'I');
-    } else if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      data.put((byte) 'M');
-      data.put((byte) 'M');
-    }
-    data.order(byteOrder);
-
-    data.putShort((short) 42);
-
-    data.putInt(8);
+  public ByteOrder getByteOrder() {
+    return byteOrder;
   }
 
   /**

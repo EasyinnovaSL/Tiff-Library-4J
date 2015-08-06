@@ -117,6 +117,12 @@ public class Metadata {
     return result;
   }
 
+  public String getCreator() {
+    String creator = null;
+
+    return creator;
+  }
+
   /**
    * Gets the first metadata object of the fiven metadata name.
    *

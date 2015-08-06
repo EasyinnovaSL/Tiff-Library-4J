@@ -37,6 +37,7 @@ import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.types.IFD;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 
 /**
@@ -76,12 +77,30 @@ public class TiffWriter {
     data = new TiffStreamIO(null);
     try {
       data.write(filename);
-      data.writeHeader();
+      writeHeader();
       writeTiff();
       data.close();
     } catch (Exception ex) {
       throw ex;
     }
+  }
+
+  /**
+   * Writes the header.
+   */
+  public void writeHeader() {
+    if (data.getByteOrder() == ByteOrder.LITTLE_ENDIAN) {
+      data.put((byte) 'I');
+      data.put((byte) 'I');
+    } else if (data.getByteOrder() == ByteOrder.BIG_ENDIAN) {
+      data.put((byte) 'M');
+      data.put((byte) 'M');
+    }
+    data.order(data.getByteOrder());
+
+    data.putShort((short) 42);
+
+    data.putInt(8);
   }
 
   /**
