@@ -89,7 +89,7 @@ public class TiffEPProfileTest {
     TiffEPProfile bp = new TiffEPProfile(to);
     bp.validate();
     assertEquals(false, bp.getValidation().correct);
-    assertEquals(3, bp.getValidation().errors.size());
+    assertEquals(15, bp.getValidation().errors.size());
     assertEquals(0, bp.getValidation().warnings.size());
   }
 
