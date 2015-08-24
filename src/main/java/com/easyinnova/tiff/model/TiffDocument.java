@@ -289,6 +289,7 @@ public class TiffDocument {
     if (metadata == null)
       createMetadataDictionary();
     System.out.println("METADATA");
+    if (metadata.getCreator() != null) System.out.println("Creator:" + metadata.getCreator());
     for (String name : metadata.keySet()) {
       String mult = "";
       if (getMetadataList(name).size() > 1)

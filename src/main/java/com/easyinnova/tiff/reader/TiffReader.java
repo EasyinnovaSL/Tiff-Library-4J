@@ -44,6 +44,7 @@ import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 import com.easyinnova.tiff.profiles.BaselineProfile;
 import com.easyinnova.tiff.profiles.TiffEPProfile;
+import com.easyinnova.tiff.profiles.TiffITProfile;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -128,6 +129,18 @@ public class TiffReader {
     TiffEPProfile bpep = new TiffEPProfile(tiffModel);
     bpep.validate();
     return bpep.getValidation();
+  }
+
+  /**
+   * Gets the result of the validation.
+   *
+   * @param profile the TiffIT profile (0: default, 1: P1, 2: P2)
+   * @return the validation result
+   */
+  public ValidationResult getTiffITValidation(int profile) {
+    TiffITProfile bpit = new TiffITProfile(tiffModel, profile);
+    bpit.validate();
+    return bpit.getValidation();
   }
 
   /**
@@ -300,6 +313,8 @@ public class TiffReader {
       if (directoryEntries < 1) {
         validation.addError("Incorrect number of IFD entries",
             directoryEntries);
+      } else if (directoryEntries > 500) {
+        validation.addError("Abnormally big number of IFD entries", directoryEntries);
       } else {
         index += 2;
 
@@ -310,9 +325,6 @@ public class TiffReader {
             tagid = data.readShort(index).toInt();
             int tagType = data.readShort(index + 2).toInt();
             int tagN = data.readLong(index + 4).toInt();
-            if (tagType == 13) {
-              tagType = 13;
-            }
             TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd);
             if (ifd.containsTagId(tagid)) {
               if (duplicateTagTolerance > 0)

@@ -36,7 +36,7 @@ import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.TiffObject;
 import com.easyinnova.tiff.model.types.IFD;
-import com.easyinnova.tiff.profiles.TiffEPProfile;
+import com.easyinnova.tiff.profiles.TiffITProfile;
 import com.easyinnova.tiff.reader.TiffReader;
 import com.easyinnova.tiff.writer.TiffWriter;
 
@@ -102,6 +102,7 @@ public class TiffReaderWriter {
         try {
           TiffReader tr = new TiffReader();
           int result = tr.readFile(filename);
+          tr.getModel().getMetadata().get("Creator");
           reportResults(tr, result, filename, output_file);
   
           TiffWriter tw = new TiffWriter();
@@ -146,7 +147,7 @@ public class TiffReaderWriter {
             System.out.println("SubIFDs: " + to.getSubIfdCount());
             
             to.printMetadata();
-            TiffEPProfile bpep = new TiffEPProfile(to);
+            TiffITProfile bpep = new TiffITProfile(to, 0);
             bpep.validate();
             bpep.getValidation().printErrors();
 

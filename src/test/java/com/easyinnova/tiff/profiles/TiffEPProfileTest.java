@@ -77,6 +77,26 @@ public class TiffEPProfileTest {
    * Test.
    */
   @Test
+  public void validTest() {
+    // Image 1
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "tiffep-sample-EP-jpeg-thumb.tif");
+    assertEquals(0, result);
+    assertEquals(false, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+
+    TiffEPProfile bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(false, bp.getValidation().correct);
+    assertEquals(3, bp.getValidation().errors.size());
+    assertEquals(0, bp.getValidation().warnings.size());
+  }
+
+  /**
+   * Test.
+   */
+  @Test
   public void invalidTest() {
     // Image 1
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Grey_stripped.tif");
