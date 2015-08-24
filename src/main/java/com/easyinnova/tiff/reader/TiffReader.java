@@ -313,6 +313,8 @@ public class TiffReader {
       if (directoryEntries < 1) {
         validation.addError("Incorrect number of IFD entries",
             directoryEntries);
+      } else if (directoryEntries > 500) {
+        validation.addError("Abnormally big number of IFD entries", directoryEntries);
       } else {
         index += 2;
 
@@ -323,9 +325,6 @@ public class TiffReader {
             tagid = data.readShort(index).toInt();
             int tagType = data.readShort(index + 2).toInt();
             int tagN = data.readLong(index + 4).toInt();
-            if (tagType == 13) {
-              tagType = 13;
-            }
             TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd);
             if (ifd.containsTagId(tagid)) {
               if (duplicateTagTolerance > 0)
