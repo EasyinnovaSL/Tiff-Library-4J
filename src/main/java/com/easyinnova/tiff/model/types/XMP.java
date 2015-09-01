@@ -83,7 +83,7 @@ public class XMP extends XmlType {
           }
         }
       } catch (Exception ex) {
-        throw new Exception("Parse format");
+        // throw new Exception("Parse format");
       }
     }
     return metadata;

@@ -112,12 +112,24 @@ public class TiffReader {
   }
 
   /**
+   * Gets the stream.
+   *
+   * @return the stream
+   */
+  public TiffInputStream getStream() {
+    return data;
+  }
+
+  /**
    * Gets the result of the validation.
    *
    * @return the validation result
    */
   public ValidationResult getBaselineValidation() {
     return validation;
+    // BaselineProfile bp = new BaselineProfile(tiffModel);
+    // bp.validate();
+    // return bp.getValidation();
   }
 
   /**
@@ -389,27 +401,7 @@ public class TiffReader {
     int offset = beginOffset;
 
     // Get type Size
-    int typeSize = 1;
-    switch (type) {
-      case 3:
-      case 8:
-        typeSize = 2;
-        break;
-      case 4:
-      case 9:
-      case 11:
-      case 13:
-        typeSize = 4;
-        break;
-      case 5:
-      case 10:
-      case 12:
-        typeSize = 8;
-        break;
-      default:
-        typeSize = 1;
-        break;
-    }
+    int typeSize = TiffTags.getTypeSize(type);
 
     boolean ok = true;
 
@@ -423,6 +415,8 @@ public class TiffReader {
       }
     }
 
+    tv.setReadOffset(offset);
+    tv.setReadLength(n);
     if (ok) {
       try {
         for (int i = 0; i < n; i++) {

@@ -50,6 +50,15 @@ public class TagValue extends TiffObject {
   /** The list of values. */
   private List<abstractTiffType> value;
   
+  /** The offset where the tag has been written (only used in TiffWriter). */
+  private int offset;
+
+  /** The offset where the tag has been read. */
+  private int readOffset;
+
+  /** The tag length that has been read. */
+  private int readLength;
+
   /**
    * Instantiates a new tag value.
    *
@@ -62,6 +71,42 @@ public class TagValue extends TiffObject {
     value = new ArrayList<abstractTiffType>();
   }
   
+  /**
+   * Sets the read offset.
+   *
+   * @param offset the new read offset
+   */
+  public void setReadOffset(int offset) {
+    readOffset = offset;
+  }
+
+  /**
+   * Gets the read offset.
+   *
+   * @return the read offset
+   */
+  public int getReadOffset() {
+    return readOffset;
+  }
+
+  /**
+   * Sets the read length.
+   *
+   * @param length the new read length
+   */
+  public void setReadLength(int length) {
+    readLength = length;
+  }
+
+  /**
+   * Gets the readlength.
+   *
+   * @return the readlength
+   */
+  public int getReadlength() {
+    return readLength;
+  }
+
   /**
    * Gets the list of values.
    *
@@ -78,6 +123,24 @@ public class TagValue extends TiffObject {
    */
   public void add(abstractTiffType value) {
     this.value.add(value);
+  }
+
+  /**
+   * Sets the offset.
+   *
+   * @param off the new offset
+   */
+  public void setOffset(int off) {
+    offset = off;
+  }
+
+  /**
+   * Gets the offset.
+   *
+   * @return the offset
+   */
+  public int getOffset() {
+    return offset;
   }
 
   /**
@@ -130,7 +193,7 @@ public class TagValue extends TiffObject {
     }
     if (defined) {
       s = value.get(0).toString();
-    } else if (type != 1) {
+    } else if (type != 1 || value.size() < 10) {
       int n = value.size();
       if (n > 1 && type != 2)
         s += "[";

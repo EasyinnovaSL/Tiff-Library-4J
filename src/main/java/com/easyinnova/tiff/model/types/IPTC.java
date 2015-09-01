@@ -148,13 +148,12 @@ public class IPTC extends abstractTiffType {
               list.add(object);
               content.put(type, list);
             }
-            /*jump to the end of readed tag*/
+            /* jump to the end of read tag */
             i = i + 4 + size;
           }
         }
       }
     }
-
 
     tv.clear();
     tv.add(this);

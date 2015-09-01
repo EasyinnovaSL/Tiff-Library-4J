@@ -113,7 +113,16 @@ public class IfdTags {
 
   @Override
   public String toString() {
-    return hashTagsName.toString();
+    String s = "";
+    for (TagValue t : tags) {
+      s += "[" + t.getName() + ":";
+      if (t.toString().length() < 100)
+        s += t.toString();
+      else
+        s += t.toString().substring(0, 50) + "...";
+      s += "]\r\n";
+    }
+    return s;
   }
 }
 

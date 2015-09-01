@@ -86,6 +86,15 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
   }
 
   /**
+   * Gets the stream.
+   *
+   * @return the stream
+   */
+  public PagedInputBuffer getStream() {
+    return buffer;
+  }
+
+  /**
    * Sets the byte order.
    *
    * @param byteOrder the byteOrder to set

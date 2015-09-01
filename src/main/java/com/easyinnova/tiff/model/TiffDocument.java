@@ -140,11 +140,29 @@ public class TiffDocument {
    */
   public List<TiffObject> getImageIfds() {
     List<TiffObject> l = new ArrayList<TiffObject>();
-    if (metadata != null && metadata.contains("IFD")) {
-      for (TiffObject ifd : getMetadataList("IFD")) {
-        if (((IFD) ifd).isImage())
-          l.add(ifd);
+    IFD oifd = this.firstIFD;
+    while (oifd != null) {
+      if (oifd.isImage()) {
+        if (oifd.hasSubIFD()) {
+          try {
+            long length = oifd.getMetadata().get("ImageLength").getFirstNumericValue();
+            long width = oifd.getMetadata().get("ImageWidth").getFirstNumericValue();
+            long sublength =
+                oifd.getsubIFD().getMetadata().get("ImageLength").getFirstNumericValue();
+            long subwidth = oifd.getsubIFD().getMetadata().get("ImageWidth").getFirstNumericValue();
+            if (sublength > length && subwidth > width) {
+              l.add(oifd.getsubIFD());
+            } else {
+              l.add(oifd);
+            }
+          } catch (Exception ex) {
+            l.add(oifd);
+          }
+        } else {
+          l.add(oifd);
+        }
       }
+      oifd = oifd.getNextIFD();
     }
     return l;
   }
@@ -179,11 +197,7 @@ public class TiffDocument {
    * @return image file d
    */
   public IFD getFirstIFD() {
-    List<TiffObject> l = getImageIfds();
-    IFD ifd = null;
-    if (l.size() > 0)
-      ifd = (IFD) l.get(0);
-    return ifd;
+    return this.firstIFD;
   }
 
   /**

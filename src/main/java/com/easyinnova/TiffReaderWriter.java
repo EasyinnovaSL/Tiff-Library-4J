@@ -31,11 +31,13 @@
  */
 package com.easyinnova;
 
+import com.easyinnova.tiff.io.TiffInputStream;
 import com.easyinnova.tiff.model.ReadIccConfigIOException;
 import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.TiffObject;
 import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.profiles.TiffITProfile;
 import com.easyinnova.tiff.reader.TiffReader;
 import com.easyinnova.tiff.writer.TiffWriter;
@@ -105,9 +107,16 @@ public class TiffReaderWriter {
           tr.getModel().getMetadata().get("Creator");
           reportResults(tr, result, filename, output_file);
   
-          TiffWriter tw = new TiffWriter();
+          TiffInputStream inputdata = new TiffInputStream(new File(filename));
+          TiffWriter tw = new TiffWriter(inputdata);
           tw.SetModel(tr.getModel());
-          // tw.write("out.tif");
+          String filenameout = "out.tif";
+          try {
+            tw.write(filenameout);
+            System.out.println("File '" + filenameout + "' written successfully");
+          } catch (Exception ex) {
+            System.out.println("Error writting file '" + filenameout + "'");
+          }
         } catch (ReadTagsIOException e) {
           System.out.println("Error loading TIFF dependencies");
         } catch (ReadIccConfigIOException e) {
@@ -147,9 +156,13 @@ public class TiffReaderWriter {
             System.out.println("SubIFDs: " + to.getSubIfdCount());
             
             to.printMetadata();
-            TiffITProfile bpep = new TiffITProfile(to, 0);
+            TiffEPProfile bpep = new TiffEPProfile(to);
             bpep.validate();
             bpep.getValidation().printErrors();
+
+            TiffITProfile bpit = new TiffITProfile(to, 0);
+            bpit.validate();
+            bpit.getValidation().printErrors();
 
             int nifd = 1;
             for (TiffObject o : to.getImageIfds()) {
@@ -160,13 +173,10 @@ public class TiffReaderWriter {
               }
             }
             nifd = 1;
-            for (TiffObject o : to.getSubIfds()) {
-              IFD ifd = (IFD) o;
-              if (ifd != null) {
-                System.out.println("SubIFD " + nifd++ + " TAGS:");
-                ifd.printTags();
-              }
-            }
+            /*
+             * for (TiffObject o : to.getSubIfds()) { IFD ifd = (IFD) o; if (ifd != null) {
+             * System.out.println("SubIFD " + nifd++ + " TAGS:"); ifd.printTags(); } }
+             */
           } else {
             // The file is not correct
             System.out.println("Errors in file '" + filename + "'");

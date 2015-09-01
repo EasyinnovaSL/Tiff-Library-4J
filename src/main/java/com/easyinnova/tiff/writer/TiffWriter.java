@@ -31,14 +31,26 @@
  */
 package com.easyinnova.tiff.writer;
 
-import com.easyinnova.tiff.io.TiffStreamIO;
+import com.easyinnova.tiff.io.TiffInputStream;
+import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.IfdTags;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffDocument;
+import com.easyinnova.tiff.model.TiffTags;
+import com.easyinnova.tiff.model.types.Double;
+import com.easyinnova.tiff.model.types.Float;
 import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.types.Long;
+import com.easyinnova.tiff.model.types.Rational;
+import com.easyinnova.tiff.model.types.SLong;
+import com.easyinnova.tiff.model.types.SRational;
+import com.easyinnova.tiff.model.types.SShort;
+import com.easyinnova.tiff.model.types.abstractTiffType;
 
+import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The Class TiffWriter.
@@ -49,13 +61,23 @@ public class TiffWriter {
   TiffDocument model;
 
   /** The odata. */
-  TiffStreamIO data;
+  TiffOutputStream data;
+
+  /** The byte order. */
+  ByteOrder byteOrder;
+
+  /** The input. */
+  TiffInputStream input;
 
   /**
    * Instantiates a new tiff writer.
+   *
+   * @param in the in
    */
-  public TiffWriter() {
+  public TiffWriter(TiffInputStream in) {
     model = new TiffDocument();
+    byteOrder = ByteOrder.BIG_ENDIAN;
+    input = in;
   }
 
   /**
@@ -74,11 +96,11 @@ public class TiffWriter {
    * @throws Exception the exception
    */
   public void write(String filename) throws Exception {
-    data = new TiffStreamIO(null);
+    data = new TiffOutputStream(input);
     try {
-      data.write(filename);
+      data.create(filename);
       writeHeader();
-      writeTiff();
+      writeIfds();
       data.close();
     } catch (Exception ex) {
       throw ex;
@@ -87,114 +109,328 @@ public class TiffWriter {
 
   /**
    * Writes the header.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
    */
-  public void writeHeader() {
-    if (data.getByteOrder() == ByteOrder.LITTLE_ENDIAN) {
+  public void writeHeader() throws IOException {
+    if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
       data.put((byte) 'I');
       data.put((byte) 'I');
-    } else if (data.getByteOrder() == ByteOrder.BIG_ENDIAN) {
+    } else if (byteOrder == ByteOrder.BIG_ENDIAN) {
       data.put((byte) 'M');
       data.put((byte) 'M');
     }
-    data.order(data.getByteOrder());
 
     data.putShort((short) 42);
-
-    data.putInt(8);
   }
 
   /**
    * Write.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
    */
-  public void writeTiff() {
-    for (int i = model.getImageIfds().size() - 1; i >= 0; i--) {
-      IFD ifd = (IFD) model.getImageIfds().get(i);
-      writeIFD(ifd);
+  public void writeIfds() throws IOException {
+    IFD first = model.getFirstIFD();
+    IFD current = first;
+
+    while (current != null) {
+      writeIFD(current, true);
+      current = current.getNextIFD();
     }
+  }
+
+  /**
+   * Gets the oversized tags.
+   *
+   * @param ifd the ifd
+   * @param oversized the oversized
+   * @param undersized the undersized
+   * @return the number of tags
+   */
+  private int classifyTags(IFD ifd, ArrayList<TagValue> oversized, ArrayList<TagValue> undersized) {
+    int tagValueSize = 4;
+    int n = 0;
+    for (TagValue tag : ifd.getMetadata().getTags()) {
+      if (filtered(tag))
+        continue;
+      int tagsize = getTagSize(tag);
+      if (tagsize > tagValueSize) {
+        oversized.add(tag);
+      } else {
+        undersized.add(tag);
+      }
+      n++;
+    }
+    return n;
+  }
+
+  /**
+   * Filtered.
+   *
+   * @param tv the tv
+   * @return true, if successful
+   */
+  private boolean filtered(TagValue tv) {
+    if (tv.getId() == 33723 || tv.getId() == 330)
+      return true;
+    return false;
   }
 
   /**
    * Write IFD data.
    *
    * @param ifd the ifd
-   * @return the int
+   * @param writeOffset the write offset
+   * @throws IOException Signals that an I/O exception has occurred.
    */
-  public int writeIFD(IFD ifd) {
-    int offset2 = writeMetadata(ifd.getMetadata());
-    // data.putInt(ifd.offset);
-    return offset2;
+  public void writeIFD(IFD ifd, boolean writeOffset) throws IOException {
+    ArrayList<TagValue> oversizedTags = new ArrayList<TagValue>();
+    ArrayList<TagValue> undersizedTags = new ArrayList<TagValue>();
+    int ntags = classifyTags(ifd, oversizedTags, undersizedTags);
+
+    int offset = (int) data.position() + 4;
+    if (writeOffset)
+      data.putInt(offset);
+
+    HashMap<Integer, Integer> pointers = new HashMap<Integer, Integer>();
+
+    // Write IFD entries
+    data.putShort((short) ntags);
+    for (TagValue tv : ifd.getMetadata().getTags()) {
+      if (filtered(tv))
+        continue;
+      int n = tv.getCardinality();
+      int id = tv.getId();
+      int tagtype = tv.getType();
+      data.putShort((short) id);
+      data.putShort((short) tagtype);
+      if (id == 700)
+        n = tv.getValue().get(0).toString().length();
+      if (id == 34675)
+        n = tv.getReadlength();
+      data.putInt(n);
+
+      pointers.put(id, (int) data.position());
+      int startpos = (int) data.position();
+      if (oversizedTags.contains(tv)) {
+        data.putInt(1); // Any number, later we will update the pointer
+      } else {
+        writeTagValue(tv);
+        while ((int) data.position() - startpos < 4)
+          data.put((byte) 0);
+      }
+    }
+    int offsetNext = 0;
+    if (ifd.hasNextIFD())
+      offsetNext = (int) data.position() + 4;
+    data.putInt(offsetNext);
+
+    // Update pointers and write tag values
+    for (TagValue tv : oversizedTags) {
+      if (!filtered(tv)) {
+        // Update pointer of the tag entry
+        int currentPosition = (int) data.position();
+        data.seek(pointers.get(tv.getId()));
+        data.putInt(currentPosition);
+        data.seek(currentPosition);
+
+        writeTagValue(tv);
+      }
+    }
+
+    if (ifd.hasStrips()) {
+      long stripOffsetsPointer = data.position();
+      ArrayList<Integer> offsets = writeStripData(ifd);
+
+      if (offsets.size() > 1) {
+        // Write offsets
+        stripOffsetsPointer = data.position();
+        for (int off : offsets) {
+          data.putInt(off);
+        }
+      }
+
+      // Update pointer of the tag entry
+      int currentPosition = (int) data.position();
+      data.seek(pointers.get(273));
+      data.putInt((int) stripOffsetsPointer);
+      data.seek(currentPosition);
+    } else if (ifd.hasTiles()) {
+      long tilesOffsetsPointer = data.position();
+      ArrayList<Integer> offsets = writeTileData(ifd);
+
+      if (offsets.size() > 1) {
+        // Write offsets
+        tilesOffsetsPointer = data.position();
+        for (int off : offsets) {
+          data.putInt(off);
+        }
+      }
+
+      // Update pointer of the tag entry
+      int currentPosition = (int) data.position();
+      data.seek(pointers.get(324));
+      data.putInt((int) tilesOffsetsPointer);
+      data.seek(currentPosition);
+    }
   }
 
   /**
-   * Write.
+   * Gets the tag size.
    *
-   * @param metadata the metadata
-   * @return the int
+   * @param tag the tag
+   * @return the tag size
    */
-  public int writeMetadata(IfdTags metadata) {
-    ArrayList<TagValue> tags = metadata.getTags();
-    // int offset = data.position();
-    for (TagValue tag : tags) {
-      if (tag.getId() == 273) {
-        writeStripData(metadata);
-      } else if (tag.getId() == 279) {
-        // Nothing to do here, writeStripData does everything
+  private int getTagSize(TagValue tag) {
+    int n = tag.getCardinality();
+    int id = tag.getId();
+
+    // Calculate tag size
+    int type = tag.getType();
+
+    if (id == 330) {
+      // SubIFD
+      n = 1000;
+    }
+
+    if (id == 700) {
+      // XMP
+      n = tag.getValue().get(0).toString().length();
+    }
+    if (id == 33723) {
+      // IPTC
+      n = 1000;
+    }
+    if (id == 34665) {
+      // EXIF
+      n = 1000;
+    }
+    if (id == 34675) {
+      // ICC
+      n = tag.getReadlength();
+    }
+    int typeSize = TiffTags.getTypeSize(type);
+    int tagSize = typeSize * n;
+    return tagSize;
+  }
+
+  /**
+   * Write tag.
+   *
+   * @param tag the tag
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  private void writeTagValue(TagValue tag) throws IOException {
+    int id = tag.getId();
+    long position = data.position();
+    tag.setOffset((int) position);
+
+    // Write tag value
+    for (abstractTiffType tt : tag.getValue()) {
+      if (id == 700) {
+        for (byte c : tt.toString().getBytes()) {
+          data.put(c);
+        }
+        data.put((byte) 0);
+      } else if (id == 33723) {
+        for (byte c : tt.toString().getBytes()) {
+          data.put(c);
+        }
+      } else if (id == 330) {
+        IFD subifd = ((IFD) tag.getValue().get(0)).getsubIFD();
+        writeIFD(subifd, false);
+      } else if (id == 34665) {
+        IFD exif = (IFD) tag.getValue().get(0);
+        writeIFD(exif, false);
+      } else if (id == 34675) {
+        for (int off = tag.getReadOffset(); off < tag.getReadOffset() + tag.getReadlength(); off++) {
+          data.put(input.readByte(off).toByte());
+        }
+        data.put((byte) 0);
       } else {
-        // int size = writeTag(tag);
-        // tag.setIntValue(offset);
-        // offset += size;
+        switch (tag.getType()) {
+          case 3:
+            data.putShort((short) tt.toInt());
+            break;
+          case 8:
+            data.putSShort((SShort) tt);
+            break;
+          case 4:
+            data.putLong((Long) tt);
+            break;
+          case 9:
+            data.putSLong((SLong) tt);
+            break;
+          case 11:
+            data.putFloat((Float) tt);
+            break;
+          case 13:
+            data.putInt((int) tt.toInt());
+            break;
+          case 5:
+            data.putRational((Rational) tt);
+            break;
+          case 10:
+            data.putSRational((SRational) tt);
+            break;
+          case 12:
+            data.putDouble((Double) tt);
+            break;
+          case 2:
+            data.put(tt.toByte());
+            break;
+          default:
+            data.put(tt.toByte());
+            break;
+        }
       }
     }
-    data.putShort((short) tags.size());
-    // for (TagValue tag : tags) {
-      // tag.write(data);
-    // }
-    return data.position();
   }
 
   /**
    * Write strip data.
    *
-   * @param metadata the metadata
+   * @param ifd the ifd
+   * @return the array list
+   * @throws IOException Signals that an I/O exception has occurred.
    */
-  private void writeStripData(IfdTags metadata) {
+  private ArrayList<Integer> writeStripData(IFD ifd) throws IOException {
+    ArrayList<Integer> newStripOffsets = new ArrayList<Integer>();
+    IfdTags metadata = ifd.getMetadata();
     TagValue stripOffsets = metadata.get(273);
     TagValue stripSizes = metadata.get(279);
-    ArrayList<Integer> stripOffsets2 = new ArrayList<Integer>();
-    ArrayList<Integer> stripSizes2 = new ArrayList<Integer>();
     for (int i = 0; i < stripOffsets.getCardinality(); i++) {
-      stripOffsets2.add(data.position());
-      stripSizes2.add((int) stripSizes.getValue().get(i).toInt());
-      for (int j = 0; j < stripSizes.getValue().get(i).toInt(); j++) {
-        int v = data.get((int) stripOffsets.getValue().get(i).toInt());
-        data.put((byte) v);
+      newStripOffsets.add((int) data.position());
+      int start = (int) stripOffsets.getValue().get(0).toInt();
+      int size = stripSizes.getValue().get(i).toInt();
+      for (int off = start; off < start + size; off++) {
+        byte v = this.input.readByte(off).toByte();
+        data.put(v);
       }
     }
-    // int offsetStripOffsets = data.position();
-    // for (int i = 0; i < stripOffsets2.size(); i++) {
-    // data.putInt(stripOffsets2.get(i));
-    // }
-    // int offsetStripSizes = data.position();
-    // for (int i = 0; i < stripSizes2.size(); i++) {
-    // data.putInt(stripOffsets2.get(i));
-    // }
-    // metadata.hashTagsId.get(273).setIntValue(offsetStripOffsets);
-    // metadata.hashTagsId.get(279).setIntValue(offsetStripSizes);
+    return newStripOffsets;
   }
 
   /**
-   * Write content.
+   * Write tile data.
    *
-   * @param tag the tag
-   * @return the int
+   * @param ifd the ifd
+   * @return the array list
+   * @throws IOException Signals that an I/O exception has occurred.
    */
-  public int writeTag(TagValue tag) {
-    int totalSize = 0;
-    for (int i = 0; i < totalSize; i++) {
-      int v = data.get((int) tag.getFirstNumericValue() + i);
-      data.put((byte) v);
+  private ArrayList<Integer> writeTileData(IFD ifd) throws IOException {
+    ArrayList<Integer> newTileOffsets = new ArrayList<Integer>();
+    IfdTags metadata = ifd.getMetadata();
+    TagValue tileOffsets = metadata.get(324);
+    TagValue tileSizes = metadata.get(325);
+    for (int i = 0; i < tileOffsets.getCardinality(); i++) {
+      newTileOffsets.add((int) data.position());
+      for (int j = 0; j < tileSizes.getValue().get(i).toInt(); j++) {
+        byte v = this.input.readByte((int) tileOffsets.getValue().get(i).toInt()).toByte();
+        data.put(v);
+      }
     }
-    return totalSize;
+    return newTileOffsets;
   }
 }
 

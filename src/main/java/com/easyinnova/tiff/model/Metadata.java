@@ -117,6 +117,11 @@ public class Metadata {
     return result;
   }
 
+  /**
+   * Gets the creator.
+   *
+   * @return the creator
+   */
   public String getCreator() {
     String creator = null;
 

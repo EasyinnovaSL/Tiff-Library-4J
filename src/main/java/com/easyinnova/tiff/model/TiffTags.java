@@ -163,6 +163,37 @@ public class TiffTags {
   }
 
   /**
+   * Gets the type size.
+   *
+   * @param type the type
+   * @return the type size
+   */
+  public static int getTypeSize(int type) {
+    int typeSize = 1;
+    switch (type) {
+      case 3:
+      case 8:
+        typeSize = 2;
+        break;
+      case 4:
+      case 9:
+      case 11:
+      case 13:
+        typeSize = 4;
+        break;
+      case 5:
+      case 10:
+      case 12:
+        typeSize = 8;
+        break;
+      default:
+        typeSize = 1;
+        break;
+    }
+    return typeSize;
+  }
+
+  /**
    * Gets the tag id.
    *
    * @param name the name

@@ -80,7 +80,7 @@ public class Rational extends abstractTiffType {
    *
    * @return the denominator
    */
-  public long getDenominator() {
+  public int getDenominator() {
     return (int) denominator.getValue();
   }
 

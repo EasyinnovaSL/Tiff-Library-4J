@@ -109,6 +109,20 @@ public class IFD extends abstractTiffType {
   }
 
   /**
+   * Gets the image size (x*y).
+   *
+   * @return the image size
+   */
+  public long getImageSize() {
+    long x = 0, y = 0;
+    if (tags.containsTagId(TiffTags.getTagId("ImageLength")))
+      x = tags.get("ImageLength").getFirstNumericValue();
+    if (tags.containsTagId(TiffTags.getTagId("ImageWidth")))
+      y = tags.get("ImageWidth").getFirstNumericValue();
+    return x * y;
+  }
+
+  /**
    * Sets the subIFD.
    *
    * @param subIFD the new subIFD

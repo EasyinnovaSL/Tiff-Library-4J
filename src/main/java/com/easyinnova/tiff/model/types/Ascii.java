@@ -75,4 +75,15 @@ public class Ascii extends abstractTiffType {
       s += (char) value;
     return s;
   }
+
+  /**
+   * To byte.
+   *
+   * @return the byte
+   */
+  @Override
+  public byte toByte() {
+    byte b = value;
+    return b;
+  }
 }

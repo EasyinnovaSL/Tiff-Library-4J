@@ -69,6 +69,31 @@ public class ValidationResult {
   }
 
   /**
+   * Adds an error.
+   *
+   * @param desc error description
+   * @param value the location
+   */
+  private void iaddErrorLoc(String desc, String value) {
+    ValidationEvent ve = new ValidationEvent(desc, null, value);
+    errors.add(ve);
+    correct = false;
+  }
+
+  /**
+   * Adds an error.
+   *
+   * @param desc error description
+   * @param value the value that caused the error
+   * @param ext the error location
+   */
+  private void iaddError(String desc, String value, String ext) {
+    ValidationEvent ve = new ValidationEvent(desc, value, ext);
+    errors.add(ve);
+    correct = false;
+  }
+
+  /**
    * Adds a warning.
    *
    * @param desc warning description
@@ -103,6 +128,17 @@ public class ValidationResult {
    * Adds an error.
    *
    * @param desc Error description
+   * @param ext Error Location
+   * @param value the integer value that caused the error
+   */
+  public void addError(String desc, String ext, long value) {
+    iaddError(desc, "" + value, ext);
+  }
+
+  /**
+   * Adds an error.
+   *
+   * @param desc Error description
    * @param value the float value that caused the error
    */
   public void addError(String desc, float value) {
@@ -117,6 +153,16 @@ public class ValidationResult {
    */
   public void addError(String desc, String value) {
     iaddError(desc, value);
+  }
+
+  /**
+   * Adds an error.
+   *
+   * @param desc Error description
+   * @param loc the location
+   */
+  public void addErrorLoc(String desc, String loc) {
+    iaddErrorLoc(desc, loc);
   }
 
   /**

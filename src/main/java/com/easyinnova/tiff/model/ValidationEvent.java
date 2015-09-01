@@ -42,6 +42,9 @@ public class ValidationEvent {
   /** The value that has thrown the error. */
   private String value;
 
+  /** The error location (node). */
+  private String location;
+
   /** The level. */
   private int level;
 
@@ -63,6 +66,19 @@ public class ValidationEvent {
   public ValidationEvent(String desc, String value) {
     this.description = desc;
     this.value = value;
+  }
+
+  /**
+   * Parameterized constructor.
+   *
+   * @param desc error description
+   * @param value the value that caused the error
+   * @param loc the value location
+   */
+  public ValidationEvent(String desc, String value, String loc) {
+    this.description = desc;
+    this.value = value;
+    this.location = loc;
   }
 
   /**
@@ -96,6 +112,17 @@ public class ValidationEvent {
   }
 
   /**
+   * Gets the location.
+   *
+   * @return the location
+   */
+  public String getLocation() {
+    if (location == null)
+      return "";
+    return location;
+  }
+
+  /**
    * Gets the description.
    *
    * @return the description
@@ -111,6 +138,16 @@ public class ValidationEvent {
    */
   public String getInvalidValue() {
     return value;
+  }
+
+  /**
+   * Gets the string.
+   *
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return description;
   }
 }
 
