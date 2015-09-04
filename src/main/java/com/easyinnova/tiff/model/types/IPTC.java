@@ -56,14 +56,27 @@ public class IPTC extends abstractTiffType {
    * The validation result.
    */
   public ValidationResult validation;
+
   /** The content. */
   private HashMap<Byte, List<abstractIptcType>> content;
+
+  /** The original value. */
+  private List<abstractTiffType> originalValue;
 
   /**
    * Instantiates a new IPTC.
    */
   public IPTC() {
     validation = new ValidationResult();
+  }
+
+  /**
+   * Gets the original.
+   *
+   * @return the original
+   */
+  public List<abstractTiffType> getOriginal() {
+    return originalValue;
   }
 
   /**
@@ -155,7 +168,8 @@ public class IPTC extends abstractTiffType {
       }
     }
 
-    tv.clear();
+    originalValue = tv.getValue();
+    tv.reset();
     tv.add(this);
   }
 

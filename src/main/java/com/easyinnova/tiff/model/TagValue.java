@@ -243,5 +243,12 @@ public class TagValue extends TiffObject {
   public void clear() {
     value.clear();
   }
+
+  /**
+   * Reset.
+   */
+  public void reset() {
+    value = new ArrayList<abstractTiffType>();
+  }
 }
 

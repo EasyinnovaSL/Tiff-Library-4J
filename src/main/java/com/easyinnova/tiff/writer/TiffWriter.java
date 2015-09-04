@@ -40,6 +40,7 @@ import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.types.Double;
 import com.easyinnova.tiff.model.types.Float;
 import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.types.IPTC;
 import com.easyinnova.tiff.model.types.Long;
 import com.easyinnova.tiff.model.types.Rational;
 import com.easyinnova.tiff.model.types.SLong;
@@ -171,8 +172,8 @@ public class TiffWriter {
    * @return true, if successful
    */
   private boolean filtered(TagValue tv) {
-    if (tv.getId() == 33723 || tv.getId() == 330)
-      return true;
+    // if (tv.getId() == 33723)
+    // return true;
     return false;
   }
 
@@ -208,6 +209,8 @@ public class TiffWriter {
         n = tv.getValue().get(0).toString().length();
       if (id == 34675)
         n = tv.getReadlength();
+      if (id == 33723)
+        n = ((IPTC) tv.getValue().get(0)).getOriginal().size();
       data.putInt(n);
 
       pointers.put(id, (int) data.position());
@@ -292,14 +295,13 @@ public class TiffWriter {
       // SubIFD
       n = 1000;
     }
-
     if (id == 700) {
       // XMP
       n = tag.getValue().get(0).toString().length();
     }
     if (id == 33723) {
       // IPTC
-      n = 1000;
+      n = tag.getReadlength();
     }
     if (id == 34665) {
       // EXIF
@@ -309,6 +311,7 @@ public class TiffWriter {
       // ICC
       n = tag.getReadlength();
     }
+
     int typeSize = TiffTags.getTypeSize(type);
     int tagSize = typeSize * n;
     return tagSize;
@@ -333,11 +336,13 @@ public class TiffWriter {
         }
         data.put((byte) 0);
       } else if (id == 33723) {
-        for (byte c : tt.toString().getBytes()) {
-          data.put(c);
+        IPTC iptc = (IPTC) tag.getValue().get(0);
+        for (int i = 0; i < iptc.getOriginal().size(); i++) {
+          data.put(iptc.getOriginal().get(i).toByte());
         }
+        data.put((byte) 0);
       } else if (id == 330) {
-        IFD subifd = ((IFD) tag.getValue().get(0)).getsubIFD();
+        IFD subifd = ((IFD) tag.getValue().get(0));
         writeIFD(subifd, false);
       } else if (id == 34665) {
         IFD exif = (IFD) tag.getValue().get(0);
