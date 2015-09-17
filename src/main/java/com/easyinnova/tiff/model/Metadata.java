@@ -105,6 +105,7 @@ public class Metadata {
             result = to;
             container = to.getContainer();
           } else if (to.getContainer() != null) {
+            // Preferences in (descending) order: EXIF, XMP, IPTC, Tiff tag
             if (container == null || to.getContainer().equals("EXIF")
                 || (to.getContainer().equals("XMP") && container.equals("IPTC"))) {
               result = to;
@@ -115,17 +116,6 @@ public class Metadata {
       }
     }
     return result;
-  }
-
-  /**
-   * Gets the creator.
-   *
-   * @return the creator
-   */
-  public String getCreator() {
-    String creator = null;
-
-    return creator;
   }
 
   /**
