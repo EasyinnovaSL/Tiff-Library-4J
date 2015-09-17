@@ -172,13 +172,6 @@ public class TiffMetadataTest {
     assertEquals("0", to.getMetadataSingleString("GainControl"));
     assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
 
-    assertEquals("6073340", to.getMetadataSingleString("SerialNumber"));
-    assertEquals("5", to.getMetadataSingleString("MeteringMode"));
-    assertEquals("82/1", to.getMetadataSingleString("FocalLength"));
-    assertEquals("AF-S DX VR Zoom-Nikkor 18-200mm f/3.5-5.6G IF-ED [II]", to.getMetadataSingleString("Lens"));
-    assertEquals("0", to.getMetadataSingleString("GainControl"));
-    assertEquals("0", to.getMetadataSingleString("SceneCaptureType"));
-
     assertEquals("[65,83,67,73,73,0,0,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("UserComment"));
     //assertEquals("[28,1,90,0,3,27,37,71,28,1,90,0,3,27,37,71,28,2,0,0,2,0,0,28,2,80,0,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,2,55,0,8,50,48,49,48,48,53,50,52,28,2,60,0,11,49,51,53,55,49,53,43,48,48,48,48,28,2,116,0,54,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]", to.getMetadataSingleString("IPTC"));
     assertEquals("[48,50,51,48]", to.getMetadataSingleString("36864"));
