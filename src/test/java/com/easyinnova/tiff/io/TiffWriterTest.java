@@ -16,7 +16,7 @@
  * @version 1.0
  * @since 21/5/2015
  */
-package com.easyinnova.tiff;
+package com.easyinnova.tiff.io;
 
 import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
