@@ -34,6 +34,7 @@ package com.easyinnova.tiff.model;
 import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class TiffDocument {
 
   /** The metadata. */
   private Metadata metadata;
+
+  /** The byte order. */
+  private ByteOrder byteOrder;
 
   /**
    * Instantiates a new tiff file.
@@ -180,6 +184,15 @@ public class TiffDocument {
   }
 
   /**
+   * Gets the endianess.
+   *
+   * @return the endianess
+   */
+  public ByteOrder getEndianess() {
+    return byteOrder;
+  }
+
+  /**
    * Returns a list of subifds.
    *
    * @return the subifds list
@@ -216,6 +229,15 @@ public class TiffDocument {
    */
   public void setMagicNumber(int magic) {
     this.magicNumber = magic;
+  }
+
+  /**
+   * Sets the magic number of the Tiff file.
+   *
+   * @param byteOrder the byte order
+   */
+  public void setByteOrder(ByteOrder byteOrder) {
+    this.byteOrder = byteOrder;
   }
 
   /**

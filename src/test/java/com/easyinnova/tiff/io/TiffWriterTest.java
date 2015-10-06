@@ -21,8 +21,6 @@ package com.easyinnova.tiff.io;
 import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 
-import com.easyinnova.tiff.io.TiffInputStream;
-import com.easyinnova.tiff.model.ImageStrips;
 import com.easyinnova.tiff.model.TiffDocument;
 import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.reader.TiffReader;
@@ -49,14 +47,14 @@ public class TiffWriterTest {
     TiffDocument tdCopy;
     IFD ifd;
     IFD ifdCopy;
-    int result;
 
     try {
       tr = new TiffReader();
       trCopy = new TiffReader();
 
       //Read the File to copy
-      result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel.tif");
+      tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+          + separator + "Bilevel.tif");
       TiffInputStream ti = new TiffInputStream(new File("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel.tif"));
       td=tr.getModel();
 
@@ -65,7 +63,8 @@ public class TiffWriterTest {
       tw.write("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel2.tif");
 
 
-      result=trCopy.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Bilevel2.tif");
+      trCopy.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+          + separator + "Bilevel2.tif");
       tdCopy=trCopy.getModel();
 
       ifd=td.getFirstIFD();

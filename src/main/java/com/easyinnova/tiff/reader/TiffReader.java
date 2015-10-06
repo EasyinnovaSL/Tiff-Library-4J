@@ -228,6 +228,7 @@ public class TiffReader {
     } else {
       validation.addError("Invalid Byte Order " + c1 + c2);
     }
+    tiffModel.setByteOrder(byteOrder);
 
     if (correct) {
       // set byte ordering to the stream
