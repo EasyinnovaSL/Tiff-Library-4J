@@ -100,6 +100,15 @@ public class IFD extends abstractTiffType {
   }
 
   /**
+   * Gets the tags.
+   *
+   * @return the tags
+   */
+  public IfdTags getTags() {
+    return tags;
+  }
+
+  /**
    * Gets the parent.
    *
    * @return the parent
@@ -356,6 +365,25 @@ public class IFD extends abstractTiffType {
    */
   public boolean hasTiles() {
     return imageTiles != null;
+  }
+
+  /**
+   * Removes the tag.
+   *
+   * @param tagName the tag name
+   */
+  public void removeTag(String tagName) {
+    this.tags.removeTag(tagName);
+  }
+
+  /**
+   * Adds a tag.
+   *
+   * @param tagName the tag name
+   * @param tagValue the tag value
+   */
+  public void addTag(String tagName, String tagValue) {
+    this.tags.addTag(tagName, tagValue);
   }
 }
 
