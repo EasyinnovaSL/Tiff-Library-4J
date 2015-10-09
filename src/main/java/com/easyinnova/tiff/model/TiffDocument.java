@@ -345,4 +345,37 @@ public class TiffDocument {
   public Metadata getMetadata() {
     return metadata;
   }
+
+  /**
+   * Removes the tag.
+   *
+   * @param tagName the tag name
+   * @return true, if successful
+   */
+  public boolean removeTag(String tagName) {
+    boolean result = false;
+    if (firstIFD != null) {
+      if (firstIFD.containsTagId(TiffTags.getTagId(tagName))) {
+        firstIFD.removeTag(tagName);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Adds the tag.
+   *
+   * @param tagName the tag name
+   * @param tagValue the tag value
+   * @return true, if successful
+   */
+  public boolean addTag(String tagName, String tagValue) {
+    boolean result = false;
+    if (firstIFD != null) {
+      if (!firstIFD.containsTagId(TiffTags.getTagId(tagName))) {
+        firstIFD.addTag(tagName, tagValue);
+      }
+    }
+    return result;
+  }
 }

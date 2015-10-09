@@ -31,6 +31,8 @@
  */
 package com.easyinnova.tiff.model;
 
+import com.easyinnova.tiff.model.types.Ascii;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -62,13 +64,51 @@ public class IfdTags {
    * @param tag the tag to add
    */
   public void addTag(TagValue tag) {
-    tags.add(tag);
+    int pos = 0;
+    while (pos < tags.size() && tags.get(pos).getId() < tag.getId()) {
+      pos++;
+    }
+    tags.add(pos, tag);
     if (!hashTagsId.containsKey(tag.getId())) {
       hashTagsId.put(tag.getId(), tag);
     }
     Tag t = TiffTags.getTag(tag.getId());
     if (t != null) {
       hashTagsName.put(t.getName(), tag);
+    }
+  }
+
+  /**
+   * Adds the tag.
+   *
+   * @param tagName the tag name
+   * @param tagValue the tag value
+   */
+  public void addTag(String tagName, String tagValue) {
+    int id = TiffTags.getTagId(tagName);
+    TagValue tag = new TagValue(id, 2);
+    for (int i = 0; i < tagValue.length(); i++) {
+      Ascii cha = new Ascii(tagValue.charAt(i));
+      tag.add(cha);
+    }
+    addTag(tag);
+  }
+
+  /**
+   * Removes the tag.
+   *
+   * @param tagName the tag name
+   */
+  public void removeTag(String tagName) {
+    for (int i = 0; i < tags.size(); i++) {
+      if (tags.get(i).getName().equals(tagName)) {
+        tags.remove(i);
+        if (hashTagsName.containsKey(tagName))
+          hashTagsName.remove(tagName);
+        if (hashTagsId.containsKey(TiffTags.getTagId(tagName)))
+          hashTagsId.remove(TiffTags.getTagId(tagName));
+        i--;
+      }
     }
   }
 
