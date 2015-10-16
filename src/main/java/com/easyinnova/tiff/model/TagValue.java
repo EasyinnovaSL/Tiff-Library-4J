@@ -117,6 +117,15 @@ public class TagValue extends TiffObject {
    }
 
   /**
+   * Sets the value.
+   *
+   * @param value the new value
+   */
+  public void setValue(List<abstractTiffType> value) {
+    this.value = value;
+  }
+
+  /**
    * Adds a value to the list.
    *
    * @param value the value

@@ -354,11 +354,14 @@ public class TiffDocument {
    */
   public boolean removeTag(String tagName) {
     boolean result = false;
-    if (firstIFD != null) {
-      if (firstIFD.containsTagId(TiffTags.getTagId(tagName))) {
-        firstIFD.removeTag(tagName);
+    IFD ifd = firstIFD;
+    while (ifd != null) {
+      if (ifd.containsTagId(TiffTags.getTagId(tagName))) {
+        ifd.removeTag(tagName);
       }
+      ifd = ifd.getNextIFD();
     }
+    createMetadataDictionary();
     return result;
   }
 
@@ -374,6 +377,7 @@ public class TiffDocument {
     if (firstIFD != null) {
       if (!firstIFD.containsTagId(TiffTags.getTagId(tagName))) {
         firstIFD.addTag(tagName, tagValue);
+        createMetadataDictionary();
       }
     }
     return result;

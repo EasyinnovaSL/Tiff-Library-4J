@@ -95,7 +95,7 @@ public class FixTags {
       ifd = (IFD) to.getFirstIFD();
 
       // Add tag
-      ifd.addTag("ImageDescription", "desc");
+      to.addTag("ImageDescription", "desc");
 
       // Write modified Tiff
       TiffWriter tw = new TiffWriter(ti);
@@ -146,7 +146,7 @@ public class FixTags {
       ifd = (IFD) to.getFirstIFD();
 
       // Remove tag
-      ifd.removeTag("Copyright");
+      to.removeTag("Copyright");
 
       // Write modified Tiff
       TiffWriter tw = new TiffWriter(ti);
@@ -176,6 +176,8 @@ public class FixTags {
       assertEquals(ifd.getTags().getTags().size() - 1, ifdCopy.getTags().getTags().size());
       assertEquals(true, ifd.getTag("Copyright") != null);
       assertEquals(false, ifdCopy.getTag("Copyright") != null);
+      assertEquals(true, to.getMetadata().contains("Copyright"));
+      assertEquals(false, tdCopy.getMetadata().contains("Copyright"));
     } catch (Exception e) {
       assertEquals(0, 1);
     }

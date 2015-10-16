@@ -374,6 +374,11 @@ public class IFD extends abstractTiffType {
    */
   public void removeTag(String tagName) {
     this.tags.removeTag(tagName);
+    int id = TiffTags.getTagId("IPTC");
+    if (this.tags.containsTagId(id)) {
+      IPTC iptc = (IPTC) this.tags.get(id).getValue().get(0);
+      iptc.removeTag("Copyright");
+    }
   }
 
   /**

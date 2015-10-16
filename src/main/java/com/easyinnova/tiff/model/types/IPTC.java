@@ -35,6 +35,7 @@ import com.easyinnova.iptc.Tag;
 import com.easyinnova.iptc.abstractIptcType;
 import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
+import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.ValidationResult;
 
 import java.lang.reflect.InvocationTargetException;
@@ -109,6 +110,83 @@ public class IPTC extends abstractTiffType {
     return content.toString();
   }
 
+  /**
+   * Removes the tag.
+   *
+   * @param tagName the tag name
+   */
+  public void removeTag(String tagName) {
+    List<abstractTiffType> l = new ArrayList<abstractTiffType>();
+    for (int i = 0; i < originalValue.size(); i++) {
+      l.add(originalValue.get(i));
+    }
+    for (int i = 0; i < l.size(); i++) {
+      if (l.get(i).toInt() == SEGMENT_MARKER[0]) {
+        // Check if segment contains type, size and content
+        if ((i + 5) < l.size() && l.get(i + 1).toInt() == SEGMENT_MARKER[1]) {
+          // Get tag type and size
+          Byte type = new Byte(0);
+          type.setValue(l.get(i + 2).toByte());
+          int size =
+ ((l.get(i + 3).toByte() & 0xff) << 8) | (l.get(i + 4).toByte() & 0xff);
+          if ((i + 4 + size) < l.size()) {
+            List<Byte> value = new ArrayList<Byte>();
+            // Read the value of the tag
+            for (int j = (i + 5); j <= (i + 4 + size); j++) {
+              Byte current = new Byte(0);
+              current.setValue(l.get(j).toByte());
+              value.add(current);
+            }
+
+            abstractIptcType object = null;
+            if (IptcTags.hasTag(type.getValue())) {
+              // Known tag
+              Tag t = IptcTags.getTag(type.getValue());
+              if (t.hasType()) {
+                String tagClass = t.getType();
+
+                try {
+                  object =
+                      (abstractIptcType) Class.forName("com.easyinnova.iptc." + tagClass)
+                          .getConstructor().newInstance();
+                  object.read(value);
+                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException
+                    | InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException e) {
+                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                }
+              }
+            }
+
+            if (object != null) {
+              // Add content
+              List<abstractIptcType> list = content.get(type);
+              if (list == null) {
+                list = new ArrayList<abstractIptcType>();
+              }
+              list.add(object);
+
+              String tagname =
+                  IptcTags.tagMap.get(Integer.parseInt(type.toString())).getShortName();
+              if (tagname.equals(tagName)) {
+                int tagSize = size + 3;
+                for (int ii = 0; ii < tagSize; ii++) {
+                  l.remove(i + 2);
+                }
+                i -= tagSize;
+              }
+            }
+            // Jump to the end of read tag
+            i = i + 4 + size;
+          }
+        }
+      }
+    }
+    originalValue = l;
+    TagValue tv = new TagValue(TiffTags.getTagId("IPTC"), 7);
+    tv.setValue(originalValue);
+    read(tv);
+  }
 
   /**
    * Reads the IPTC.
@@ -121,17 +199,17 @@ public class IPTC extends abstractTiffType {
 
     for (int i = 0; i < tv.getCardinality(); i++) {
       if (tv.getValue().get(i).toInt() == SEGMENT_MARKER[0]) {
-                /*check if segment contains type, size and content*/
-        if ((i + 5) < tv.getCardinality()
-            && tv.getValue().get(i + 1).toInt() == SEGMENT_MARKER[1]) {
+        // Check if segment contains type, size and content
+        if ((i + 5) < tv.getCardinality() && tv.getValue().get(i + 1).toInt() == SEGMENT_MARKER[1]) {
+          // Get tag type and size
           Byte type = new Byte(0);
           type.setValue(tv.getValue().get(i + 2).toByte());
           int size =
-              ((tv.getValue().get(i + 3).toByte() & 0xff) << 8) | (tv.getValue().get(i + 4).toByte()
-                  & 0xff);
+              ((tv.getValue().get(i + 3).toByte() & 0xff) << 8)
+                  | (tv.getValue().get(i + 4).toByte() & 0xff);
           if ((i + 4 + size) < tv.getCardinality()) {
             List<Byte> value = new ArrayList<Byte>();
-                        /*read the value of the tag*/
+            // Read the value of the tag
             for (int j = (i + 5); j <= (i + 4 + size); j++) {
               Byte current = new Byte(0);
               current.setValue(tv.getValue().get(j).toByte());
@@ -140,6 +218,7 @@ public class IPTC extends abstractTiffType {
 
             abstractIptcType object = null;
             if (IptcTags.hasTag(type.getValue())) {
+              // Known tag
               Tag t = IptcTags.getTag(type.getValue());
               if (t.hasType()) {
                 String tagClass = t.getType();
@@ -153,7 +232,9 @@ public class IPTC extends abstractTiffType {
                 }
               }
             }
+
             if (object != null) {
+              // Add content
               List<abstractIptcType> list = content.get(type);
               if (list == null) {
                 list = new ArrayList<abstractIptcType>();
@@ -161,7 +242,7 @@ public class IPTC extends abstractTiffType {
               list.add(object);
               content.put(type, list);
             }
-            /* jump to the end of read tag */
+            // Jump to the end of read tag
             i = i + 4 + size;
           }
         }
