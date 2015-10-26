@@ -375,10 +375,11 @@ public class TiffDocument {
   public boolean addTag(String tagName, String tagValue) {
     boolean result = false;
     if (firstIFD != null) {
-      if (!firstIFD.containsTagId(TiffTags.getTagId(tagName))) {
-        firstIFD.addTag(tagName, tagValue);
-        createMetadataDictionary();
+      if (firstIFD.containsTagId(TiffTags.getTagId(tagName))) {
+        firstIFD.removeTag(tagName);
       }
+      firstIFD.addTag(tagName, tagValue);
+      createMetadataDictionary();
     }
     return result;
   }

@@ -91,6 +91,15 @@ public class TiffWriter {
   }
 
   /**
+   * Sets the byte order.
+   *
+   * @param byteOrder the new byte order
+   */
+  public void setByteOrder(ByteOrder byteOrder) {
+    this.byteOrder = byteOrder;
+  }
+
+  /**
    * Write.
    *
    * @param filename the filename
