@@ -54,7 +54,16 @@ public class Long extends abstractTiffType {
    *
    * @return the value
    */
-  public int getValue() {
+  public long getValue() {
+    return ((long) value) & (0xffffffffl);
+  }
+
+  /**
+   * Gets the internal value.
+   *
+   * @return the internal value
+   */
+  public int getInternalValue() {
     return value;
   }
 

@@ -110,11 +110,13 @@ public class BaselineProfile extends GenericProfile implements Profile {
    */
   @Override
   public void validate() {
+    int n = 0;
     for (TiffObject o : model.getImageIfds()) {
       IFD ifd = (IFD) o;
       IfdTags metadata = ifd.getMetadata();
       validateMetadata(metadata);
-      checkImage(ifd, metadata);
+      checkImage(ifd, n, metadata);
+      n++;
     }
   }
 
@@ -174,10 +176,11 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check if the tags that define the image are correct and consistent.
    *
    * @param ifd the ifd
+   * @param n the ifd number
    * @param metadata the ifd metadata
    */
-  public void checkImage(IFD ifd, IfdTags metadata) {
-    CheckCommonFields(ifd, metadata);
+  public void checkImage(IFD ifd, int n, IfdTags metadata) {
+    CheckCommonFields(ifd, n, metadata);
 
     if (!metadata.containsTagId(TiffTags.getTagId("PhotometricInterpretation"))) {
       validation.addError("Missing Photometric Interpretation");
@@ -422,9 +425,10 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check common fields.
    *
    * @param ifd the ifd
+   * @param n the ifd number
    * @param metadata the ifd metadata
    */
-  private void CheckCommonFields(IFD ifd, IfdTags metadata) {
+  private void CheckCommonFields(IFD ifd, int n, IfdTags metadata) {
     int id;
 
     // Width tag is mandatory
@@ -434,7 +438,8 @@ public class BaselineProfile extends GenericProfile implements Profile {
     else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val <= 0)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), val);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            val);
     }
 
     // Height tag is mandatory
@@ -444,7 +449,8 @@ public class BaselineProfile extends GenericProfile implements Profile {
     else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val <= 0)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), val);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            val);
     }
 
     // Check Resolution Unit
@@ -454,7 +460,8 @@ public class BaselineProfile extends GenericProfile implements Profile {
     } else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val != 1 && val != 2 && val != 3)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), val);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            val);
     }
 
     // Check XResolution
@@ -463,8 +470,9 @@ public class BaselineProfile extends GenericProfile implements Profile {
       // validation.addError("Missing required field", TiffTags.getTag(id).name);
     } else {
       float val = ((Rational) metadata.get(id).getValue().get(0)).getFloatValue();
-      if (val <= 0)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), val);
+      if (val <= 0f)
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            val);
     }
 
     // Check YResolution
@@ -473,8 +481,9 @@ public class BaselineProfile extends GenericProfile implements Profile {
       // validation.addError("Missing required field", TiffTags.getTag(id).name);
     } else {
       float val = ((Rational) metadata.get(id).getValue().get(0)).getFloatValue();
-      if (val <= 0)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), val);
+      if (val <= 0f)
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            val);
     }
 
     // Check Planar Configuration
@@ -484,7 +493,8 @@ public class BaselineProfile extends GenericProfile implements Profile {
     } else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val != 1 && val != 2)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), val);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            val);
     }
 
     // Check Orientation
@@ -494,7 +504,8 @@ public class BaselineProfile extends GenericProfile implements Profile {
     } else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val <= 0 || val > 8)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), val);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            val);
     }
 
     // Check whether the image is stored in tiles or strips

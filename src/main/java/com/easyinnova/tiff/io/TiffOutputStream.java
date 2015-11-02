@@ -66,7 +66,7 @@ public class TiffOutputStream {
   /**
    * Instantiates a new tiff stream io.
    *
-   * @param in the inpu stream
+   * @param in the input stream
    */
   public TiffOutputStream(TiffInputStream in) {
     originalFile = in;
@@ -179,7 +179,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putLong(Long val) throws IOException {
-    aFile.writeInt(val.getValue());
+    aFile.writeInt(val.getInternalValue());
     position += 4;
   }
 
