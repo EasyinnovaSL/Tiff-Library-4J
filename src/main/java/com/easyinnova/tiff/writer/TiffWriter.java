@@ -107,6 +107,7 @@ public class TiffWriter {
    */
   public void write(String filename) throws Exception {
     data = new TiffOutputStream(input);
+    data.setByteOrder(byteOrder);
     try {
       data.create(filename);
       writeHeader();

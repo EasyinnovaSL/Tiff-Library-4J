@@ -29,6 +29,7 @@ import com.easyinnova.tiff.writer.TiffWriter;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.ByteOrder;
 
 /**
  * Testing class.
@@ -146,5 +147,306 @@ public class TiffWriterTest {
     } catch (Exception e) {
       assertEquals(0, 1);
     }
+  }
+
+
+  /**
+   * Creator little endian test
+   */
+  @Test
+  public void CreatorLittleEndian() {
+    TiffReader tr;
+    TiffReader trCopy;
+    TiffWriter tw;
+    TiffDocument td;
+    TiffDocument tdCopy;
+    IFD ifd;
+    IFD ifdCopy;
+
+    try {
+      tr = new TiffReader();
+      trCopy = new TiffReader();
+
+      // Read the File to copy
+      tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+          + separator + "Bilevel.tif");
+      TiffInputStream ti =
+          new TiffInputStream(new File("src" + separator + "test" + separator + "resources"
+              + separator + "Small" + separator + "Bilevel.tif"));
+      td = tr.getModel();
+
+      tw = new TiffWriter(ti);
+      tw.SetModel(td);
+      tw.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+      tw.write("src" + separator + "test" + separator + "resources" + separator + "Small"
+          + separator + "Bilevel2.tif");
+
+
+      trCopy.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+          + separator + "Bilevel2.tif");
+      tdCopy = trCopy.getModel();
+
+      ifd = td.getFirstIFD();
+      ifdCopy = tdCopy.getFirstIFD();
+
+
+      assertEquals(td.getIfdAndSubIfdCount(), tdCopy.getIfdAndSubIfdCount());
+      assertEquals(td.getIfdCount(), tdCopy.getIfdCount());
+      assertEquals(td.getIfdImagesCount(), tdCopy.getIfdImagesCount());
+      assertEquals(td.getMagicNumber(), tdCopy.getMagicNumber());
+
+      assertEquals(ifd.getTag("ImageWidth").getCardinality(), ifdCopy.getTag("ImageWidth")
+          .getCardinality());
+      assertEquals(ifd.getTag("ImageWidth").getFirstNumericValue(), ifdCopy.getTag("ImageWidth")
+          .getFirstNumericValue());
+
+      assertEquals(ifd.getTag("ImageLength").getCardinality(), ifdCopy.getTag("ImageLength")
+          .getCardinality());
+      assertEquals(ifd.getTag("ImageLength").getFirstNumericValue(), ifdCopy.getTag("ImageLength")
+          .getFirstNumericValue());
+
+      assertEquals(ifd.getTag("BitsPerSample").getCardinality(), ifdCopy.getTag("BitsPerSample")
+          .getCardinality());
+      assertEquals(ifd.getTag("BitsPerSample").getFirstNumericValue(),
+          ifdCopy.getTag("BitsPerSample").getFirstNumericValue());
+
+      assertEquals(ifd.getTag("PhotometricInterpretation").getCardinality(),
+          ifdCopy.getTag("PhotometricInterpretation").getCardinality());
+      assertEquals(ifd.getTag("PhotometricInterpretation").getFirstNumericValue(),
+          ifdCopy.getTag("PhotometricInterpretation").getFirstNumericValue());
+
+      assertEquals(ifdCopy.hasStrips(), ifd.hasStrips());
+      assertEquals(ifdCopy.hasTiles(), ifd.hasTiles());
+
+
+      assertEquals(td.getMetadataSingleString("Compression"),
+          tdCopy.getMetadataSingleString("Compression"));
+      assertEquals(td.getMetadataSingleString("StripBYTECount"),
+          tdCopy.getMetadataSingleString("StripBYTECount"));
+      assertEquals(td.getMetadataSingleString("FlashPixVersion"),
+          tdCopy.getMetadataSingleString("FlashPixVersion"));
+      assertEquals(td.getMetadataSingleString("42240"), tdCopy.getMetadataSingleString("42240"));
+      assertEquals(td.getMetadataSingleString("InstanceID"),
+          tdCopy.getMetadataSingleString("InstanceID"));
+      assertEquals(td.getMetadataSingleString("ExposureProgram"),
+          tdCopy.getMetadataSingleString("ExposureProgram"));
+
+      assertEquals(td.getMetadataSingleString("ColorSpace"),
+          tdCopy.getMetadataSingleString("ColorSpace"));
+      assertEquals(td.getMetadataSingleString("ColorMode"),
+          tdCopy.getMetadataSingleString("ColorMode"));
+      assertEquals(td.getMetadataSingleString("CreateDate"),
+          tdCopy.getMetadataSingleString("CreateDate"));
+      assertEquals(td.getMetadataSingleString("when"), tdCopy.getMetadataSingleString("when"));
+      assertEquals(td.getMetadataSingleString("BitsPerSample"),
+          tdCopy.getMetadataSingleString("BitsPerSample"));
+      assertEquals(td.getMetadataSingleString("DateTime"),
+          tdCopy.getMetadataSingleString("DateTime"));
+
+      assertEquals(td.getMetadataSingleString("YResolution"),
+          tdCopy.getMetadataSingleString("YResolution"));
+      assertEquals(td.getMetadataSingleString("SubSecTimeOriginal"),
+          tdCopy.getMetadataSingleString("SubSecTimeOriginal"));
+      assertEquals(td.getMetadataSingleString("34864"), tdCopy.getMetadataSingleString("34864"));
+      assertEquals(td.getMetadataSingleString("ExposureMode"),
+          tdCopy.getMetadataSingleString("ExposureMode"));
+      assertEquals(td.getMetadataSingleString("ImageWidth"),
+          tdCopy.getMetadataSingleString("ImageWidth"));
+      assertEquals(td.getMetadataSingleString("ExposureTime"),
+          tdCopy.getMetadataSingleString("ExposureTime"));
+
+      assertEquals(td.getMetadataSingleString("action"), tdCopy.getMetadataSingleString("action"));
+      assertEquals(td.getMetadataSingleString("NewSubfileType"),
+          tdCopy.getMetadataSingleString("NewSubfileType"));
+      assertEquals(td.getMetadataSingleString("SubSecTime"),
+          tdCopy.getMetadataSingleString("SubSecTime"));
+      assertEquals(td.getMetadataSingleString("FNumber"), tdCopy.getMetadataSingleString("FNumber"));
+      assertEquals(td.getMetadataSingleString("FlashCompensation"),
+          tdCopy.getMetadataSingleString("FlashCompensation"));
+      assertEquals(td.getMetadataSingleString("PixelXDimension"),
+          tdCopy.getMetadataSingleString("PixelXDimension"));
+
+      assertEquals(td.getMetadataSingleString("FileSource"),
+          tdCopy.getMetadataSingleString("FileSource"));
+      assertEquals(td.getMetadataSingleString("format"), tdCopy.getMetadataSingleString("format"));
+      assertEquals(td.getMetadataSingleString("DocumentID"),
+          tdCopy.getMetadataSingleString("DocumentID"));
+      assertEquals(td.getMetadataSingleString("FocalLengthIn35mmFilm"),
+          tdCopy.getMetadataSingleString("FocalLengthIn35mmFilm"));
+      assertEquals(td.getMetadataSingleString("Make"), tdCopy.getMetadataSingleString("Make"));
+      assertEquals(td.getMetadataSingleString("CompressedBitsPerPixel"),
+          tdCopy.getMetadataSingleString("CompressedBitsPerPixel"));
+
+      assertEquals(td.getMetadataSingleString("Orientation"),
+          tdCopy.getMetadataSingleString("Orientation"));
+      assertEquals(td.getMetadataSingleString("Contrast"),
+          tdCopy.getMetadataSingleString("Contrast"));
+      assertEquals(td.getMetadataSingleString("instanceID"),
+          tdCopy.getMetadataSingleString("instanceID"));
+      assertEquals(td.getMetadataSingleString("DateTimeDigitized"),
+          tdCopy.getMetadataSingleString("DateTimeDigitized"));
+      assertEquals(td.getMetadataSingleString("XResolution"),
+          tdCopy.getMetadataSingleString("XResolution"));
+
+      assertEquals(td.getMetadataSingleString("SerialNumber"),
+          tdCopy.getMetadataSingleString("SerialNumber"));
+      assertEquals(td.getMetadataSingleString("MeteringMode"),
+          tdCopy.getMetadataSingleString("MeteringMode"));
+      assertEquals(td.getMetadataSingleString("FocalLength"),
+          tdCopy.getMetadataSingleString("FocalLength"));
+      assertEquals(td.getMetadataSingleString("Lens"), tdCopy.getMetadataSingleString("Lens"));
+      assertEquals(td.getMetadataSingleString("GainControl"),
+          tdCopy.getMetadataSingleString("GainControl"));
+      assertEquals(td.getMetadataSingleString("SceneCaptureType"),
+          tdCopy.getMetadataSingleString("SceneCaptureType"));
+
+      assertEquals(td.getMetadataSingleString("UserComment"),
+          tdCopy.getMetadataSingleString("UserComment"));
+
+
+    } catch (Exception e) {
+      assertEquals(0, 1);
+    }
+  }
+
+  /**
+   * Creator test
+   */
+  @Test
+  public void CreatorBigFile() {
+    /*
+     * TiffReader tr; TiffReader trCopy; TiffWriter tw; TiffDocument td; TiffDocument tdCopy; IFD
+     * ifd; IFD ifdCopy;
+     * 
+     * try { tr = new TiffReader(); trCopy = new TiffReader();
+     * 
+     * // Read the File to copy tr.readFile("src" + separator + "test" + separator + "resources" +
+     * separator + "Anular_detalles_03.tif"); TiffInputStream ti = new TiffInputStream(new
+     * File("src" + separator + "test" + separator + "resources" + separator +
+     * "Anular_detalles_03.tif")); td = tr.getModel();
+     * 
+     * tw = new TiffWriter(ti); tw.SetModel(td); tw.write("src" + separator + "test" + separator +
+     * "resources" + separator + "Anular_detalles_032.tif");
+     * 
+     * 
+     * trCopy.readFile("src" + separator + "test" + separator + "resources" + separator +
+     * "Anular_detalles_032.tif"); tdCopy = trCopy.getModel();
+     * 
+     * ifd = td.getFirstIFD(); ifdCopy = tdCopy.getFirstIFD();
+     * 
+     * 
+     * assertEquals(td.getIfdAndSubIfdCount(), tdCopy.getIfdAndSubIfdCount());
+     * assertEquals(td.getIfdCount(), tdCopy.getIfdCount()); assertEquals(td.getIfdImagesCount(),
+     * tdCopy.getIfdImagesCount()); assertEquals(td.getMagicNumber(), tdCopy.getMagicNumber());
+     * 
+     * assertEquals(ifd.getTag("ImageWidth").getCardinality(), ifdCopy.getTag("ImageWidth")
+     * .getCardinality()); assertEquals(ifd.getTag("ImageWidth").getFirstNumericValue(),
+     * ifdCopy.getTag("ImageWidth") .getFirstNumericValue());
+     * 
+     * assertEquals(ifd.getTag("ImageLength").getCardinality(), ifdCopy.getTag("ImageLength")
+     * .getCardinality()); assertEquals(ifd.getTag("ImageLength").getFirstNumericValue(),
+     * ifdCopy.getTag("ImageLength") .getFirstNumericValue());
+     * 
+     * assertEquals(ifd.getTag("BitsPerSample").getCardinality(), ifdCopy.getTag("BitsPerSample")
+     * .getCardinality()); assertEquals(ifd.getTag("BitsPerSample").getFirstNumericValue(),
+     * ifdCopy.getTag("BitsPerSample").getFirstNumericValue());
+     * 
+     * assertEquals(ifd.getTag("PhotometricInterpretation").getCardinality(),
+     * ifdCopy.getTag("PhotometricInterpretation").getCardinality());
+     * assertEquals(ifd.getTag("PhotometricInterpretation").getFirstNumericValue(),
+     * ifdCopy.getTag("PhotometricInterpretation").getFirstNumericValue());
+     * 
+     * assertEquals(ifdCopy.hasStrips(), ifd.hasStrips()); assertEquals(ifdCopy.hasTiles(),
+     * ifd.hasTiles());
+     * 
+     * 
+     * assertEquals(td.getMetadataSingleString("Compression"),
+     * tdCopy.getMetadataSingleString("Compression"));
+     * assertEquals(td.getMetadataSingleString("StripBYTECount"),
+     * tdCopy.getMetadataSingleString("StripBYTECount"));
+     * assertEquals(td.getMetadataSingleString("FlashPixVersion"),
+     * tdCopy.getMetadataSingleString("FlashPixVersion"));
+     * assertEquals(td.getMetadataSingleString("42240"), tdCopy.getMetadataSingleString("42240"));
+     * assertEquals(td.getMetadataSingleString("InstanceID"),
+     * tdCopy.getMetadataSingleString("InstanceID"));
+     * assertEquals(td.getMetadataSingleString("ExposureProgram"),
+     * tdCopy.getMetadataSingleString("ExposureProgram"));
+     * 
+     * assertEquals(td.getMetadataSingleString("ColorSpace"),
+     * tdCopy.getMetadataSingleString("ColorSpace"));
+     * assertEquals(td.getMetadataSingleString("ColorMode"),
+     * tdCopy.getMetadataSingleString("ColorMode"));
+     * assertEquals(td.getMetadataSingleString("CreateDate"),
+     * tdCopy.getMetadataSingleString("CreateDate"));
+     * assertEquals(td.getMetadataSingleString("when"), tdCopy.getMetadataSingleString("when"));
+     * assertEquals(td.getMetadataSingleString("BitsPerSample"),
+     * tdCopy.getMetadataSingleString("BitsPerSample"));
+     * assertEquals(td.getMetadataSingleString("DateTime"),
+     * tdCopy.getMetadataSingleString("DateTime"));
+     * 
+     * assertEquals(td.getMetadataSingleString("YResolution"),
+     * tdCopy.getMetadataSingleString("YResolution"));
+     * assertEquals(td.getMetadataSingleString("SubSecTimeOriginal"),
+     * tdCopy.getMetadataSingleString("SubSecTimeOriginal"));
+     * assertEquals(td.getMetadataSingleString("34864"), tdCopy.getMetadataSingleString("34864"));
+     * assertEquals(td.getMetadataSingleString("ExposureMode"),
+     * tdCopy.getMetadataSingleString("ExposureMode"));
+     * assertEquals(td.getMetadataSingleString("ImageWidth"),
+     * tdCopy.getMetadataSingleString("ImageWidth"));
+     * assertEquals(td.getMetadataSingleString("ExposureTime"),
+     * tdCopy.getMetadataSingleString("ExposureTime"));
+     * 
+     * assertEquals(td.getMetadataSingleString("action"), tdCopy.getMetadataSingleString("action"));
+     * assertEquals(td.getMetadataSingleString("NewSubfileType"),
+     * tdCopy.getMetadataSingleString("NewSubfileType"));
+     * assertEquals(td.getMetadataSingleString("SubSecTime"),
+     * tdCopy.getMetadataSingleString("SubSecTime"));
+     * assertEquals(td.getMetadataSingleString("FNumber"),
+     * tdCopy.getMetadataSingleString("FNumber"));
+     * assertEquals(td.getMetadataSingleString("FlashCompensation"),
+     * tdCopy.getMetadataSingleString("FlashCompensation"));
+     * assertEquals(td.getMetadataSingleString("PixelXDimension"),
+     * tdCopy.getMetadataSingleString("PixelXDimension"));
+     * 
+     * assertEquals(td.getMetadataSingleString("FileSource"),
+     * tdCopy.getMetadataSingleString("FileSource"));
+     * assertEquals(td.getMetadataSingleString("format"), tdCopy.getMetadataSingleString("format"));
+     * assertEquals(td.getMetadataSingleString("DocumentID"),
+     * tdCopy.getMetadataSingleString("DocumentID"));
+     * assertEquals(td.getMetadataSingleString("FocalLengthIn35mmFilm"),
+     * tdCopy.getMetadataSingleString("FocalLengthIn35mmFilm"));
+     * assertEquals(td.getMetadataSingleString("Make"), tdCopy.getMetadataSingleString("Make"));
+     * assertEquals(td.getMetadataSingleString("CompressedBitsPerPixel"),
+     * tdCopy.getMetadataSingleString("CompressedBitsPerPixel"));
+     * 
+     * assertEquals(td.getMetadataSingleString("Orientation"),
+     * tdCopy.getMetadataSingleString("Orientation"));
+     * assertEquals(td.getMetadataSingleString("Contrast"),
+     * tdCopy.getMetadataSingleString("Contrast"));
+     * assertEquals(td.getMetadataSingleString("instanceID"),
+     * tdCopy.getMetadataSingleString("instanceID"));
+     * assertEquals(td.getMetadataSingleString("DateTimeDigitized"),
+     * tdCopy.getMetadataSingleString("DateTimeDigitized"));
+     * assertEquals(td.getMetadataSingleString("XResolution"),
+     * tdCopy.getMetadataSingleString("XResolution"));
+     * 
+     * assertEquals(td.getMetadataSingleString("SerialNumber"),
+     * tdCopy.getMetadataSingleString("SerialNumber"));
+     * assertEquals(td.getMetadataSingleString("MeteringMode"),
+     * tdCopy.getMetadataSingleString("MeteringMode"));
+     * assertEquals(td.getMetadataSingleString("FocalLength"),
+     * tdCopy.getMetadataSingleString("FocalLength"));
+     * assertEquals(td.getMetadataSingleString("Lens"), tdCopy.getMetadataSingleString("Lens"));
+     * assertEquals(td.getMetadataSingleString("GainControl"),
+     * tdCopy.getMetadataSingleString("GainControl"));
+     * assertEquals(td.getMetadataSingleString("SceneCaptureType"),
+     * tdCopy.getMetadataSingleString("SceneCaptureType"));
+     * 
+     * assertEquals(td.getMetadataSingleString("UserComment"),
+     * tdCopy.getMetadataSingleString("UserComment"));
+     * 
+     * 
+     * } catch (Exception e) { assertEquals(0, 1); }
+     */
   }
 }

@@ -71,6 +71,7 @@ public class TiffOutputStream {
   public TiffOutputStream(TiffInputStream in) {
     originalFile = in;
     position = 0;
+    byteOrder = ByteOrder.BIG_ENDIAN;
   }
 
   /**
@@ -80,6 +81,15 @@ public class TiffOutputStream {
    */
   public ByteOrder getByteOrder() {
     return byteOrder;
+  }
+
+  /**
+   * Sets the byte order.
+   *
+   * @param byteOrder the new byte order
+   */
+  public void setByteOrder(ByteOrder byteOrder) {
+    this.byteOrder = byteOrder;
   }
 
   /**
@@ -146,7 +156,12 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putShort(short val) throws IOException {
-    aFile.writeShort(val);
+    if (byteOrder == ByteOrder.BIG_ENDIAN)
+      aFile.writeShort(val);
+    else {
+      aFile.write((val >>> 0) & 0xFF);
+      aFile.write((val >>> 8) & 0xFF);
+    }
     position += 2;
   }
 
@@ -157,8 +172,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putSShort(SShort val) throws IOException {
-    aFile.writeShort(val.getValue());
-    position += 2;
+    putShort(val.getValue());
   }
 
   /**
@@ -168,7 +182,14 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putInt(int val) throws IOException {
-    aFile.writeInt(val);
+    if (byteOrder == ByteOrder.BIG_ENDIAN)
+      aFile.writeInt(val);
+    else {
+      aFile.write((val >>> 0) & 0xFF);
+      aFile.write((val >>> 8) & 0xFF);
+      aFile.write((val >>> 16) & 0xFF);
+      aFile.write((val >>> 24) & 0xFF);
+    }
     position += 4;
   }
 
@@ -179,8 +200,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putLong(Long val) throws IOException {
-    aFile.writeInt(val.getInternalValue());
-    position += 4;
+    putInt(val.getInternalValue());
   }
 
   /**
@@ -190,8 +210,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putSLong(SLong val) throws IOException {
-    aFile.writeInt(val.getValue());
-    position += 4;
+    putInt(val.getValue());
   }
 
   /**
@@ -201,9 +220,8 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putRational(Rational val) throws IOException {
-    aFile.writeInt(val.getNumerator());
-    aFile.writeInt(val.getDenominator());
-    position += 8;
+    putInt(val.getNumerator());
+    putInt(val.getDenominator());
   }
 
   /**
@@ -213,9 +231,8 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putSRational(SRational val) throws IOException {
-    aFile.writeInt(val.getNumerator());
-    aFile.writeInt(val.getDenominator());
-    position += 8;
+    putInt(val.getNumerator());
+    putInt(val.getDenominator());
   }
 
   /**
@@ -225,8 +242,12 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putFloat(Float val) throws IOException {
-    aFile.writeFloat(val.getValue());
-    position += 8;
+    if (byteOrder == ByteOrder.BIG_ENDIAN) {
+      aFile.writeFloat(val.getValue());
+      position += 4;
+    } else {
+      putInt(java.lang.Float.floatToIntBits(val.getValue()));
+    }
   }
 
   /**
@@ -236,7 +257,19 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putDouble(Double val) throws IOException {
-    aFile.writeDouble(val.getValue());
+    if (byteOrder == ByteOrder.BIG_ENDIAN) {
+      aFile.writeDouble(val.getValue());
+    } else {
+      long v = java.lang.Double.doubleToLongBits(val.getValue());
+      aFile.write((int) (v >>> 0) & 0xFF);
+      aFile.write((int) (v >>> 8) & 0xFF);
+      aFile.write((int) (v >>> 16) & 0xFF);
+      aFile.write((int) (v >>> 24) & 0xFF);
+      aFile.write((int) (v >>> 32) & 0xFF);
+      aFile.write((int) (v >>> 40) & 0xFF);
+      aFile.write((int) (v >>> 48) & 0xFF);
+      aFile.write((int) (v >>> 56) & 0xFF);
+    }
     position += 8;
   }
 
