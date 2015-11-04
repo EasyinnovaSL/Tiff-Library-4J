@@ -40,7 +40,6 @@ import com.easyinnova.tiff.model.types.SRational;
 import com.easyinnova.tiff.model.types.SShort;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 
 /**
@@ -51,17 +50,14 @@ public class TiffOutputStream {
   /** The original file */
   TiffInputStream originalFile;
 
-  /** The a file. */
-  RandomAccessFile aFile;
-
   /** The filename. */
   String filename;
 
   /** The byte order. */
   ByteOrder byteOrder;
 
-  /** The position. */
-  int position;
+  /** The output. */
+  OutputBuffer output;
 
   /**
    * Instantiates a new tiff stream io.
@@ -70,8 +66,8 @@ public class TiffOutputStream {
    */
   public TiffOutputStream(TiffInputStream in) {
     originalFile = in;
-    position = 0;
     byteOrder = ByteOrder.BIG_ENDIAN;
+    output = new OutputBuffer(byteOrder);
   }
 
   /**
@@ -100,20 +96,14 @@ public class TiffOutputStream {
    */
   public void create(String filename) throws IOException {
     this.filename = filename;
-    aFile = new RandomAccessFile(filename, "rw");
-    // channel = aFile.getChannel();
-    // data = channel.map(FileChannel.MapMode.READ_WRITE, 0, 10000000);
+    output.Create(filename);
   }
 
   /**
    * Close.
    */
   public void close() {
-    try {
-      aFile.close();
-    } catch (Exception ex) {
-      /*everything is ok*/
-    }
+    output.close();
   }
 
   /**
@@ -123,8 +113,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void seek(int offset) throws IOException {
-    aFile.seek(offset);
-    position = offset;
+    output.seek(offset);
   }
 
   /**
@@ -134,8 +123,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void put(byte val) throws IOException {
-    aFile.write(val);
-    position++;
+    writeByteCurrentPosition(val);
   }
 
   /**
@@ -156,13 +144,14 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putShort(short val) throws IOException {
-    if (byteOrder == ByteOrder.BIG_ENDIAN)
-      aFile.writeShort(val);
-    else {
-      aFile.write((val >>> 0) & 0xFF);
-      aFile.write((val >>> 8) & 0xFF);
+    if (byteOrder == ByteOrder.BIG_ENDIAN) {
+      writeIntCurrentPosition((val >>> 8) & 0xFF);
+      writeIntCurrentPosition((val >>> 0) & 0xFF);
     }
-    position += 2;
+    else {
+      writeIntCurrentPosition((val >>> 0) & 0xFF);
+      writeIntCurrentPosition((val >>> 8) & 0xFF);
+    }
   }
 
   /**
@@ -182,15 +171,18 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putInt(int val) throws IOException {
-    if (byteOrder == ByteOrder.BIG_ENDIAN)
-      aFile.writeInt(val);
-    else {
-      aFile.write((val >>> 0) & 0xFF);
-      aFile.write((val >>> 8) & 0xFF);
-      aFile.write((val >>> 16) & 0xFF);
-      aFile.write((val >>> 24) & 0xFF);
+    if (byteOrder == ByteOrder.BIG_ENDIAN) {
+      writeIntCurrentPosition((val >>> 24) & 0xFF);
+      writeIntCurrentPosition((val >>> 16) & 0xFF);
+      writeIntCurrentPosition((val >>> 8) & 0xFF);
+      writeIntCurrentPosition((val >>> 0) & 0xFF);
     }
-    position += 4;
+    else {
+      writeIntCurrentPosition((val >>> 0) & 0xFF);
+      writeIntCurrentPosition((val >>> 8) & 0xFF);
+      writeIntCurrentPosition((val >>> 16) & 0xFF);
+      writeIntCurrentPosition((val >>> 24) & 0xFF);
+    }
   }
 
   /**
@@ -242,12 +234,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putFloat(Float val) throws IOException {
-    if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      aFile.writeFloat(val.getValue());
-      position += 4;
-    } else {
-      putInt(java.lang.Float.floatToIntBits(val.getValue()));
-    }
+    putInt(java.lang.Float.floatToIntBits(val.getValue()));
   }
 
   /**
@@ -257,20 +244,46 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void putDouble(Double val) throws IOException {
+    long v = java.lang.Double.doubleToLongBits(val.getValue());
     if (byteOrder == ByteOrder.BIG_ENDIAN) {
-      aFile.writeDouble(val.getValue());
+      writeIntCurrentPosition((int) (v >>> 56) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 48) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 40) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 32) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 24) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 16) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 8) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 0) & 0xFF);
     } else {
-      long v = java.lang.Double.doubleToLongBits(val.getValue());
-      aFile.write((int) (v >>> 0) & 0xFF);
-      aFile.write((int) (v >>> 8) & 0xFF);
-      aFile.write((int) (v >>> 16) & 0xFF);
-      aFile.write((int) (v >>> 24) & 0xFF);
-      aFile.write((int) (v >>> 32) & 0xFF);
-      aFile.write((int) (v >>> 40) & 0xFF);
-      aFile.write((int) (v >>> 48) & 0xFF);
-      aFile.write((int) (v >>> 56) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 0) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 8) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 16) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 24) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 32) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 40) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 48) & 0xFF);
+      writeIntCurrentPosition((int) (v >>> 56) & 0xFF);
     }
-    position += 8;
+  }
+
+  /**
+   * Write byte.
+   *
+   * @param v the v
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void writeByteCurrentPosition(byte v) throws IOException {
+    output.writeByteCurrentPosition(v);
+  }
+
+  /**
+   * Write byte.
+   *
+   * @param v the v
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void writeIntCurrentPosition(int v) throws IOException {
+    output.writeIntCurrentPosition(v);
   }
 
   /**
@@ -280,7 +293,7 @@ public class TiffOutputStream {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public long position() throws IOException {
-    return position;
+    return output.position();
   }
 }
 
