@@ -44,6 +44,9 @@ public class TiffITProfile extends GenericProfile implements Profile {
   /** The profile. */
   private int profile;
 
+  /** The current ifd. */
+  private int currentIfd;
+
   /**
    * Instantiates a new tiff/ep profile validation.
    *
@@ -60,7 +63,9 @@ public class TiffITProfile extends GenericProfile implements Profile {
    */
   @Override
   public void validate() {
+    currentIfd = 0;
     for (TiffObject o : model.getImageIfds()) {
+      currentIfd++;
       IFD ifd = (IFD) o;
       IfdTags metadata = ifd.getMetadata();
       int sft = -1;
@@ -250,7 +255,8 @@ public class TiffITProfile extends GenericProfile implements Profile {
           && metadata.get(TiffTags.getTagId("PhotometricInterpretation")).getFirstNumericValue() == 6
           &&
           metadata.get(TiffTags.getTagId("Compression")).getFirstNumericValue() != 7) {
-        validation.addError("YCbCr shall be used only when compression has the value 7");
+        validation.addErrorLoc("YCbCr shall be used only when compression has the value 7", "IFD"
+            + currentIfd);
       }
     } else if (p == 1 || p == 2) {
       checkRequiredTag(metadata, "PhotometricInterpretation", 1, new long[] {5});
@@ -595,10 +601,11 @@ public class TiffITProfile extends GenericProfile implements Profile {
     boolean ok = true;
     int tagid = TiffTags.getTagId(tagName);
     if (!metadata.containsTagId(tagid)) {
-      validation.addError("Missing required tag for TiffIT " + tagName);
+      validation.addErrorLoc("Missing required tag for TiffIT " + tagName, "IFD" + currentIfd);
       ok = false;
     } else if (cardinality != -1 && metadata.get(tagid).getCardinality() != cardinality) {
-      validation.addError("Invalid cardinality for TiffIT tag " + tagName, metadata.get(tagid)
+      validation.addError("Invalid cardinality for TiffIT tag " + tagName, "IFD" + currentIfd,
+          metadata.get(tagid)
           .getCardinality());
     } else if (cardinality == 1 && possibleValues != null) {
       long val = metadata.get(tagid).getFirstNumericValue();
@@ -609,7 +616,7 @@ public class TiffITProfile extends GenericProfile implements Profile {
         i++;
       }
       if (!contained)
-        validation.addError("Invalid value for TiffIT tag " + tagName, val);
+        validation.addError("Invalid value for TiffIT tag " + tagName, "IFD" + currentIfd, val);
     }
     return ok;
   }

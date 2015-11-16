@@ -72,23 +72,11 @@ public class ValidationResult {
    * Adds an error.
    *
    * @param desc error description
-   * @param value the location
-   */
-  private void iaddErrorLoc(String desc, String value) {
-    ValidationEvent ve = new ValidationEvent(desc, null, value);
-    errors.add(ve);
-    correct = false;
-  }
-
-  /**
-   * Adds an error.
-   *
-   * @param desc error description
    * @param value the value that caused the error
-   * @param ext the error location
+   * @param loc the error location
    */
-  private void iaddError(String desc, String value, String ext) {
-    ValidationEvent ve = new ValidationEvent(desc, value, ext);
+  private void iaddError(String desc, String value, String loc) {
+    ValidationEvent ve = new ValidationEvent(desc, value, loc);
     errors.add(ve);
     correct = false;
   }
@@ -98,9 +86,10 @@ public class ValidationResult {
    *
    * @param desc warning description
    * @param value the value that caused the warning
+   * @param loc the location
    */
-  private void iaddWarning(String desc, String value) {
-    ValidationEvent ve = new ValidationEvent(desc, value);
+  private void iaddWarning(String desc, String value, String loc) {
+    ValidationEvent ve = new ValidationEvent(desc, value, loc);
     warnings.add(ve);
   }
 
@@ -108,62 +97,34 @@ public class ValidationResult {
    * Adds an error.
    *
    * @param desc Error description
+   * @param loc Error Location
    * @param value the integer value that caused the error
    */
-  public void addError(String desc, int value) {
-    iaddError(desc, "" + value);
+  public void addError(String desc, String loc, long value) {
+    iaddError(desc, "" + value, loc);
+  }
+
+
+  /**
+   * Adds an error.
+   *
+   * @param desc Error description
+   * @param loc Error Location
+   * @param value the value that caused the error
+   */
+  public void addError(String desc, String loc, String value) {
+    iaddError(desc, "" + value, loc);
   }
 
   /**
    * Adds an error.
    *
    * @param desc Error description
-   * @param value the integer value that caused the error
-   */
-  public void addError(String desc, long value) {
-    iaddError(desc, "" + value);
-  }
-
-  /**
-   * Adds an error.
-   *
-   * @param desc Error description
-   * @param ext Error Location
-   * @param value the integer value that caused the error
-   */
-  public void addError(String desc, String ext, long value) {
-    iaddError(desc, "" + value, ext);
-  }
-
-  /**
-   * Adds an error.
-   *
-   * @param desc Error description
+   * @param loc Error Location
    * @param value the float value that caused the error
    */
-  public void addError(String desc, float value) {
-    iaddError(desc, "" + value);
-  }
-
-  /**
-   * Adds an error.
-   *
-   * @param desc Error description
-   * @param ext Error Location
-   * @param value the float value that caused the error
-   */
-  public void addError(String desc, String ext, float value) {
-    iaddError(desc, "" + value, ext);
-  }
-
-  /**
-   * Adds an error.
-   *
-   * @param desc Error description
-   * @param value the String that caused the error
-   */
-  public void addError(String desc, String value) {
-    iaddError(desc, value);
+  public void addError(String desc, String loc, float value) {
+    iaddError(desc, "" + value, loc);
   }
 
   /**
@@ -173,25 +134,7 @@ public class ValidationResult {
    * @param loc the location
    */
   public void addErrorLoc(String desc, String loc) {
-    iaddErrorLoc(desc, loc);
-  }
-
-  /**
-   * Adds an error.
-   *
-   * @param desc Error description
-   */
-  public void addError(String desc) {
-    iaddError(desc, null);
-  }
-
-  /**
-   * Adds a warning.
-   *
-   * @param desc Warning description
-   */
-  public void addWarning(String desc) {
-    iaddWarning(desc, null);
+    iaddError(desc, null, loc);
   }
 
   /**
@@ -199,29 +142,10 @@ public class ValidationResult {
    *
    * @param desc Warning description
    * @param value the String that caused the warning
+   * @param loc the location
    */
-  public void addWarning(String desc, String value) {
-    iaddWarning(desc, value);
-  }
-
-  /**
-   * Adds an warning.
-   *
-   * @param desc Warning description
-   * @param value the integer value that caused the warning
-   */
-  public void addWarning(String desc, long value) {
-    iaddWarning(desc, "" + value);
-  }
-
-  /**
-   * Adds an warning.
-   *
-   * @param desc Warning description
-   * @param value the integer value that caused the warning
-   */
-  public void addWarning(String desc, int value) {
-    iaddWarning(desc, "" + value);
+  public void addWarning(String desc, String value, String loc) {
+    iaddWarning(desc, value, loc);
   }
 
   /**

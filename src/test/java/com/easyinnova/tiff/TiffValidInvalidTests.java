@@ -40,6 +40,12 @@ public class TiffValidInvalidTests {
     try {
       tr = new TiffReader();
 
+      result =
+          tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+              + separator + "Bilevel.TIF");
+      assertEquals(0, result);
+      assertEquals(true, tr.getBaselineValidation().isCorrect());
+
       result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Header" + separator + "Classic Intel.TIF");
       assertEquals(0, result);
       assertEquals(true, tr.getBaselineValidation().isCorrect());

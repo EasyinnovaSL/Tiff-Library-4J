@@ -134,9 +134,9 @@ public class BaselineProfile extends GenericProfile implements Profile {
     }
     for (TagValue ie : metadata.getTags()) {
       if (!TiffTags.tagMap.containsKey(ie.getId())) {
-        validation.addWarning("Ignoring undefined tag id " + ie.getId());
+        validation.addWarning("Ignoring undefined tag id " + ie.getId(), "", "Metadata");
       } else if (!TiffTags.tagTypes.containsKey(ie.getType())) {
-        validation.addWarning("Ignoring unknown tag type " + ie.getType());
+        validation.addWarning("Ignoring unknown tag type " + ie.getType(), "", "Metadata");
       }
       else {
         Tag t = TiffTags.getTag(ie.getId());
@@ -149,13 +149,13 @@ public class BaselineProfile extends GenericProfile implements Profile {
             stypes += tt;
           }
           validation.addError("Invalid type for tag " + TiffTags.getTag(ie.getId()).getName() + "["
-              + stypes + "]", stype);
+              + stypes + "]", "Metadata", stype);
         }
         try {
           int card = Integer.parseInt(t.getCardinality());
           if (card != ie.getCardinality())
             validation.addError("Cardinality for tag " + TiffTags.getTag(ie.getId()).getName()
-                + " must be " + card,
+                + " must be " + card, "Metadata",
                 ie.getCardinality());
         } catch (Exception e) {
           // TODO: Deal with formulas?
@@ -164,9 +164,9 @@ public class BaselineProfile extends GenericProfile implements Profile {
 
       if (ie.getId() < prevTagId) {
         if (tagOrderTolerance > 0)
-          validation.addWarning("Tags are not in ascending order");
+          validation.addWarning("Tags are not in ascending order", "", "Metadata");
         else
-          validation.addError("Tags are not in ascending order");
+          validation.addErrorLoc("Tags are not in ascending order", "Metadata");
       }
       prevTagId = ie.getId();
     }
@@ -183,9 +183,9 @@ public class BaselineProfile extends GenericProfile implements Profile {
     CheckCommonFields(ifd, n, metadata);
 
     if (!metadata.containsTagId(TiffTags.getTagId("PhotometricInterpretation"))) {
-      validation.addError("Missing Photometric Interpretation");
+      validation.addErrorLoc("Missing Photometric Interpretation", "IFD" + n);
     } else if (metadata.get(TiffTags.getTagId("PhotometricInterpretation")).getValue().size() != 1) {
-      validation.addError("Invalid Photometric Interpretation");
+      validation.addErrorLoc("Invalid Photometric Interpretation", "IFD" + n);
     } else {
       photometric =
           (int) metadata.get(TiffTags.getTagId("PhotometricInterpretation")).getFirstNumericValue();
@@ -195,40 +195,40 @@ public class BaselineProfile extends GenericProfile implements Profile {
           if (!metadata.containsTagId(TiffTags.getTagId("BitsPerSample"))
               || metadata.get(TiffTags.getTagId("BitsPerSample")).getFirstNumericValue() == 1) {
             type = ImageType.BILEVEL;
-            CheckBilevelImage(metadata);
+            CheckBilevelImage(metadata, n);
           } else {
             type = ImageType.GRAYSCALE;
-            CheckGrayscaleImage(metadata);
+            CheckGrayscaleImage(metadata, n);
           }
           break;
         case 2:
           type = ImageType.RGB;
-          CheckRGBImage(metadata);
+          CheckRGBImage(metadata, n);
           break;
         case 3:
           type = ImageType.PALETTE;
-          CheckPalleteImage(metadata);
+          CheckPalleteImage(metadata, n);
           break;
         case 4:
           type = ImageType.TRANSPARENCY_MASK;
-          CheckTransparencyMask(metadata);
+          CheckTransparencyMask(metadata, n);
           break;
         case 5:
           type = ImageType.CMYK;
-          CheckCMYK(metadata);
+          CheckCMYK(metadata, n);
           break;
         case 6:
           type = ImageType.YCbCr;
-          CheckYCbCr(metadata);
+          CheckYCbCr(metadata, n);
           break;
         case 8:
         case 9:
         case 10:
           type = ImageType.CIELab;
-          CheckCIELab(metadata);
+          CheckCIELab(metadata, n);
           break;
         default:
-          validation.addWarning("Unknown Photometric Interpretation", photometric);
+          validation.addWarning("Unknown Photometric Interpretation", "" + photometric, "IFD" + n);
           break;
       }
     }
@@ -238,85 +238,90 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check Bilevel Image.
    *
    * @param metadata the metadata
+   * @param n the IFD number
    */
-  private void CheckBilevelImage(IfdTags metadata) {
+  private void CheckBilevelImage(IfdTags metadata, int n) {
     // Compression
     long comp = metadata.get(TiffTags.getTagId("Compression")).getFirstNumericValue();
     // if (comp != 1 && comp != 2 && comp != 32773)
     if (comp < 1)
-      validation.addError("Invalid Compression", comp);
+      validation.addError("Invalid Compression", "IFD" + n, comp);
   }
 
   /**
    * Check Grayscale Image.
    *
    * @param metadata the metadata
+   * @param n the IFD number
    */
-  private void CheckGrayscaleImage(IfdTags metadata) {
+  private void CheckGrayscaleImage(IfdTags metadata, int n) {
     // Bits per Sample
     long bps = metadata.get(TiffTags.getTagId("BitsPerSample")).getFirstNumericValue();
     // if (bps != 4 && bps != 8)
     if (bps < 1)
-      validation.addError("Invalid Bits per Sample", bps);
+      validation.addError("Invalid Bits per Sample", "IFD" + n, bps);
 
     // Compression
     long comp = metadata.get(TiffTags.getTagId("Compression")).getFirstNumericValue();
     // if (comp != 1 && comp != 32773)
     if (comp < 1)
-      validation.addError("Invalid Compression", comp);
+      validation.addError("Invalid Compression", "IFD" + n, comp);
   }
 
   /**
    * Check Pallete Color Image.
    *
    * @param metadata the metadata
+   * @param nifd the IFD number
    */
-  private void CheckPalleteImage(IfdTags metadata) {
+  private void CheckPalleteImage(IfdTags metadata, int nifd) {
     // Color Map
     if (!metadata.containsTagId(TiffTags.getTagId("ColorMap"))) {
-      validation.addError("Missing Color Map");
+      validation.addErrorLoc("Missing Color Map", "IFD" + nifd);
     } else {
       int n = metadata.get(TiffTags.getTagId("ColorMap")).getCardinality();
       if (n != 3 * (int) Math.pow(2, metadata.get(TiffTags.getTagId("BitsPerSample"))
           .getFirstNumericValue()))
-        validation.addError("Incorrect Color Map Cardinality", metadata.get(320).getCardinality());
+        validation.addError("Incorrect Color Map Cardinality", "IFD" + nifd, metadata.get(320)
+            .getCardinality());
     }
 
     // Bits per Sample
     long bps = metadata.get(TiffTags.getTagId("BitsPerSample")).getFirstNumericValue();
     if (bps != 4 && bps != 8)
-      validation.addError("Invalid Bits per Sample", bps);
+      validation.addError("Invalid Bits per Sample", "IFD" + nifd, bps);
 
     // Compression
     long comp = metadata.get(TiffTags.getTagId("Compression")).getFirstNumericValue();
     // if (comp != 1 && comp != 32773)
     if (comp < 1)
-      validation.addError("Invalid Compression", comp);
+      validation.addError("Invalid Compression", "IFD" + nifd, comp);
   }
 
   /**
    * Check transparency mask.
    *
    * @param metadata the metadata
+   * @param n the ifd number
    */
-  private void CheckTransparencyMask(IfdTags metadata) {
+  private void CheckTransparencyMask(IfdTags metadata, int n) {
     // Samples per pixel
     if (!metadata.containsTagId(TiffTags.getTagId("SamplesPerPixel"))) {
-      validation.addError("Missing Samples Per Pixel");
+      validation.addErrorLoc("Missing Samples Per Pixel", "IFD" + n);
     } else {
       long spp = metadata.get(TiffTags.getTagId("SamplesPerPixel")).getFirstNumericValue();
       if (spp != 1) {
-        validation.addError("Invalid Samples Per Pixel", spp);
+        validation.addError("Invalid Samples Per Pixel", "IFD" + n, spp);
       }
     }
 
     // BitsPerSample
     if (!metadata.containsTagId(TiffTags.getTagId("BitsPerSample"))) {
-      validation.addError("Missing BitsPerSample");
+      validation.addErrorLoc("Missing BitsPerSample", "IFD" + n);
     } else {
       long bps = metadata.get(TiffTags.getTagId("BitsPerSample")).getFirstNumericValue();
       if (bps != 1) {
-        validation.addError("Invalid BitsPerSample", bps);
+        validation.addError("Invalid BitsPerSample", "IFD" + n, bps);
       }
     }
   }
@@ -325,16 +330,17 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check CMYK.
    *
    * @param metadata the metadata
+   * @param n the ifd number
    */
-  private void CheckCMYK(IfdTags metadata) {
+  private void CheckCMYK(IfdTags metadata, int n) {
     // Samples per pixel
     if (!metadata.containsTagId(TiffTags.getTagId("SamplesPerPixel"))) {
-      validation.addError("Missing Samples Per Pixel");
+      validation.addErrorLoc("Missing Samples Per Pixel", "IFD" + n);
     }
 
     // BitsPerSample
     if (!metadata.containsTagId(TiffTags.getTagId("BitsPerSample"))) {
-      validation.addError("Missing BitsPerSample");
+      validation.addErrorLoc("Missing BitsPerSample", "IFD" + n);
     }
   }
 
@@ -342,25 +348,26 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check YCbCr.
    *
    * @param metadata the metadata
+   * @param n the IFD number
    */
-  private void CheckYCbCr(IfdTags metadata) {
+  private void CheckYCbCr(IfdTags metadata, int n) {
     // Samples per pixel
     if (!metadata.containsTagId(TiffTags.getTagId("SamplesPerPixel"))) {
-      validation.addError("Missing Samples Per Pixel");
+      validation.addErrorLoc("Missing Samples Per Pixel", "IFD" + n);
     } else {
       long spp = metadata.get(TiffTags.getTagId("SamplesPerPixel")).getFirstNumericValue();
       if (spp != 3) {
-        validation.addError("Invalid Samples Per Pixel", spp);
+        validation.addError("Invalid Samples Per Pixel", "IFD" + n, spp);
       }
     }
 
     // BitsPerSample
     if (!metadata.containsTagId(TiffTags.getTagId("BitsPerSample"))) {
-      validation.addError("Missing BitsPerSample");
+      validation.addErrorLoc("Missing BitsPerSample", "IFD" + n);
     } else {
       for (abstractTiffType vi : metadata.get(TiffTags.getTagId("BitsPerSample")).getValue()) {
         if (vi.toInt() != 8) {
-          validation.addError("Invalid BitsPerSample", vi.toInt());
+          validation.addError("Invalid BitsPerSample", "IFD" + n, vi.toInt());
           break;
         }
       }
@@ -388,15 +395,16 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check CIELab.
    *
    * @param metadata the metadata
+   * @param n the IFD number
    */
-  private void CheckCIELab(IfdTags metadata) {
+  private void CheckCIELab(IfdTags metadata, int n) {
     // BitsPerSample
     if (!metadata.containsTagId(TiffTags.getTagId("BitsPerSample"))) {
-      validation.addError("Missing BitsPerSample");
+      validation.addErrorLoc("Missing BitsPerSample", "IFD" + n);
     } else {
       for (abstractTiffType vi : metadata.get(TiffTags.getTagId("BitsPerSample")).getValue()) {
         if (vi.toInt() != 8) {
-          validation.addError("Invalid BitsPerSample", vi.toInt());
+          validation.addError("Invalid BitsPerSample", "IFD" + n, vi.toInt());
           break;
         }
       }
@@ -407,18 +415,19 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check RGB Image.
    *
    * @param metadata the metadata
+   * @param n the IFD number
    */
-  private void CheckRGBImage(IfdTags metadata) {
+  private void CheckRGBImage(IfdTags metadata, int n) {
     // Samples per Pixel
     long samples = metadata.get(TiffTags.getTagId("SamplesPerPixel")).getFirstNumericValue();
     if (samples < 3)
-      validation.addError("Invalid Samples per Pixel", samples);
+      validation.addError("Invalid Samples per Pixel", "IFD" + n, samples);
 
     // Compression
     long comp = metadata.get(TiffTags.getTagId("Compression")).getFirstNumericValue();
     // if (comp != 1 && comp != 32773)
     if (comp < 1)
-      validation.addError("Invalid Compression", comp);
+      validation.addError("Invalid Compression", "IFD" + n, comp);
   }
 
   /**
@@ -434,7 +443,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
     // Width tag is mandatory
     id = TiffTags.getTagId("ImageWidth");
     if (!metadata.containsTagId(id))
-      validation.addError("Missing required field", TiffTags.getTag(id).getName());
+      validation.addError("Missing required field", "IFD" + n, TiffTags.getTag(id).getName());
     else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val <= 0)
@@ -445,7 +454,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
     // Height tag is mandatory
     id = TiffTags.getTagId("ImageLength");
     if (!metadata.containsTagId(id))
-      validation.addError("Missing required field", TiffTags.getTag(id).getName());
+      validation.addError("Missing required field", "IFD" + n, TiffTags.getTag(id).getName());
     else {
       long val = metadata.get(id).getFirstNumericValue();
       if (val <= 0)
@@ -512,13 +521,13 @@ public class BaselineProfile extends GenericProfile implements Profile {
     strips = ifd.hasStrips();
     tiles = ifd.hasTiles();
     if (!strips && !tiles)
-      validation.addError("Missing image organization tags");
+      validation.addErrorLoc("Missing image organization tags", "IFD" + n);
     else if (strips && tiles)
-      validation.addError("Image in both strips and tiles");
+      validation.addErrorLoc("Image in both strips and tiles", "IFD" + n);
     else if (strips) {
-      CheckStrips(metadata);
+      CheckStrips(metadata, n);
     } else if (tiles) {
-      CheckTiles(ifd, metadata);
+      CheckTiles(ifd, metadata, n);
     }
 
     // Check pixel samples bits
@@ -527,7 +536,8 @@ public class BaselineProfile extends GenericProfile implements Profile {
       long spp = metadata.get(TiffTags.getTagId("SamplesPerPixel")).getFirstNumericValue();
       int bps = metadata.get(TiffTags.getTagId("BitsPerSample")).getValue().size();
       if (spp != bps) {
-        validation.addError("Sampes per Pixel and Bits per Sample count do not match");
+        validation
+            .addErrorLoc("Sampes per Pixel and Bits per Sample count do not match", "IFD" + n);
         if (bps == 1) {
           // TODO: Tolerate and proceed as if the BitsPerSample tag had a count equal to the
           // SamplesPerPixel tag value, and with all values equal to the single value actually given
@@ -537,16 +547,16 @@ public class BaselineProfile extends GenericProfile implements Profile {
       if (metadata.containsTagId(TiffTags.getTagId("ExtraSamples"))) {
         int ext = metadata.get(TiffTags.getTagId("ExtraSamples")).getValue().size();
         if (ext + 3 != bps) {
-          validation.addError("Incorrect Extra Samples Count", ext);
+          validation.addError("Incorrect Extra Samples Count", "IFD" + n, ext);
         } else if (ext > 0 && bps <= 3) {
-          validation.addError("Unnecessary Extra Samples", ext);
+          validation.addError("Unnecessary Extra Samples", "IFD" + n, ext);
         }
       }
 
       if (bps > 1) {
         TagValue lbps = metadata.get(TiffTags.getTagId("BitsPerSample"));
         if (lbps == null || lbps.getValue() == null) {
-          validation.addError("Invalid Bits per Sample");
+          validation.addErrorLoc("Invalid Bits per Sample", "IFD" + n);
         } else {
           boolean distinct_bps_samples = false;
           for (int i = 1; i < lbps.getCardinality(); i++) {
@@ -554,7 +564,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
               distinct_bps_samples = true;
           }
           if (distinct_bps_samples)
-            validation.addError("Distinct Bits per Sample values");
+            validation.addErrorLoc("Distinct Bits per Sample values", "IFD" + n);
         }
       }
     }
@@ -564,8 +574,9 @@ public class BaselineProfile extends GenericProfile implements Profile {
    * Check that the strips containing the image are well-formed.
    *
    * @param metadata the metadata
+   * @param n the IFD number
    */
-  private void CheckStrips(IfdTags metadata) {
+  private void CheckStrips(IfdTags metadata, int n) {
     long offset;
     int id;
 
@@ -574,40 +585,61 @@ public class BaselineProfile extends GenericProfile implements Profile {
     offset = metadata.get(id).getFirstNumericValue();
     int nso = metadata.get(id).getCardinality();
     if (offset <= 0)
-      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), offset);
+      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+          offset);
 
     // Strip Byte Counts
     id = TiffTags.getTagId("StripBYTECount");
     offset = metadata.get(id).getFirstNumericValue();
     int nsc = metadata.get(id).getCardinality();
     if (offset <= 0)
-      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), offset);
+      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+          offset);
 
     if (nso != nsc) {
-      validation.addError("Inconsistent strip lengths");
+      validation.addErrorLoc("Inconsistent strip lengths", "IFD" + n);
+    }
+
+    int pixelSize = 0;
+    for (int i = 0; i < metadata.get("BitsPerSample").getCardinality(); i++) {
+      pixelSize += metadata.get("BitsPerSample").getValue().get(i).toInt();
+    }
+    if (metadata.get("Compression").getFirstNumericValue() == 1
+ && pixelSize >= 8) {
+      int calculatedImageLength = 0;
+      for (int i = 0; i < nsc; i++) {
+        calculatedImageLength += metadata.get(id).getValue().get(i).toInt();
+      }
+      if (calculatedImageLength != metadata.get("ImageLength").getFirstNumericValue()
+          * metadata.get("ImageWidth").getFirstNumericValue() * pixelSize / 8) {
+        // validation.toString();
+        validation.addErrorLoc("Calculated and declared image size do not match", "IFD" + n);
+      }
     }
 
     // Rows per Strip
     id = TiffTags.getTagId("RowsPerStrip");
     if (!metadata.containsTagId(id)) {
       if (rowsPerStripTolerance > 0)
-        validation.addWarning("Missing required field", TiffTags.getTag(id).getName());
+        validation.addWarning("Missing required field", TiffTags.getTag(id).getName(), "IFD" + n);
       else
-        validation.addError("Missing required field", TiffTags.getTag(id).getName());
+        validation.addError("Missing required field", "IFD" + n, TiffTags.getTag(id).getName());
     } else {
       offset = metadata.get(id).getFirstNumericValue();
       if (offset <= 0)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), offset);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            offset);
     }
   }
 
   /**
    * Check that the tiles containing the image are well-formed.
    *
-   * @param metadata the metadata
    * @param ifd the ifd
+   * @param metadata the metadata
+   * @param n the ifd number
    */
-  private void CheckTiles(IFD ifd, IfdTags metadata) {
+  private void CheckTiles(IFD ifd, IfdTags metadata, int n) {
     long offset;
     int id;
 
@@ -616,39 +648,45 @@ public class BaselineProfile extends GenericProfile implements Profile {
     offset = metadata.get(id).getFirstNumericValue();
     int no = metadata.get(id).getCardinality();
     if (offset <= 0)
-      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), offset);
+      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+          offset);
 
     // Check Tile Byte Counts
     id = TiffTags.getTagId("TileBYTECounts");
     offset = metadata.get(id).getFirstNumericValue();
     int nc = metadata.get(id).getCardinality();
     if (offset <= 0)
-      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), offset);
+      validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+          offset);
 
     if (no != nc) {
-      validation.addError("Inconsistent tile lengths");
+      validation.addErrorLoc("Inconsistent tile lengths", "IFD" + n);
     }
 
     // Check Tile Width
     long tileWidth = 0;
     id = TiffTags.getTagId("TileWidth");
     if (!metadata.containsTagId(id))
-      validation.addError("Missing required field for tiles " + TiffTags.getTag(id).getName());
+      validation.addErrorLoc("Missing required field for tiles " + TiffTags.getTag(id).getName(),
+          "IFD" + n);
     else {
       tileWidth = metadata.get(id).getFirstNumericValue();
       if (tileWidth <= 0)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), tileWidth);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            tileWidth);
     }
 
     // Check Tile Length
     id = TiffTags.getTagId("TileLength");
     long tileLength = 0;
     if (!metadata.containsTagId(id))
-      validation.addError("Missing required field for tiles " + TiffTags.getTag(id).getName());
+      validation.addErrorLoc("Missing required field for tiles " + TiffTags.getTag(id).getName(),
+          "IFD" + n);
     else {
       tileLength = metadata.get(id).getFirstNumericValue();
       if (tileLength <= 0)
-        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), tileLength);
+        validation.addError("Invalid value for field " + TiffTags.getTag(id).getName(), "IFD" + n,
+            tileLength);
     }
 
     long tilesPerImage =
@@ -664,7 +702,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
       if (planar == 2) {
         long spp_tpi = spp * tilesPerImage;
         if (ifd.getImageTiles().getTiles().size() < spp_tpi) {
-          validation.addError("Insufficient tiles");
+          validation.addErrorLoc("Insufficient tiles", "IFD" + n);
         }
       }
     }

@@ -45,7 +45,7 @@ public class OutputBuffer {
   private boolean[] isByte;
 
   /** The maximum internal buffer size. */
-  private int maxBufferSize = 100;
+  private int maxBufferSize = 10000;
 
   /** The current buffer size. */
   private int currentBufferSize;
@@ -105,9 +105,11 @@ public class OutputBuffer {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void seek(int offset) throws IOException {
-    writeBuffer();
-    newBuffer(offset);
-    aFile.seek(offset);
+    if (!(offset >= bufferOffset && offset < position)) { // TODO: position -> currentBufferSize
+      writeBuffer();
+      newBuffer(offset);
+      aFile.seek(offset);
+    }
     position = offset;
   }
 

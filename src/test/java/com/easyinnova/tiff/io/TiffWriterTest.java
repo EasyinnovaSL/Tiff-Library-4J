@@ -332,9 +332,13 @@ public class TiffWriterTest {
       String filename =
           "src" + separator + "test" + separator + "resources" + separator + "TIFF_EP Samples"
               + separator + "tiffep-sample-EP.tif";
-      // String filename =
-      // "src" + separator + "test" + separator + "resources" + separator + "private tests"
-      // + separator + "Anular_detalles_03.tif";
+
+      // filename = "src" + separator + "test" + separator + "resources" + separator +
+      // "private tests" + separator + "Anular_detalles_03.tif";
+
+      filename =
+          "src" + separator + "test" + separator + "resources" + separator + "Small" + separator
+              + "Bilevel.tif";
       tr.readFile(filename);
       TiffInputStream ti = new TiffInputStream(new File(filename));
       td = tr.getModel();

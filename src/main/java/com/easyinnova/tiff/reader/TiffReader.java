@@ -172,9 +172,9 @@ public class TiffReader {
         validation = new ValidationResult();
         readHeader();
         if (tiffModel.getMagicNumber() < 42) {
-          validation.addError("Incorrect tiff magic number", tiffModel.getMagicNumber());
+          validation.addError("Incorrect tiff magic number", "Header", tiffModel.getMagicNumber());
         } else if (tiffModel.getMagicNumber() == 43) {
-          validation.addError("Big tiff file not yet supported");
+          validation.addErrorLoc("Big tiff file not yet supported", "Header");
         } else if (validation.isCorrect()) {
           readIFDs();
 
@@ -208,7 +208,7 @@ public class TiffReader {
       c1 = data.readByte().toInt();
       c2 = data.readByte().toInt();
     } catch (Exception ex) {
-      validation.addError("Header IO Exception");
+      validation.addErrorLoc("Header IO Exception", "Header");
     }
 
     // read the first two bytes, in order to know the byte ordering
@@ -217,16 +217,16 @@ public class TiffReader {
     else if (c1 == 'M' && c2 == 'M')
       byteOrder = ByteOrder.BIG_ENDIAN;
     else if (byteOrderErrorTolerance > 0 && c1 == 'i' && c2 == 'i') {
-      validation.addWarning("Byte Order in lower case");
+      validation.addWarning("Byte Order in lower case", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.LITTLE_ENDIAN;
     } else if (byteOrderErrorTolerance > 0 && c1 == 'm' && c2 == 'm') {
-      validation.addWarning("Byte Order in lower case");
+      validation.addWarning("Byte Order in lower case", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.BIG_ENDIAN;
     } else if (byteOrderErrorTolerance > 1) {
-      validation.addWarning("Non-sense Byte Order. Trying Little Endian.");
+      validation.addWarning("Non-sense Byte Order. Trying Little Endian.", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.LITTLE_ENDIAN;
     } else {
-      validation.addError("Invalid Byte Order " + c1 + c2);
+      validation.addErrorLoc("Invalid Byte Order " + c1 + c2, "Header");
     }
     tiffModel.setByteOrder(byteOrder);
 
@@ -239,7 +239,7 @@ public class TiffReader {
         int magic = data.readShort().toInt();
         tiffModel.setMagicNumber(magic);
       } catch (Exception ex) {
-        validation.addError("Magic number parsing error");
+        validation.addErrorLoc("Magic number parsing error", "Header");
       }
     }
   }
@@ -253,41 +253,41 @@ public class TiffReader {
       // The pointer to the first IFD is located in bytes 4-7
       offset0 = data.readLong(4).toInt();
       if (offset0 == 0)
-        validation.addError("There is no first IFD");
+        validation.addErrorLoc("There is no first IFD", "Header");
       else if (offset0 > data.size())
-        validation.addError("Incorrect offset");
+        validation.addErrorLoc("Incorrect offset", "Header");
     } catch (Exception ex) {
-      validation.addError("IO exception");
+      validation.addErrorLoc("IO exception", "Header");
     }
       
     if (validation.isCorrect()) {
+      int nifd = 1;
       try {
-        IfdReader ifd0 = readIFD(offset0, true);
+        IfdReader ifd0 = readIFD(offset0, true, 0);
         HashSet<Integer> usedOffsets = new HashSet<Integer>();
         usedOffsets.add(offset0);
         if (ifd0.getIfd() == null) {
-          validation.addError("Parsing error in first IFD");
+          validation.addErrorLoc("Parsing error in first IFD", "IFD" + 0);
         } else {
           tiffModel.addIfd0(ifd0.getIfd());
 
           IfdReader current_ifd = ifd0;
 
           // Read next IFDs
-          int nifd = 1;
           boolean stop = false;
           while (current_ifd.getNextIfdOffset() > 0 && !stop) {
             if (usedOffsets.contains(current_ifd.getNextIfdOffset())) {
               // Circular reference
-              validation.addError("IFD offset already used");
+              validation.addErrorLoc("IFD offset already used", "IFD" + nifd);
               stop = true;
             } else if (current_ifd.getNextIfdOffset() > data.size()) {
-              validation.addError("Incorrect offset");
+              validation.addErrorLoc("Incorrect offset", "IFD" + nifd);
               stop = true;
             } else {
               usedOffsets.add(current_ifd.getNextIfdOffset());
-              IfdReader next_ifd = readIFD(current_ifd.getNextIfdOffset(), true);
+              IfdReader next_ifd = readIFD(current_ifd.getNextIfdOffset(), true, nifd);
               if (next_ifd == null) {
-                validation.addError("Parsing error in IFD " + nifd);
+                validation.addErrorLoc("Parsing error in IFD " + nifd, "IFD" + nifd);
                 stop = true;
               } else {
                 current_ifd.getIfd().setNextIFD(next_ifd.getIfd());
@@ -298,7 +298,7 @@ public class TiffReader {
           }
         }
       } catch (Exception ex) {
-        validation.addError("IFD parsing error");
+        validation.addErrorLoc("IFD parsing error", "IFD" + nifd);
       }
 
       try {
@@ -313,9 +313,10 @@ public class TiffReader {
    *
    * @param offset the file offset (in bytes) pointing to the IFD
    * @param isImage the is image
+   * @param n the IFD number
    * @return the ifd reading result
    */
-  private IfdReader readIFD(int offset, boolean isImage) {
+  private IfdReader readIFD(int offset, boolean isImage, int n) {
     IFD ifd = new IFD(isImage);
     IfdReader ir = new IfdReader();
     ir.setIfd(ifd);
@@ -324,10 +325,10 @@ public class TiffReader {
       int index = offset;
       int directoryEntries = data.readShort(offset).toInt();
       if (directoryEntries < 1) {
-        validation.addError("Incorrect number of IFD entries",
+        validation.addError("Incorrect number of IFD entries", "IFD" + n,
             directoryEntries);
       } else if (directoryEntries > 500) {
-        validation.addError("Abnormally big number of IFD entries", directoryEntries);
+        validation.addError("Abnormally big number of IFD entries", "IFD" + n, directoryEntries);
       } else {
         index += 2;
 
@@ -338,17 +339,17 @@ public class TiffReader {
             tagid = data.readShort(index).toInt();
             int tagType = data.readShort(index + 2).toInt();
             int tagN = data.readLong(index + 4).toInt();
-            TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd);
+            TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd, n);
             if (ifd.containsTagId(tagid)) {
               if (duplicateTagTolerance > 0)
-                validation.addWarning("Duplicate tag", tagid);
+                validation.addWarning("Duplicate tag", "" + tagid, "IFD" + n);
               else
-                validation.addError("Duplicate tag", tagid);
+                validation.addError("Duplicate tag", "IFD" + n, tagid);
             } else {
               ifd.addTag(tv);
             }
           } catch (Exception ex) {
-            validation.addError("Parse error in tag #" + i + " (" + tagid + ")");
+            validation.addErrorLoc("Parse error in tag #" + i + " (" + tagid + ")", "IFD" + n);
           }
 
           index += 12;
@@ -361,12 +362,12 @@ public class TiffReader {
         } catch (Exception ex) {
           nextIfdOffset = 0;
           if (nextIFDTolerance > 0)
-            validation.addWarning("Unreadable next IFD offset");
+            validation.addWarning("Unreadable next IFD offset", "", "IFD" + n);
           else
-            validation.addError("Unreadable next IFD offset");
+            validation.addErrorLoc("Unreadable next IFD offset", "IFD" + n);
         }
         if (nextIfdOffset > 0 && nextIfdOffset < 7) {
-          validation.addError("Invalid next IFD offset", nextIfdOffset);
+          validation.addError("Invalid next IFD offset", "IFD" + n, nextIfdOffset);
           nextIfdOffset = 0;
         }
         ir.setNextIfdOffset(nextIfdOffset);
@@ -374,7 +375,7 @@ public class TiffReader {
         ir.readImage();
       }
     } catch (Exception ex) {
-      validation.addError("IO Exception");
+      validation.addErrorLoc("IO Exception", "IFD" + n);
       ir.setIfd(null);
     }
     return ir;
@@ -388,9 +389,10 @@ public class TiffReader {
    * @param id the tag id
    * @param beginOffset the offset position of the tag value
    * @param parentIFD the parent ifd
+   * @param nifd the ifd number
    * @return the tag value object
    */
-  protected TagValue getValue(int tagtype, int n, int id, int beginOffset, IFD parentIFD) {
+  protected TagValue getValue(int tagtype, int n, int id, int beginOffset, IFD parentIFD, int nifd) {
     int type = tagtype;
     if (id == 330 && type != 13)
       type = 13;
@@ -411,7 +413,7 @@ public class TiffReader {
       try {
       offset = data.readLong(offset).toInt();
       } catch (Exception ex) {
-        validation.addError("Parse error getting tag " + id + " value");
+        validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + n);
         ok = false;
       }
     }
@@ -461,7 +463,7 @@ public class TiffReader {
               break;
             case 13:
               int ifdOffset = data.readLong(offset).toInt();
-              IfdReader ifd = readIFD(ifdOffset, true);
+              IfdReader ifd = readIFD(ifdOffset, true, -1);
               IFD subIfd = ifd.getIfd();
               subIfd.setParent(parentIFD);
               parentIFD.setsubIFD(subIfd);
@@ -471,7 +473,7 @@ public class TiffReader {
           offset += typeSize;
         }
       } catch (Exception ex) {
-        validation.addError("Parse error getting tag " + id + " value");
+        validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         ok = false;
       }
     }
@@ -488,33 +490,33 @@ public class TiffReader {
           if (instanceOfMyClass.isIFD()) {
             long ifdOffset = tv.getFirstNumericValue();
             try {
-              IfdReader ifd = readIFD((int) ifdOffset, false);
+              IfdReader ifd = readIFD((int) ifdOffset, false, -1);
               IFD exifIfd = ifd.getIfd();
               exifIfd.setIsIFD(true);
               tv.clear();
               tv.add(exifIfd);
             } catch (Exception ex) {
-              validation.addError("Parse error in Exif");
+              validation.addErrorLoc("Parse error in Exif", "IFD" + nifd);
             }
           } else {
             instanceOfMyClass.read(tv);
           }
         } catch (ClassNotFoundException e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         } catch (NoSuchMethodException e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         } catch (SecurityException e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         } catch (InstantiationException e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         } catch (IllegalAccessException e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         } catch (IllegalArgumentException e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         } catch (InvocationTargetException e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         } catch (Exception e) {
-          validation.addError("Parse error getting tag " + id + " value");
+          validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);
         }
       }
     }

@@ -290,36 +290,54 @@ public class TiffFileInputStreamTest {
   }
 
   /**
-   * Read racional.
+   * Read rational.
    *
    * @throws IOException Signals that an I/O exception has occurred.
    */
   @Test
-  public void readRacional() throws IOException {
-    TiffInputStream stream = new TiffInputStream(new File("src" + separator + "test" + separator + "resources" + separator + "io" + separator + "DoubleTest.hex"));
+  public void readRational() throws IOException {
+    TiffInputStream stream =
+        new TiffInputStream(new File("src" + separator + "test" + separator + "resources"
+            + separator + "io" + separator + "RationalTest.hex"));
     stream.setByteOrder(ByteOrder.BIG_ENDIAN);
-    assertEquals("0.0", stream.readDouble().toString());
-    assertEquals("-0.0", stream.readDouble().toString());
-    assertEquals("Infinity", stream.readDouble().toString());
-    assertEquals("-Infinity", stream.readDouble().toString());
-    assertEquals("1.7976931348623157E308", stream.readDouble().toString());
-    assertEquals("-1.7976931348623157E308", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
-    assertEquals("-2.225073858507201E-308", stream.readDouble().toString());
-    assertEquals("2.225073858507201E-308", stream.readDouble().toString());
+    assertEquals("2147483647/2147483647", stream.readRational().toString());
+    assertEquals("0/0", stream.readRational().toString());
+    assertEquals("2147483648/2147483648", stream.readRational().toString());
+    assertEquals("0/2147483647", stream.readRational().toString());
+    assertEquals("4294967295/4294967295", stream.readRational().toString());
     stream.setByteOrder(ByteOrder.LITTLE_ENDIAN);
     stream.seekOffset(0);
-    assertEquals("0.0", stream.readDouble().toString());
-    assertEquals("6.32E-322", stream.readDouble().toString());
-    assertEquals("3.0418E-319", stream.readDouble().toString());
-    assertEquals("3.04814E-319", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
-    assertEquals("NaN", stream.readDouble().toString());
+    assertEquals("4294967167/4294967167", stream.readRational().toString());
+    assertEquals("0/0", stream.readRational().toString());
+    assertEquals("128/128", stream.readRational().toString());
+    assertEquals("0/4294967167", stream.readRational().toString());
+    assertEquals("4294967295/4294967295", stream.readRational().toString());
+    stream.close();
+  }
+
+  /**
+   * Read Srational.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Test
+  public void readSRational() throws IOException {
+    TiffInputStream stream =
+        new TiffInputStream(new File("src" + separator + "test" + separator + "resources"
+            + separator + "io" + separator + "RationalTest.hex"));
+    stream.setByteOrder(ByteOrder.BIG_ENDIAN);
+    assertEquals("2147483647/2147483647", stream.readSRational().toString());
+    assertEquals("0/0", stream.readSRational().toString());
+    assertEquals("-2147483648/-2147483648", stream.readSRational().toString());
+    assertEquals("0/2147483647", stream.readSRational().toString());
+    assertEquals("-1/-1", stream.readSRational().toString());
+    stream.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+    stream.seekOffset(0);
+    assertEquals("-129/-129", stream.readSRational().toString());
+    assertEquals("0/0", stream.readSRational().toString());
+    assertEquals("128/128", stream.readSRational().toString());
+    assertEquals("0/-129", stream.readSRational().toString());
+    assertEquals("-1/-1", stream.readSRational().toString());
     stream.close();
   }
 }

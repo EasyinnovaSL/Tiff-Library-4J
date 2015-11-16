@@ -116,11 +116,11 @@ public class TiffEPProfile extends GenericProfile implements Profile {
       }
       if (photo == 2 || photo == 3) {
         if (spp != 3) {
-          validation.addError("Invalid SampesPerPixel value fo TiffEP", spp);
+          validation.addError("Invalid SampesPerPixel value fo TiffEP", "IFD" + n, spp);
         }
       } else if (photo == 1 || photo == 32803) {
         if (spp != 1) {
-          validation.addError("Invalid SampesPerPixel value fo TiffEP", spp);
+          validation.addError("Invalid SampesPerPixel value fo TiffEP", "IFD" + n, spp);
         }
         if (photo == 32803) {
           checkRequiredTag(metadata, "CFARepeatPatternDim", 2, "IFD" + n);
@@ -139,7 +139,7 @@ public class TiffEPProfile extends GenericProfile implements Profile {
         checkRequiredTag(metadata, "StripOffsets", -1, "IFD" + n);
         checkRequiredTag(metadata, "RowsPerStrip", 1, "IFD" + n);
         if (ifd.hasTiles()) {
-          validation.addError("Image in both strips and tiles");
+          validation.addErrorLoc("Image in both strips and tiles", "IFD" + n);
         }
       } else if (ifd.hasTiles()) {
         checkRequiredTag(metadata, "TileLength", 1, "IFD" + n);
@@ -184,13 +184,13 @@ public class TiffEPProfile extends GenericProfile implements Profile {
     if (metadata.containsTagId(TiffTags.getTagId("FocalPlaneResolutionUnit"))) {
       int focal = (int) metadata.get("FocalPlaneResolutionUnit").getFirstNumericValue();
       if (focal < 1 || focal > 5)
-        validation.addError("Invalid value fot TiffEP tag FocalPlaneResolutionUnit");
+        validation.addErrorLoc("Invalid value fot TiffEP tag FocalPlaneResolutionUnit", "IFD" + n);
     }
 
     if (metadata.containsTagId(TiffTags.getTagId("SensingMethod"))) {
       int sensing = (int) metadata.get("SensingMethod").getFirstNumericValue();
       if (sensing < 0 || sensing > 8)
-        validation.addError("Invalid value fot TiffEP tag SensingMethod");
+        validation.addErrorLoc("Invalid value fot TiffEP tag SensingMethod", "IFD" + n);
     }
   }
 
@@ -227,18 +227,18 @@ public class TiffEPProfile extends GenericProfile implements Profile {
         32767}, "SubIFD" + n)) {
       int photo = (int) metadata.get("PhotometricInterpretation").getFirstNumericValue();
       if (photo != 6) {
-        checkForbiddenTag(metadata, "YCbCrCoefficients", "IFD" + n);
-        checkForbiddenTag(metadata, "YCbCrSubSampling", "IFD" + n);
-        checkForbiddenTag(metadata, "YCbCrPositioning", "IFD" + n);
-        checkForbiddenTag(metadata, "ReferenceBlackWhite", "IFD" + n);
+        checkForbiddenTag(metadata, "YCbCrCoefficients", "SubIFD" + n);
+        checkForbiddenTag(metadata, "YCbCrSubSampling", "SubIFD" + n);
+        checkForbiddenTag(metadata, "YCbCrPositioning", "SubIFD" + n);
+        checkForbiddenTag(metadata, "ReferenceBlackWhite", "SubIFD" + n);
       }
       if (photo == 2 || photo == 3) {
         if (spp != 3) {
-          validation.addError("Invalid SampesPerPixel value fo TiffEP", spp);
+          validation.addError("Invalid SampesPerPixel value fo TiffEP", "SubIFD" + n, spp);
         }
       } else if (photo == 1 || photo == 32803) {
         if (spp != 1) {
-          validation.addError("Invalid SampesPerPixel value fo TiffEP", spp);
+          validation.addError("Invalid SampesPerPixel value fo TiffEP", "SubIFD" + n, spp);
         }
         if (photo == 32803) {
           checkRequiredTag(metadata, "CFARepeatPatternDim", 2, "SubIFD" + n);
@@ -255,7 +255,7 @@ public class TiffEPProfile extends GenericProfile implements Profile {
         checkRequiredTag(metadata, "StripOffsets", -1, "SubIFD" + n);
         checkRequiredTag(metadata, "RowsPerStrip", 1, "SubIFD" + n);
         if (ifd.hasTiles()) {
-          validation.addError("Image in both strips and tiles");
+          validation.addErrorLoc("Image in both strips and tiles", "SubIFD");
         }
       } else if (ifd.hasTiles()) {
         checkRequiredTag(metadata, "TileLength", 1, "SubIFD" + n);
@@ -266,9 +266,9 @@ public class TiffEPProfile extends GenericProfile implements Profile {
       checkRequiredTag(metadata, "StripBYTECount", -1, "SubIFD" + n);
       checkRequiredTag(metadata, "StripOffsets", -1, "SubIFD" + n);
       checkRequiredTag(metadata, "RowsPerStrip", 1, "SubIFD" + n);
-      checkForbiddenTag(metadata, "TileLength", "IFD" + n);
-      checkForbiddenTag(metadata, "TileOffsets", "IFD" + n);
-      checkForbiddenTag(metadata, "TileWidth", "IFD" + n);
+      checkForbiddenTag(metadata, "TileLength", "SubIFD" + n);
+      checkForbiddenTag(metadata, "TileOffsets", "SubIFD" + n);
+      checkForbiddenTag(metadata, "TileWidth", "SubIFD" + n);
     }
 
     int nycbcr = 0;

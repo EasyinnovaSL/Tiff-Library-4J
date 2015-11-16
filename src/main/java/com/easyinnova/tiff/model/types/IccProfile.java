@@ -89,7 +89,7 @@ public class IccProfile extends abstractTiffType {
     try {
       int iccsize = data.readLong(offset).toInt();
       if (iccsize != size)
-        validation.addError("ICC Profile size does not match");
+        validation.addErrorLoc("ICC Profile size does not match", "ICC");
 
       int index = offset + 128;
       int tagCount = data.readLong(index).toInt();

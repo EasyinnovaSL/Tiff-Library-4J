@@ -153,7 +153,7 @@ public class IPTC extends abstractTiffType {
                 } catch (ClassNotFoundException | NoSuchMethodException | SecurityException
                     | InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                  validation.addErrorLoc("Parse error getting IPTC tag " + type.toString(), "IPTC");
                 }
               }
             }
@@ -228,7 +228,7 @@ public class IPTC extends abstractTiffType {
                       .getConstructor().newInstance();
                   object.read(value);
                 } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                  validation.addError("Parse error getting IPTC tag " + type.toString());
+                  validation.addErrorLoc("Parse error getting IPTC tag " + type.toString(), "IPTC");
                 }
               }
             }
