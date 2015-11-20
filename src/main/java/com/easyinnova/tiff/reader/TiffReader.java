@@ -328,7 +328,11 @@ public class TiffReader {
         validation.addError("Incorrect number of IFD entries", "IFD" + n,
             directoryEntries);
       } else if (directoryEntries > 500) {
-        validation.addError("Abnormally big number of IFD entries", "IFD" + n, directoryEntries);
+        if (n < 0) {
+          validation.addError("Incorrect number of IFD entries", "SubIFD" + (-n), directoryEntries);
+        } else {
+          validation.addError("Incorrect number of IFD entries", "IFD" + n, directoryEntries);
+        }
       } else {
         index += 2;
 
@@ -463,7 +467,7 @@ public class TiffReader {
               break;
             case 13:
               int ifdOffset = data.readLong(offset).toInt();
-              IfdReader ifd = readIFD(ifdOffset, true, -1);
+              IfdReader ifd = readIFD(ifdOffset, true, -nifd);
               IFD subIfd = ifd.getIfd();
               subIfd.setParent(parentIFD);
               parentIFD.setsubIFD(subIfd);

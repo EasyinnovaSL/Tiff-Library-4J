@@ -46,9 +46,6 @@ public class TiffEPProfile extends GenericProfile implements Profile {
     int n = 0;
     while (ifd != null) {
       validateIfd(ifd, n);
-      if (ifd.hasSubIFD()) {
-        validateSubIfd(ifd.getsubIFD(), n);
-      }
       ifd = ifd.getNextIFD();
       n++;
     }
@@ -61,8 +58,21 @@ public class TiffEPProfile extends GenericProfile implements Profile {
    * @param n the ifd number
    */
   private void validateIfd(IFD ifd, int n) {
-    boolean thumbnail = ifd.hasSubIFD() && ifd.getsubIFD().getImageSize() > ifd.getImageSize();
-    IfdTags metadata = ifd.getMetadata();
+    boolean hasSubIfd = ifd.hasSubIFD();
+    boolean thumbnail = hasSubIfd && ifd.getsubIFD().getImageSize() > ifd.getImageSize();
+    boolean structureOk = false;
+
+    IfdTags metadata;
+    if (!hasSubIfd) {
+      validation.addErrorLoc("Missing Sub IFD", "IFD" + n);
+      metadata = ifd.getMetadata();
+    } else if (!thumbnail) {
+      validation.addErrorLoc("Sub IFD image is not bigger than the main image", "IFD" + n);
+      metadata = ifd.getMetadata();
+    } else {
+      metadata = ifd.getsubIFD().getMetadata();
+      structureOk = true;
+    }
 
     checkRequiredTag(metadata, "ImageLength", 1, "IFD" + n);
     checkRequiredTag(metadata, "ImageWidth", 1, "IFD" + n);
@@ -95,10 +105,10 @@ public class TiffEPProfile extends GenericProfile implements Profile {
     if (n == 0)
       checkRequiredTag(metadata, "TIFFEPStandardID", 4, "IFD" + n);
     if (checkRequiredTag(metadata, "NewSubfileType", 1, new long[] {0, 1}, "IFD" + n)) {
-      if (thumbnail)
-        checkRequiredTag(metadata, "NewSubfileType", 1, new long[] {1}, "IFD" + n);
-      else
+      if (structureOk) {
+        checkRequiredTag(ifd.getMetadata(), "NewSubfileType", 1, new long[] {1}, "IFD" + n);
         checkRequiredTag(metadata, "NewSubfileType", 1, new long[] {0}, "IFD" + n);
+      }
       int nst = (int) metadata.get("NewSubfileType").getFirstNumericValue();
       if (nst != 0) {
         if (n == 0)

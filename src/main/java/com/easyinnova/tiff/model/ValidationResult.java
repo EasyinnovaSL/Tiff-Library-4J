@@ -61,18 +61,6 @@ public class ValidationResult {
    *
    * @param desc error description
    * @param value the value that caused the error
-   */
-  private void iaddError(String desc, String value) {
-    ValidationEvent ve = new ValidationEvent(desc, value);
-    errors.add(ve);
-    correct = false;
-  }
-
-  /**
-   * Adds an error.
-   *
-   * @param desc error description
-   * @param value the value that caused the error
    * @param loc the error location
    */
   private void iaddError(String desc, String value, String loc) {

@@ -78,8 +78,17 @@ public class TiffEPProfileTest {
    */
   @Test
   public void validTest() {
-    // Image 1
+    TiffEPProfile bp;
 
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "IMG_0887_EP.tif");
+    assertEquals(0, result);
+    assertEquals(true, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+    bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(true, bp.getValidation().correct);
   }
 
   /**
@@ -87,72 +96,106 @@ public class TiffEPProfileTest {
    */
   @Test
   public void invalidTests() {
-    // Image 1
+    TiffEPProfile bp;
+
     result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small" + separator + "Grey_stripped.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
-
-    TiffEPProfile bp = new TiffEPProfile(to);
+    bp = new TiffEPProfile(to);
     bp.validate();
     assertEquals(false, bp.getValidation().correct);
-    assertEquals(12, bp.getValidation().errors.size());
+    assertEquals(13, bp.getValidation().errors.size());
     assertEquals(0, bp.getValidation().warnings.size());
 
-    // Image 2
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "tiffep-sample.tif");
+    assertEquals(0, result);
+    assertEquals(true, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+    bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(false, bp.getValidation().correct);
+
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "tiffep-sample-EP.tif");
+    assertEquals(0, result);
+    assertEquals(true, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+    bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(false, bp.getValidation().correct);
+
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "tiffep-sample-EP-jpeg.tif");
+    assertEquals(0, result);
+    assertEquals(true, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+    bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(false, bp.getValidation().correct);
+
     result =
         tr.readFile("src" + separator + "test" + separator + "resources" + separator
             + "TIFF_EP Samples" + separator + "tiffep-sample-EP-jpeg-thumb.tif");
     assertEquals(0, result);
     assertEquals(false, tr.getBaselineValidation().correct);
     to = tr.getModel();
-
     bp = new TiffEPProfile(to);
     bp.validate();
     assertEquals(false, bp.getValidation().correct);
-    assertEquals(26, bp.getValidation().errors.size());
-    assertEquals(0, bp.getValidation().warnings.size());
 
-    // Image 3
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "tiffep-sample-EP-thumb.tif");
+    assertEquals(0, result);
+    assertEquals(false, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+    bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(false, bp.getValidation().correct);
+
     result =
         tr.readFile("src" + separator + "test" + separator + "resources" + separator
             + "TIFF_EP Samples" + separator + "DSC_1501_EP.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
-
     bp = new TiffEPProfile(to);
     bp.validate();
     assertEquals(false, bp.getValidation().correct);
-    assertEquals(11, bp.getValidation().errors.size());
-    assertEquals(0, bp.getValidation().warnings.size());
 
-    // Image 4
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "DSC_1502_EP.tif");
+    assertEquals(0, result);
+    assertEquals(true, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+    bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(false, bp.getValidation().correct);
+
+    result =
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator
+            + "TIFF_EP Samples" + separator + "IMG_0887.tif");
+    assertEquals(0, result);
+    assertEquals(true, tr.getBaselineValidation().correct);
+    to = tr.getModel();
+    bp = new TiffEPProfile(to);
+    bp.validate();
+    assertEquals(false, bp.getValidation().correct);
+
     result =
         tr.readFile("src" + separator + "test" + separator + "resources" + separator
             + "TIFF_EP Samples" + separator + "tiffep-sample.dng.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
-
     bp = new TiffEPProfile(to);
     bp.validate();
     assertEquals(false, bp.getValidation().correct);
-    assertEquals(11, bp.getValidation().errors.size());
-    assertEquals(0, bp.getValidation().warnings.size());
-
-    // Image 5
-    result =
-        tr.readFile("src" + separator + "test" + separator + "resources" + separator
-            + "TIFF_EP Samples" + separator + "tiffep-sample-EP-jpeg-thumb.tif");
-    assertEquals(0, result);
-    assertEquals(false, tr.getBaselineValidation().correct);
-    to = tr.getModel();
-
-    bp = new TiffEPProfile(to);
-    bp.validate();
-    assertEquals(false, bp.getValidation().correct);
-    assertEquals(26, bp.getValidation().errors.size());
-    assertEquals(0, bp.getValidation().warnings.size());
   }
 }
