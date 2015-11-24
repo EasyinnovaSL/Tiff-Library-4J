@@ -90,6 +90,22 @@ public class TagValue extends TiffObject {
   }
 
   /**
+   * Gets the descriptive value.
+   *
+   * @return the descriptive value
+   */
+  public String getDescriptiveValue() {
+    String desc = this.toString();
+    Tag tag = TiffTags.getTag(id);
+    if (tag != null) {
+      String tagDescription = tag.getTagValueDescription(value.toString());
+      if (tagDescription != null)
+        desc = tagDescription;
+    }
+    return desc;
+  }
+
+  /**
    * Sets the read length.
    *
    * @param length the new read length

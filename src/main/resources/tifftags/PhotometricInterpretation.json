@@ -10,5 +10,11 @@
   "description": "",
   "source": "",
   "created": "18/05/2015",
-  "modified": "18/05/2015"
+  "modified": "18/05/2015",
+  "valueCodes": [
+	0,1,2,3,4,5,6,8,9,10
+  ],
+  "valueDescriptions": [
+	"Bilevel","Bilevel","RGB","Palette color","Transparency Mask","CMYK","YCbCr"," CIE Lab","ICC Lab","ITU Lab"
+  ]
 }

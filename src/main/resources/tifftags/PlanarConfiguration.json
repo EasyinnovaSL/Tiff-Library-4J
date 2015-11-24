@@ -10,5 +10,11 @@
   "description": "",
   "source": "",
   "created": "18/05/2015",
-  "modified": "18/05/2015"
+  "modified": "18/05/2015",
+  "valueCodes": [
+	1,2
+  ],
+  "valueDescriptions": [
+	"Chunky","Planar"
+  ]
 }

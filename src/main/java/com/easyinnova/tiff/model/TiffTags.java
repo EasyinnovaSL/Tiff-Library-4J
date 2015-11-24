@@ -59,6 +59,19 @@ public class TiffTags {
   private static TiffTags instance = null;
 
   /**
+   * Read tag from buffer.
+   *
+   * @param br the br
+   * @param gson the gson
+   */
+  private static void readTagFromBuffer(BufferedReader br, Gson gson) {
+    Tag tag = gson.fromJson(br, Tag.class);
+    tag.createValuesDictionary();
+    tagMap.put(tag.getId(), tag);
+    tagNames.put(tag.getName(), tag);
+  }
+
+  /**
    * Instantiates a new tiff tags.
    *
    * @throws ReadTagsIOException the read tags io exception
@@ -74,13 +87,9 @@ public class TiffTags {
         if (folder.exists() && folder.isDirectory()) {
           for (final File fileEntry : folder.listFiles()) {
             try {
-              BufferedReader br =
-                  new BufferedReader(new FileReader(fileEntry.toPath().toString()));
-
-              Tag tag = gson.fromJson(br, Tag.class);
-
-              tagMap.put(tag.getId(), tag);
-              tagNames.put(tag.getName(), tag);
+              FileReader fr = new FileReader(fileEntry.toPath().toString());
+              BufferedReader br = new BufferedReader(fr);
+              readTagFromBuffer(br, gson);
             } catch (FileNotFoundException e) {
               throw new ReadTagsIOException();
             }
@@ -98,10 +107,7 @@ public class TiffTags {
             if (name.startsWith("tifftags/") && !name.equals("tifftags/")) {
               try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(zip));
-
-                Tag tag = gson.fromJson(in, Tag.class);
-                tagMap.put(tag.getId(), tag);
-                tagNames.put(tag.getName(), tag);
+                readTagFromBuffer(in, gson);
               } catch (Exception ex) {
                 throw new ReadTagsIOException();
               }

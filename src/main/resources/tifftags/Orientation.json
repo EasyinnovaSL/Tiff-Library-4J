@@ -10,5 +10,11 @@
   "description": "",
   "source": "",
   "created": "18/05/2015",
-  "modified": "18/05/2015"
+  "modified": "18/05/2015",
+  "valueCodes": [
+	1,2,3,4,5,6,7,8
+  ],
+  "valueDescriptions": [
+	"TopLeft","TopRight","BottomRight","BottomLeft","LeftTop","RightTop","RightBottom","LeftBottom"
+  ]
 }

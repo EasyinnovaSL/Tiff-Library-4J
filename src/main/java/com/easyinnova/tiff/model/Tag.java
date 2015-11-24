@@ -33,6 +33,7 @@
 package com.easyinnova.tiff.model;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -73,6 +74,15 @@ public class Tag {
   /** The modified. */
   private Date modified;
   
+  /** The value codes. */
+  private List<Integer> valueCodes;
+
+  /** The value descriptions. */
+  private List<String> valueDescriptions;
+
+  /** The tag value descriptions. */
+  private HashMap<String, String> tagValueDescriptions = new HashMap<String, String>();
+
   /**
    * Gets the id.
    *
@@ -89,6 +99,33 @@ public class Tag {
    */
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  /**
+   * Creates the values dictionary.
+   */
+  public void createValuesDictionary() {
+    tagValueDescriptions = new HashMap<String, String>();
+    if (valueCodes != null && valueDescriptions != null && valueCodes.size() > 0
+        && valueCodes.size() == valueDescriptions.size()) {
+      for (int i = 0; i < valueCodes.size(); i++) {
+        tagValueDescriptions.put(valueCodes.get(i) + "", valueDescriptions.get(i));
+      }
+    }
+  }
+
+  /**
+   * Gets the tag value description.
+   *
+   * @param encodedValue the encoded value
+   * @return the tag value description
+   */
+  public String getTagValueDescription(String encodedValue) {
+    String desc = null;
+    if (tagValueDescriptions.containsKey(encodedValue)) {
+      desc = tagValueDescriptions.get(encodedValue);
+    }
+    return desc;
   }
 
   /**
