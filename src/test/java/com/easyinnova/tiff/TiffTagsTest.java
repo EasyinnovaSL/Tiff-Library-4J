@@ -74,7 +74,7 @@ public class TiffTagsTest {
       tr = new TiffReader();
       int result =
           tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
-              + separator + "Bilevel.TIF");
+              + separator + "Bilevel.tif");
       assertEquals(0, result);
       assertEquals(true, tr.getBaselineValidation().isCorrect());
 
