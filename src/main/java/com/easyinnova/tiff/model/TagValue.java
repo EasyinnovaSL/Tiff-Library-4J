@@ -98,7 +98,7 @@ public class TagValue extends TiffObject {
     String desc = this.toString();
     Tag tag = TiffTags.getTag(id);
     if (tag != null) {
-      String tagDescription = tag.getTagValueDescription(value.toString());
+      String tagDescription = tag.getTagValueDescription(toString());
       if (tagDescription != null)
         desc = tagDescription;
     }
@@ -211,6 +211,7 @@ public class TagValue extends TiffObject {
    */
   public String toString() {
     String s = "";
+    int max = 200;
     boolean defined = false;
     try {
       defined = TiffTags.hasTag(id) && TiffTags.getTag(id).hasTypedef();
@@ -226,6 +227,8 @@ public class TagValue extends TiffObject {
         s += value.get(i).toString();
         if (n > 1 && i + 1 < n && type != 2)
           s += ",";
+        if (s.length() > max)
+          break;
       }
       if (n > 1 && type != 2)
         s += "]";

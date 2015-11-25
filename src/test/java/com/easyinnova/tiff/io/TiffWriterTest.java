@@ -151,7 +151,6 @@ public class TiffWriterTest {
     }
   }
 
-
   /**
    * Creator little endian test
    */

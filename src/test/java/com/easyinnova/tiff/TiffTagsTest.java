@@ -30,10 +30,14 @@
  */
 package com.easyinnova.tiff;
 
+import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 
+import com.easyinnova.tiff.model.ReadIccConfigIOException;
+import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.easyinnova.tiff.model.Tag;
 import com.easyinnova.tiff.model.TiffTags;
+import com.easyinnova.tiff.reader.TiffReader;
 
 import org.junit.Test;
 
@@ -64,6 +68,24 @@ public class TiffTagsTest {
     assertEquals(tag2.getTagValueDescription("1"), "Chunky");
     assertEquals(tag2.getTagValueDescription("2"), "Planar");
     assertEquals(tag2.getTagValueDescription("unexisting"), null);
+
+    TiffReader tr;
+    try {
+      tr = new TiffReader();
+      int result =
+          tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+              + separator + "Bilevel.TIF");
+      assertEquals(0, result);
+      assertEquals(true, tr.getBaselineValidation().isCorrect());
+
+      String value =
+          tr.getModel().getFirstIFD().getTag("PhotometricInterpretation").getDescriptiveValue();
+      assertEquals(value, "Bilevel");
+    } catch (ReadTagsIOException e) {
+      assertEquals(0, 1);
+    } catch (ReadIccConfigIOException e) {
+      assertEquals(0, 1);
+    }
   }
 }
 

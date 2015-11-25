@@ -156,10 +156,11 @@ public class IfdTags {
     String s = "";
     for (TagValue t : tags) {
       s += "[" + t.getName() + ":";
-      if (t.toString().length() < 100)
-        s += t.toString();
+      String st = t.toString();
+      if (st.length() < 100)
+        s += st;
       else
-        s += t.toString().substring(0, 50) + "...";
+        s += st.substring(0, 50) + "...";
       s += "]\r\n";
     }
     return s;

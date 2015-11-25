@@ -142,6 +142,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
         Tag t = TiffTags.getTag(ie.getId());
         String stype = TiffTags.tagTypes.get(ie.getType());
         if (!t.validType(stype)) {
+          // Tag type check
           String stypes = "";
           for (String tt : t.getType()) {
             if (stypes.length() > 0)
@@ -151,7 +152,20 @@ public class BaselineProfile extends GenericProfile implements Profile {
           validation.addError("Invalid type for tag " + TiffTags.getTag(ie.getId()).getName() + "["
               + stypes + "]", "Metadata", stype);
         }
+        if (ie.getId() == 320) {
+          // Colormap length check
+          long bps = 0;
+          if (metadata.containsTagId(258))
+            bps = metadata.get(258).getFirstNumericValue();
+          long calc = 3 * (long) Math.pow(2, bps);
+          if (calc != ie.getCardinality()) {
+            validation.addError("Invalid cardinality for tag "
+                + TiffTags.getTag(ie.getId()).getName() + "[" + ie.getCardinality() + "]",
+                "Metadata", stype);
+          }
+        }
         try {
+          // Cardonality check
           int card = Integer.parseInt(t.getCardinality());
           if (card != ie.getCardinality())
             validation.addError("Cardinality for tag " + TiffTags.getTag(ie.getId()).getName()

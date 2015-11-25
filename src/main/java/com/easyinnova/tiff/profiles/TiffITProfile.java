@@ -225,6 +225,20 @@ public class TiffITProfile extends GenericProfile implements Profile {
     if (metadata.containsTagId(TiffTags.getTagId("SampesPerPixel"))) {
       spp = (int)metadata.get(TiffTags.getTagId("SampesPerPixel")).getFirstNumericValue();
     }
+    int planar = 1;
+    if (metadata.containsTagId(TiffTags.getTagId("PlanarConfiguration"))) {
+      planar = (int) metadata.get(TiffTags.getTagId("PlanarConfiguration")).getFirstNumericValue();
+    }
+    int rps = -1;
+    if (metadata.containsTagId(TiffTags.getTagId("RowsPerStrip"))) {
+      rps = (int) metadata.get(TiffTags.getTagId("RowsPerStrip")).getFirstNumericValue();
+    }
+    int length = -1;
+    if (metadata.containsTagId(TiffTags.getTagId("ImageLength"))) {
+      length = (int) metadata.get(TiffTags.getTagId("ImageLength")).getFirstNumericValue();
+    }
+    int spi = Math.floorDiv(length + rps - 1, rps);
+
     if (lab) {
 
     } else {
@@ -261,7 +275,11 @@ public class TiffITProfile extends GenericProfile implements Profile {
     } else if (p == 1 || p == 2) {
       checkRequiredTag(metadata, "PhotometricInterpretation", 1, new long[] {5});
     }
-    checkRequiredTag(metadata, "StripOffsets", 1);
+    if (planar == 1 || planar == 32768) {
+      checkRequiredTag(metadata, "StripOffsets", spi);
+    } else if (planar == 2) {
+      checkRequiredTag(metadata, "StripOffsets", spp * spi);
+    }
     if (rgb || lab) {
     } else if (p == 1 || p == 2) {
       checkRequiredTag(metadata, "Orientation", 1, new long[]{1});
@@ -276,7 +294,11 @@ public class TiffITProfile extends GenericProfile implements Profile {
       }
     }
     if (p == 1 || p == 2 || rgb || lab) {
-      checkRequiredTag(metadata, "StripBYTECount", 1);
+      if (planar == 1 || planar == 32768) {
+        checkRequiredTag(metadata, "StripBYTECount", spi);
+      } else if (planar == 2) {
+        checkRequiredTag(metadata, "StripBYTECount", spp * spi);
+      }
       checkRequiredTag(metadata, "XResolution", 1);
       checkRequiredTag(metadata, "YResolution", 1);
     }
@@ -601,10 +623,12 @@ public class TiffITProfile extends GenericProfile implements Profile {
     boolean ok = true;
     int tagid = TiffTags.getTagId(tagName);
     if (!metadata.containsTagId(tagid)) {
-      validation.addErrorLoc("Missing required tag for TiffIT " + tagName, "IFD" + currentIfd);
+      validation.addErrorLoc("Missing required tag for TiffIT" + profile + " " + tagName, "IFD"
+          + currentIfd);
       ok = false;
     } else if (cardinality != -1 && metadata.get(tagid).getCardinality() != cardinality) {
-      validation.addError("Invalid cardinality for TiffIT tag " + tagName, "IFD" + currentIfd,
+      validation.addError("Invalid cardinality for TiffIT" + profile + " tag " + tagName, "IFD"
+          + currentIfd,
           metadata.get(tagid)
           .getCardinality());
     } else if (cardinality == 1 && possibleValues != null) {
@@ -616,7 +640,8 @@ public class TiffITProfile extends GenericProfile implements Profile {
         i++;
       }
       if (!contained)
-        validation.addError("Invalid value for TiffIT tag " + tagName, "IFD" + currentIfd, val);
+        validation.addError("Invalid value for TiffIT" + profile + " tag " + tagName, "IFD"
+            + currentIfd, val);
     }
     return ok;
   }
