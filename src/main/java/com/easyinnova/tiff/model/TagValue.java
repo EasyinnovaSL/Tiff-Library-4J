@@ -31,8 +31,10 @@
  */
 package com.easyinnova.tiff.model;
 
+import com.easyinnova.tiff.model.types.Ascii;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -211,29 +213,50 @@ public class TagValue extends TiffObject {
    */
   public String toString() {
     String s = "";
-    int max = 200;
-    boolean defined = false;
-    try {
-      defined = TiffTags.hasTag(id) && TiffTags.getTag(id).hasTypedef();
-    } catch (Exception ex) {
-    }
-    if (defined) {
-      s = value.get(0).toString();
-    } else if (type != 1 || value.size() < 10) {
-      int n = value.size();
-      if (n > 1 && type != 2)
-        s += "[";
-      for (int i = 0; i < n; i++) {
-        s += value.get(i).toString();
-        if (n > 1 && i + 1 < n && type != 2)
-          s += ",";
-        if (s.length() > max)
-          break;
+    if (type == 2) {
+      s = readString();
+    } else {
+      int max = 200;
+      boolean defined = false;
+      try {
+        defined = TiffTags.hasTag(id) && TiffTags.getTag(id).hasTypedef();
+      } catch (Exception ex) {
       }
-      if (n > 1 && type != 2)
-        s += "]";
+      if (defined) {
+        s = value.get(0).toString();
+      } else if (type != 1 || value.size() < 10) {
+        int n = value.size();
+        if (n > 1)
+          s += "[";
+        for (int i = 0; i < n; i++) {
+          s += value.get(i).toString();
+          if (n > 1 && i + 1 < n)
+            s += ",";
+          if (s.length() > max)
+            break;
+        }
+        if (n > 1)
+          s += "]";
+      }
     }
     return s;
+  }
+
+  /**
+   * Read string.
+   * 
+   * @return String
+   */
+  public String readString() {
+    byte[] bbs = new byte[value.size() - 1];
+    for (int i = 0; i < value.size() - 1; i++) {
+      bbs[i] = ((Ascii) value.get(i)).toByte();
+    }
+    try {
+      return new String(bbs, "UTF8");
+    } catch (UnsupportedEncodingException e) {
+      return "";
+    }
   }
 
   /**

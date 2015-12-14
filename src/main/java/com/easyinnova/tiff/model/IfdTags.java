@@ -91,6 +91,8 @@ public class IfdTags {
       Ascii cha = new Ascii(tagValue.charAt(i));
       tag.add(cha);
     }
+    Ascii chaf = new Ascii(0);
+    tag.add(chaf);
     addTag(tag);
   }
 

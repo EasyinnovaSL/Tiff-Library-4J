@@ -481,6 +481,9 @@ public class TiffReader {
         ok = false;
       }
     }
+    if (type == 2) {
+      tv.readString();
+    }
 
     if (ok && TiffTags.hasTag(id)) {
       Tag t = TiffTags.getTag(id);
