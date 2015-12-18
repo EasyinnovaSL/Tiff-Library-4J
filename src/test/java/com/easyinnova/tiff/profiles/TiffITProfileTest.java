@@ -78,8 +78,7 @@ public class TiffITProfileTest {
 
     // Valid
     result =
-        tr.readFile("src" + separator + "test" + separator + "resources" + separator
- + "IT Samples"
+        tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
             + separator + "sample-IT.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getBaselineValidation().correct);
@@ -91,16 +90,6 @@ public class TiffITProfileTest {
     result =
         tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
             + separator + "sample-cmyk-IT.tif");
-    assertEquals(0, result);
-    assertEquals(true, tr.getBaselineValidation().correct);
-    to = tr.getModel();
-    bp = new TiffITProfile(to, 0);
-    bp.validate();
-    assertEquals(true, bp.getValidation().correct);
-
-    result =
-        tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
-            + separator + "sample-cmyk-IT1.tif");
     assertEquals(0, result);
     assertEquals(true, tr.getBaselineValidation().correct);
     to = tr.getModel();
@@ -138,26 +127,6 @@ public class TiffITProfileTest {
     TiffITProfile bp;
 
     // Valid
-    result =
-        tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
-            + separator + "sample-cmyk-IT1.tif");
-    assertEquals(0, result);
-    assertEquals(true, tr.getBaselineValidation().correct);
-    to = tr.getModel();
-    bp = new TiffITProfile(to, 1);
-    bp.validate();
-    assertEquals(true, bp.getValidation().correct);
-
-    result =
-        tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
-            + separator + "sample-cmyk-IT1-c2.tif");
-    assertEquals(0, result);
-    assertEquals(true, tr.getBaselineValidation().correct);
-    to = tr.getModel();
-    bp = new TiffITProfile(to, 2);
-    bp.validate();
-    assertEquals(true, bp.getValidation().correct);
-
     // Invalid
     result =
         tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
@@ -200,26 +169,6 @@ public class TiffITProfileTest {
     TiffITProfile bp;
 
     // Valid
-    result =
-        tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
-            + separator + "sample-cmyk-IT1.tif");
-    assertEquals(0, result);
-    assertEquals(true, tr.getBaselineValidation().correct);
-    to = tr.getModel();
-    bp = new TiffITProfile(to, 2);
-    bp.validate();
-    assertEquals(true, bp.getValidation().correct);
-
-    result =
-        tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"
-            + separator + "sample-cmyk-IT1-c2.tif");
-    assertEquals(0, result);
-    assertEquals(true, tr.getBaselineValidation().correct);
-    to = tr.getModel();
-    bp = new TiffITProfile(to, 2);
-    bp.validate();
-    assertEquals(true, bp.getValidation().correct);
-
     // Invalid
     result =
         tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IT Samples"

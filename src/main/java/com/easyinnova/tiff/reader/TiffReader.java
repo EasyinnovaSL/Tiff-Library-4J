@@ -322,6 +322,9 @@ public class TiffReader {
     ir.setIfd(ifd);
     int nextIfdOffset = 0;
     try {
+      if (offset % 2 != 0) {
+        validation.addErrorLoc("Bad word alignment in the offset of the IFD", "IFD" + n);
+      }
       int index = offset;
       int directoryEntries = data.readShort(offset).toInt();
       if (directoryEntries < 1) {
@@ -343,6 +346,7 @@ public class TiffReader {
             tagid = data.readShort(index).toInt();
             int tagType = data.readShort(index + 2).toInt();
             int tagN = data.readLong(index + 4).toInt();
+            checkType(tagid, tagType, n);
             TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd, n);
             if (ifd.containsTagId(tagid)) {
               if (duplicateTagTolerance > 0)
@@ -386,6 +390,36 @@ public class TiffReader {
   }
 
   /**
+   * Check tag type.
+   *
+   * @param tagid the tagid
+   * @param tagType the tag type
+   * @param n the n
+   */
+  private void checkType(int tagid, int tagType, int n) {
+    if (TiffTags.hasTag(tagid) && !TiffTags.getTag(tagid).getName().equals("IPTC")) {
+      boolean found = false;
+      String stagType = TiffTags.getTagTypeName(tagType);
+      if (stagType.equals("SUBIFD"))
+        stagType = "IFD";
+      if (stagType.equals("UNDEFINED"))
+        stagType = "BYTE";
+      for (String vType : TiffTags.getTag(tagid).getType()) {
+        String vType2 = vType;
+        if (vType2.equals("UNDEFINED"))
+          vType2 = "BYTE";
+        if (vType2.equals(stagType)) {
+          found = true;
+        }
+      }
+      if (!found) {
+        validation.addError("Incorrect type for tag " + TiffTags.getTag(tagid).getName(),
+            "IFD" + n, stagType);
+      }
+    }
+  }
+
+  /**
    * Gets the value of the given tag field.
    *
    * @param tagtype the tag type
@@ -415,7 +449,10 @@ public class TiffReader {
     // Check if the tag value fits in the directory entry value field, and get offset if not
     if (typeSize * n > tagValueSize) {
       try {
-      offset = data.readLong(offset).toInt();
+        offset = data.readLong(offset).toInt();
+        if (offset % 2 != 0) {
+          validation.addErrorLoc("Bad word alignment in the offset of tag " + id, "IFD" + n);
+        }
       } catch (Exception ex) {
         validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + n);
         ok = false;
@@ -467,6 +504,10 @@ public class TiffReader {
               break;
             case 13:
               int ifdOffset = data.readLong(offset).toInt();
+              if (ifdOffset % 2 != 0) {
+                validation
+                    .addErrorLoc("Bad word alignment in the offset of the sub IFD", "IFD" + n);
+              }
               IfdReader ifd = readIFD(ifdOffset, true, -nifd);
               IFD subIfd = ifd.getIfd();
               subIfd.setParent(parentIFD);
@@ -497,6 +538,9 @@ public class TiffReader {
           if (instanceOfMyClass.isIFD()) {
             long ifdOffset = tv.getFirstNumericValue();
             try {
+              if (ifdOffset % 2 != 0) {
+                validation.addErrorLoc("Bad word alignment in the offset of Exif", "IFD" + n);
+              }
               IfdReader ifd = readIFD((int) ifdOffset, false, -1);
               IFD exifIfd = ifd.getIfd();
               exifIfd.setIsIFD(true);

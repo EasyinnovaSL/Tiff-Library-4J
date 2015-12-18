@@ -126,6 +126,12 @@ public class TiffValidInvalidTests {
       assertEquals(0, result);
       assertEquals(false, tr.getBaselineValidation().isCorrect());
 
+      result =
+          tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Block"
+              + separator + "Bad alignment Classic E.tif");
+      assertEquals(0, result);
+      assertEquals(false, tr.getBaselineValidation().isCorrect());
+
       result = tr.readFile("src" + separator + "test" + separator + "resources" + separator + "IFD Struct" + separator + "Insane tag count E.TIF");
       assertEquals(0, result);
       assertEquals(false, tr.getBaselineValidation().isCorrect());

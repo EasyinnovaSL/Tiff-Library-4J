@@ -227,4 +227,14 @@ public class TiffTags {
   public static boolean hasTag(int id) {
     return tagMap.containsKey(id);
   }
+
+  /**
+   * Gets the tag type name.
+   *
+   * @param id the id
+   * @return the tag type name
+   */
+  public static String getTagTypeName(int id) {
+    return tagTypes.get(id);
+  }
 }
