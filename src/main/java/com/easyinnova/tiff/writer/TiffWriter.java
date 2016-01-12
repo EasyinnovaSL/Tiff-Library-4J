@@ -243,6 +243,8 @@ public class TiffWriter {
       if (!filtered(tv)) {
         // Update pointer of the tag entry
         int currentPosition = (int) data.position();
+        if (currentPosition % 2 != 0)
+          currentPosition++; // Word alignment check
         data.seek(pointers.get(tv.getId()));
         data.putInt(currentPosition);
         data.seek(currentPosition);
