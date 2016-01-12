@@ -394,7 +394,7 @@ public class TiffWriterTest {
   }
 
   /**
-   * Creator little endian test
+   * Check alignment
    */
   @Test
   public void AlignmentCheck() {
@@ -427,6 +427,45 @@ public class TiffWriterTest {
           trCopy.getBaselineValidation().errors.size());
       assertEquals(tr.getBaselineValidation().warnings.size(),
           trCopy.getBaselineValidation().warnings.size());
+
+      new File(filename.replace(".tif", "2.tif")).delete();
+
+    } catch (Exception e) {
+      assertEquals(0, 1);
+    }
+  }
+
+  /**
+   * Fic alignment
+   */
+  @Test
+  public void AlignmentFix() {
+    TiffReader tr;
+    TiffReader trCopy;
+    TiffWriter tw;
+    TiffDocument td;
+
+    try {
+      tr = new TiffReader();
+      trCopy = new TiffReader();
+
+      // Read the File to copy
+      String filename =
+          "src" + separator + "test" + separator + "resources" + separator + "Block" + separator
+              + "Bad alignment Classic E.tif";
+      tr.readFile(filename);
+      TiffInputStream ti = new TiffInputStream(new File(filename));
+      td = tr.getModel();
+
+      tw = new TiffWriter(ti);
+      tw.SetModel(td);
+      tw.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+      tw.write(filename.replace(".tif", "2.tif"));
+
+      trCopy.readFile(filename.replace(".tif", "2.tif"));
+
+      assertEquals(tr.getBaselineValidation().errors.size(), 3);
+      assertEquals(trCopy.getBaselineValidation().errors.size(), 0);
 
       new File(filename.replace(".tif", "2.tif")).delete();
 

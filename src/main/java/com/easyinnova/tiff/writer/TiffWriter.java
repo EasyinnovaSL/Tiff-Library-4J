@@ -417,7 +417,13 @@ public class TiffWriter {
     TagValue stripOffsets = metadata.get(273);
     TagValue stripSizes = metadata.get(279);
     for (int i = 0; i < stripOffsets.getCardinality(); i++) {
-      newStripOffsets.add((int) data.position());
+      int pos = (int) data.position();
+      if (pos % 2 != 0) {
+        // Correct word alignment
+        data.put((byte) 0);
+        pos = (int) data.position();
+      }
+      newStripOffsets.add(pos);
       int start = (int) stripOffsets.getValue().get(0).toInt();
       int size = stripSizes.getValue().get(i).toInt();
       for (int off = start; off < start + size; off++) {
@@ -441,7 +447,13 @@ public class TiffWriter {
     TagValue tileOffsets = metadata.get(324);
     TagValue tileSizes = metadata.get(325);
     for (int i = 0; i < tileOffsets.getCardinality(); i++) {
-      newTileOffsets.add((int) data.position());
+      int pos = (int) data.position();
+      if (pos % 2 != 0) {
+        // Correct word alignment
+        data.put((byte) 0);
+        pos = (int) data.position();
+      }
+      newTileOffsets.add(pos);
       for (int j = 0; j < tileSizes.getValue().get(i).toInt(); j++) {
         byte v = this.input.readByte((int) tileOffsets.getValue().get(i).toInt()).toByte();
         data.put(v);
