@@ -255,6 +255,11 @@ public class TiffWriter {
 
     if (ifd.hasStrips()) {
       long stripOffsetsPointer = data.position();
+      if (stripOffsetsPointer % 2 != 0) {
+        // Correct word alignment
+        data.put((byte) 0);
+        stripOffsetsPointer = (int) data.position();
+      }
       ArrayList<Integer> offsets = writeStripData(ifd);
 
       if (offsets.size() > 1) {
@@ -272,6 +277,11 @@ public class TiffWriter {
       data.seek(currentPosition);
     } else if (ifd.hasTiles()) {
       long tilesOffsetsPointer = data.position();
+      if (tilesOffsetsPointer % 2 != 0) {
+        // Correct word alignment
+        data.put((byte) 0);
+        tilesOffsetsPointer = (int) data.position();
+      }
       ArrayList<Integer> offsets = writeTileData(ifd);
 
       if (offsets.size() > 1) {
@@ -418,11 +428,6 @@ public class TiffWriter {
     TagValue stripSizes = metadata.get(279);
     for (int i = 0; i < stripOffsets.getCardinality(); i++) {
       int pos = (int) data.position();
-      if (pos % 2 != 0) {
-        // Correct word alignment
-        data.put((byte) 0);
-        pos = (int) data.position();
-      }
       newStripOffsets.add(pos);
       int start = (int) stripOffsets.getValue().get(0).toInt();
       int size = stripSizes.getValue().get(i).toInt();

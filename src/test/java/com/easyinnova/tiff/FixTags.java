@@ -130,6 +130,59 @@ public class FixTags {
   }
 
   /**
+   * Adds the tag test.
+   */
+  @Test
+  public void addTagTest2() {
+    try {
+      // Read Tiff
+      result =
+          tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+              + separator + "RGB_stripped.tif");
+      TiffInputStream ti =
+          new TiffInputStream(new File("src" + separator + "test" + separator + "resources"
+              + separator + "Small" + separator + "RGB_stripped.tif"));
+      to = tr.getModel();
+      ifd = (IFD) to.getFirstIFD();
+
+      // Add tag
+      to.addTag("ImageDescription", "desc");
+
+      // Write modified Tiff
+      TiffWriter tw = new TiffWriter(ti);
+      tw.SetModel(tr.getModel());
+      tw.write("src" + separator + "test" + separator + "resources" + separator + "Small"
+          + separator + "RGB_stripped2.tif");
+
+
+      // Read modified Tiff
+      TiffReader trCopy = new TiffReader();
+      trCopy.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+          + separator + "RGB_stripped2.tif");
+      TiffDocument tdCopy;
+      tdCopy = trCopy.getModel();
+
+      // Compare modified Tiff with original
+      IFD ifdCopy;
+      ifdCopy = tdCopy.getFirstIFD();
+
+      // Re read original Tiff
+      result =
+          tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
+              + separator + "RGB_stripped.tif");
+      to = tr.getModel();
+      ifd = (IFD) to.getFirstIFD();
+
+      assertEquals(ifd.getTags().getTags().size() + 1, ifdCopy.getTags().getTags().size());
+      assertEquals("desc", ifdCopy.getTag("ImageDescription").toString());
+      assertEquals(trCopy.getBaselineValidation().getErrors().size(), tr.getBaselineValidation()
+          .getErrors().size());
+    } catch (Exception e) {
+      assertEquals(0, 1);
+    }
+  }
+
+  /**
    * Remove tag test.
    */
   @Test
