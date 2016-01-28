@@ -429,7 +429,7 @@ public class TiffWriter {
     for (int i = 0; i < stripOffsets.getCardinality(); i++) {
       int pos = (int) data.position();
       newStripOffsets.add(pos);
-      int start = (int) stripOffsets.getValue().get(0).toInt();
+      int start = (int) stripOffsets.getValue().get(i).toInt();
       int size = stripSizes.getValue().get(i).toInt();
       for (int off = start; off < start + size; off++) {
         byte v = this.input.readByte(off).toByte();
