@@ -170,6 +170,7 @@ public class TiffReader {
 
         tiffModel = new TiffDocument();
         validation = new ValidationResult();
+        tiffModel.setSize(data.size());
         readHeader();
         if (tiffModel.getMagicNumber() < 42) {
           validation.addError("Incorrect tiff magic number", "Header", tiffModel.getMagicNumber());
@@ -201,6 +202,7 @@ public class TiffReader {
    */
   private void readHeader() {
     boolean correct = true;
+    boolean correctByteOrder = false;
     ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
     int c1 = 0;
     int c2 = 0;
@@ -212,23 +214,30 @@ public class TiffReader {
     }
 
     // read the first two bytes, in order to know the byte ordering
-    if (c1 == 'I' && c2 == 'I')
+    if (c1 == 'I' && c2 == 'I') {
       byteOrder = ByteOrder.LITTLE_ENDIAN;
-    else if (c1 == 'M' && c2 == 'M')
+      correctByteOrder = true;
+    } else if (c1 == 'M' && c2 == 'M') {
       byteOrder = ByteOrder.BIG_ENDIAN;
+      correctByteOrder = true;
+    }
     else if (byteOrderErrorTolerance > 0 && c1 == 'i' && c2 == 'i') {
       validation.addWarning("Byte Order in lower case", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.LITTLE_ENDIAN;
+      correctByteOrder = true;
     } else if (byteOrderErrorTolerance > 0 && c1 == 'm' && c2 == 'm') {
       validation.addWarning("Byte Order in lower case", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.BIG_ENDIAN;
+      correctByteOrder = true;
     } else if (byteOrderErrorTolerance > 1) {
       validation.addWarning("Non-sense Byte Order. Trying Little Endian.", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.LITTLE_ENDIAN;
     } else {
       validation.addErrorLoc("Invalid Byte Order " + c1 + c2, "Header");
     }
-    tiffModel.setByteOrder(byteOrder);
+    if (correctByteOrder) {
+      tiffModel.setByteOrder(byteOrder);
+    }
 
     if (correct) {
       // set byte ordering to the stream
@@ -252,6 +261,7 @@ public class TiffReader {
     try {
       // The pointer to the first IFD is located in bytes 4-7
       offset0 = data.readLong(4).toInt();
+      tiffModel.setFirstIFDOffset(offset0);
       if (offset0 == 0)
         validation.addErrorLoc("There is no first IFD", "Header");
       else if (offset0 > data.size())

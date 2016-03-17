@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -63,12 +64,14 @@ public class TiffTags {
    *
    * @param br the br
    * @param gson the gson
+   * @return the tag
    */
-  private static void readTagFromBuffer(BufferedReader br, Gson gson) {
+  private static Tag readTagFromBuffer(BufferedReader br, Gson gson) {
     Tag tag = gson.fromJson(br, Tag.class);
     tag.createValuesDictionary();
     tagMap.put(tag.getId(), tag);
     tagNames.put(tag.getName(), tag);
+    return tag;
   }
 
   /**
@@ -117,6 +120,7 @@ public class TiffTags {
           throw new ReadTagsIOException();
         }
       }
+      // generateTagRules();
 
       tagTypes.put(1, "BYTE");
       tagTypes.put(2, "ASCII");
@@ -131,6 +135,51 @@ public class TiffTags {
       tagTypes.put(11, "FLOAT");
       tagTypes.put(12, "DOUBLE");
       tagTypes.put(13, "SUBIFD");
+    } catch (Exception ex) {
+      throw new ReadTagsIOException();
+    }
+  }
+
+  /**
+   * Generate tag rules.
+   *
+   * @throws ReadTagsIOException the read tags io exception
+   */
+  protected void generateTagRules() throws ReadTagsIOException {
+    try {
+      PrintWriter writer = new PrintWriter("typecheck.xml", "UTF-8");
+      for (int tagId : tagMap.keySet()) {
+        Tag tag = tagMap.get(tagId);
+        writer.println("  <rule context=\"tag[id=" + tag.getId() + "]\">");
+        String typeRule = "";
+        for (String tagType : tag.getType()) {
+          if (typeRule.length() > 0)
+            typeRule += " || ";
+          typeRule += "{type=='" + tagType + "'}";
+        }
+        writer.println("   <assert test=\"" + typeRule + "\">Tag type does not match</assert>");
+        writer.println("  </rule>");
+      }
+      writer.close();
+
+      writer = new PrintWriter("cardinalitycheck.xml", "UTF-8");
+      for (int tagId : tagMap.keySet()) {
+        Tag tag = tagMap.get(tagId);
+        if (tag.getCardinality().length() > 0 && !tag.getCardinality().equals("N")) {
+          try {
+            int card = Integer.parseInt(tag.getCardinality());
+            writer.println("  <rule context=\"tag[id=" + tag.getId() + "]\">");
+            String typeRule = "{cardinality==" + card + "}";
+            writer.println("   <assert test=\"" + typeRule
+                + "\">Tag cardinality does not match</assert>");
+            writer.println("  </rule>");
+          } catch (Exception ex) {
+            // TODO: Deal with formulas
+            System.err.println("Formula in tag " + tag.getName() + ": " + tag.getCardinality());
+          }
+        }
+      }
+      writer.close();
     } catch (Exception ex) {
       throw new ReadTagsIOException();
     }

@@ -326,21 +326,6 @@ public class Tag {
   }
 
   /**
-   * Valid type.
-   *
-   * @param type the type
-   * @return true, if is valid
-   */
-  public boolean validType(String type) {
-    boolean valid = false;
-    if (type.contains(type))
-      valid = true;
-    if (type == "LONG" && type.contains("UNDEFINED"))
-      valid = true;
-    return valid;
-  }
-
-  /**
    * Checks for typedef.
    *
    * @return true, if successful

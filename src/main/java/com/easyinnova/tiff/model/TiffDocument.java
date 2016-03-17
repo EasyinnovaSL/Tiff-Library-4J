@@ -55,6 +55,12 @@ public class TiffDocument {
   /** The byte order. */
   private ByteOrder byteOrder;
 
+  /** The offset of the first IFD. */
+  private int firstIFDOffset;
+
+  /** The file size in bytes. */
+  private long size;
+
   /**
    * Instantiates a new tiff file.
    */
@@ -70,6 +76,42 @@ public class TiffDocument {
    */
   public void addIfd0(IFD ifd) {
     firstIFD = ifd;
+  }
+
+  /**
+   * Sets the first ifd offset.
+   *
+   * @param offset the new first ifd offset
+   */
+  public void setFirstIFDOffset(int offset) {
+    firstIFDOffset = offset;
+  }
+
+  /**
+   * Gets the first ifd offset.
+   *
+   * @return the first ifd offset
+   */
+  public int getFirstIFDOffset() {
+    return firstIFDOffset;
+  }
+
+  /**
+   * Sets the size.
+   *
+   * @param size the new size
+   */
+  public void setSize(long size) {
+    this.size = size;
+  }
+
+  /**
+   * Gets the size.
+   *
+   * @return the size
+   */
+  public long getSize() {
+    return size;
   }
 
   /**

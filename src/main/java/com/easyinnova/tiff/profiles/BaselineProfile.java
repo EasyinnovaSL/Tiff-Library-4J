@@ -129,7 +129,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
   public void validateMetadata(IfdTags metadata) {
     int prevTagId = 0;
     try {
-    TiffTags.getTiffTags();
+      TiffTags.getTiffTags();
     } catch (ReadTagsIOException e) {
     }
     for (TagValue ie : metadata.getTags()) {
@@ -141,17 +141,6 @@ public class BaselineProfile extends GenericProfile implements Profile {
       else {
         Tag t = TiffTags.getTag(ie.getId());
         String stype = TiffTags.tagTypes.get(ie.getType());
-        if (!t.validType(stype)) {
-          // Tag type check
-          String stypes = "";
-          for (String tt : t.getType()) {
-            if (stypes.length() > 0)
-              stypes += ",";
-            stypes += tt;
-          }
-          validation.addError("Invalid type for tag " + TiffTags.getTag(ie.getId()).getName() + "["
-              + stypes + "]", "Metadata", stype);
-        }
         if (ie.getId() == 320) {
           // Colormap length check
           long bps = 0;
@@ -165,7 +154,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
           }
         }
         try {
-          // Cardonality check
+          // Cardinality check
           int card = Integer.parseInt(t.getCardinality());
           if (card != ie.getCardinality())
             validation.addError("Cardinality for tag " + TiffTags.getTag(ie.getId()).getName()
@@ -551,7 +540,8 @@ public class BaselineProfile extends GenericProfile implements Profile {
       int bps = metadata.get(TiffTags.getTagId("BitsPerSample")).getValue().size();
       if (spp != bps) {
         validation
-            .addErrorLoc("Sampes per Pixel and Bits per Sample count do not match", "IFD" + n);
+.addErrorLoc("Samples per Pixel and Bits per Sample count do not match", "IFD"
+            + n);
         if (bps == 1) {
           // TODO: Tolerate and proceed as if the BitsPerSample tag had a count equal to the
           // SamplesPerPixel tag value, and with all values equal to the single value actually given
