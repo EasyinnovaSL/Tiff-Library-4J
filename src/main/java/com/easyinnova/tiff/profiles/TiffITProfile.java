@@ -222,8 +222,8 @@ public class TiffITProfile extends GenericProfile implements Profile {
         metadata.containsTagId(TiffTags.getTagId("PhotometricInterpretation"))
             && metadata.get(TiffTags.getTagId("PhotometricInterpretation")).getFirstNumericValue() == 8;
     int spp = -1;
-    if (metadata.containsTagId(TiffTags.getTagId("SampesPerPixel"))) {
-      spp = (int)metadata.get(TiffTags.getTagId("SampesPerPixel")).getFirstNumericValue();
+    if (metadata.containsTagId(TiffTags.getTagId("SamplesPerPixel"))) {
+      spp = (int) metadata.get(TiffTags.getTagId("SamplesPerPixel")).getFirstNumericValue();
     }
     int planar = 1;
     if (metadata.containsTagId(TiffTags.getTagId("PlanarConfiguration"))) {
@@ -289,7 +289,7 @@ public class TiffITProfile extends GenericProfile implements Profile {
     } else {
       if (p == 0) {
         checkRequiredTag(metadata, "SamplesPerPixel", 1);
-      } else if (p == 2 || p == 2) {
+      } else if (p == 1 || p == 2) {
         checkRequiredTag(metadata, "SamplesPerPixel", 1, new long[]{4});
       }
     }

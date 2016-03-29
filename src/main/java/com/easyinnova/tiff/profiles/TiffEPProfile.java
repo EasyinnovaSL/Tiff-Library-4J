@@ -210,6 +210,8 @@ public class TiffEPProfile extends GenericProfile implements Profile {
    * @param ifd the subifd
    * @param n the ifd number
    */
+  @SuppressWarnings("unused")
+  @Deprecated
   private void validateSubIfd(IFD ifd, int n) {
     boolean thumbnail = ifd.getParent().getImageSize() > ifd.getImageSize();
     IfdTags metadata = ifd.getMetadata();

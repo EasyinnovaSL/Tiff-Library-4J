@@ -66,6 +66,9 @@ public class IFD extends abstractTiffType {
   /** The is image. */
   private boolean isImage;
 
+  /** The next ifd offset. */
+  private int nextOffset;
+
   /**
    * The Enum ImageRepresentation.
    */
@@ -88,6 +91,24 @@ public class IFD extends abstractTiffType {
     tags = new IfdTags();
     nextIFD = null;
     this.isImage = isImage;
+  }
+
+  /**
+   * Gets the next offset.
+   *
+   * @return the next offset
+   */
+  public int getNextOffset() {
+    return nextOffset;
+  }
+
+  /**
+   * Sets the next offset.
+   *
+   * @param offset the new next offset
+   */
+  public void setNextOffset(int offset) {
+    nextOffset = offset;
   }
 
   /**

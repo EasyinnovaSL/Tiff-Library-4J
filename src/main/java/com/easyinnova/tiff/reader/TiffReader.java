@@ -171,17 +171,20 @@ public class TiffReader {
         tiffModel = new TiffDocument();
         validation = new ValidationResult();
         tiffModel.setSize(data.size());
-        readHeader();
-        if (tiffModel.getMagicNumber() < 42) {
-          validation.addError("Incorrect tiff magic number", "Header", tiffModel.getMagicNumber());
-        } else if (tiffModel.getMagicNumber() == 43) {
-          validation.addErrorLoc("Big tiff file not yet supported", "Header");
-        } else if (validation.isCorrect()) {
-          readIFDs();
+        boolean correctHeader = readHeader();
+        if (correctHeader) {
+          if (tiffModel.getMagicNumber() < 42) {
+            validation
+                .addError("Incorrect tiff magic number", "Header", tiffModel.getMagicNumber());
+          } else if (tiffModel.getMagicNumber() == 43) {
+            validation.addErrorLoc("Big tiff file not yet supported", "Header");
+          } else if (validation.isCorrect()) {
+            readIFDs();
 
-          BaselineProfile bp = new BaselineProfile(tiffModel);
-          bp.validate();
-          getBaselineValidation().add(bp.getValidation());
+            BaselineProfile bp = new BaselineProfile(tiffModel);
+            bp.validate();
+            getBaselineValidation().add(bp.getValidation());
+          }
         }
 
         data.close();
@@ -199,10 +202,11 @@ public class TiffReader {
 
   /**
    * Reads the Tiff header.
+   *
+   * @return true, if successful
    */
-  private void readHeader() {
+  private boolean readHeader() {
     boolean correct = true;
-    boolean correctByteOrder = false;
     ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
     int c1 = 0;
     int c2 = 0;
@@ -216,31 +220,24 @@ public class TiffReader {
     // read the first two bytes, in order to know the byte ordering
     if (c1 == 'I' && c2 == 'I') {
       byteOrder = ByteOrder.LITTLE_ENDIAN;
-      correctByteOrder = true;
     } else if (c1 == 'M' && c2 == 'M') {
       byteOrder = ByteOrder.BIG_ENDIAN;
-      correctByteOrder = true;
     }
     else if (byteOrderErrorTolerance > 0 && c1 == 'i' && c2 == 'i') {
       validation.addWarning("Byte Order in lower case", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.LITTLE_ENDIAN;
-      correctByteOrder = true;
     } else if (byteOrderErrorTolerance > 0 && c1 == 'm' && c2 == 'm') {
       validation.addWarning("Byte Order in lower case", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.BIG_ENDIAN;
-      correctByteOrder = true;
     } else if (byteOrderErrorTolerance > 1) {
       validation.addWarning("Non-sense Byte Order. Trying Little Endian.", "" + c1 + c2, "Header");
       byteOrder = ByteOrder.LITTLE_ENDIAN;
     } else {
       validation.addErrorLoc("Invalid Byte Order " + c1 + c2, "Header");
+      correct = false;
     }
-    if (correctByteOrder) {
-      tiffModel.setByteOrder(byteOrder);
-    }
-
     if (correct) {
-      // set byte ordering to the stream
+      tiffModel.setByteOrder(byteOrder);
       data.setByteOrder(byteOrder);
 
       try {
@@ -249,8 +246,10 @@ public class TiffReader {
         tiffModel.setMagicNumber(magic);
       } catch (Exception ex) {
         validation.addErrorLoc("Magic number parsing error", "Header");
+        correct = false;
       }
     }
+    return correct;
   }
 
   /**
@@ -279,7 +278,9 @@ public class TiffReader {
         if (ifd0.getIfd() == null) {
           validation.addErrorLoc("Parsing error in first IFD", "IFD" + 0);
         } else {
-          tiffModel.addIfd0(ifd0.getIfd());
+          IFD iifd = ifd0.getIfd();
+          iifd.setNextOffset(ifd0.getNextIfdOffset());
+          tiffModel.addIfd0(iifd);
 
           IfdReader current_ifd = ifd0;
 
@@ -300,7 +301,9 @@ public class TiffReader {
                 validation.addErrorLoc("Parsing error in IFD " + nifd, "IFD" + nifd);
                 stop = true;
               } else {
-                current_ifd.getIfd().setNextIFD(next_ifd.getIfd());
+                iifd = next_ifd.getIfd();
+                iifd.setNextOffset(next_ifd.getNextIfdOffset());
+                current_ifd.getIfd().setNextIFD(iifd);
                 current_ifd = next_ifd;
               }
               nifd++;

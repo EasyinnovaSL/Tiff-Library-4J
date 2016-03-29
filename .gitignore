@@ -12,3 +12,4 @@ Tiff-Library-4J.iml
 out/
 src/test/resources/Small/Bilevel2.tif
 src/test/resources/private tests/
+.metadata/
