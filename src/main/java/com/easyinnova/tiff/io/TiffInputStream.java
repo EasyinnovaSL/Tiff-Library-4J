@@ -270,7 +270,7 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     }         
     return new Long(val);
   }
-  
+
   /**
    * Read s long.
    *

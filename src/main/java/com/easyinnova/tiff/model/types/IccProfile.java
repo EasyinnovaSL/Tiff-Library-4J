@@ -30,22 +30,22 @@
  */
 package com.easyinnova.tiff.model.types;
 
-import com.easyinnova.tiff.io.TiffInputStream;
 import com.easyinnova.tiff.model.IccProfileCreator;
 import com.easyinnova.tiff.model.IccProfileCreators;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.ValidationResult;
+
+import java.io.IOException;
 
 /**
  * The Class IccProfile.
  */
 public class IccProfile extends abstractTiffType {
 
+  public enum ProfileClass { Input, Display, Output, DeviceLink, ColorSpace, Abstract, NamedColor, Unknown }
+
   /** The tags. */
   public IccTags tags;
-
-  /** The data. */
-  TiffInputStream data;
 
   /** The validation result. */
   public ValidationResult validation;
@@ -53,8 +53,14 @@ public class IccProfile extends abstractTiffType {
   /** The version. */
   private String version;
 
+  /** The description. */
+  private String description;
+
   /** The version. */
   private IccProfileCreator creator;
+
+  /** Profile class */
+  private ProfileClass profileClass;
 
   /**
    * Default Constructor.
@@ -65,45 +71,12 @@ public class IccProfile extends abstractTiffType {
   }
 
   /**
-   * Instantiates a new icc profile.
+   * Gets the description.
    *
-   * @param offset the offset in bytes to the beginning of the ICC Profile
-   * @param size the size in bytes of the embedded ICC Profile
-   * @param data the data
+   * @return the description
    */
-  public IccProfile(int offset, int size, TiffInputStream data) {
-    this.data = data;
-    validation = new ValidationResult();
-    setTypeSize(size);
-    tags = new IccTags();
-    readIccProfile(offset, size);
-  }
-
-  /**
-   * Read icc profile.
-   *
-   * @param offset the offset
-   * @param size the size
-   */
-  private void readIccProfile(int offset, int size) {
-    try {
-      int iccsize = data.readLong(offset).toInt();
-      if (iccsize != size)
-        validation.addErrorLoc("ICC Profile size does not match", "ICC");
-
-      int index = offset + 128;
-      int tagCount = data.readLong(index).toInt();
-
-      for (int i = 0; i < tagCount; i++) {
-        int signature = data.readLong(index).toInt();
-        int tagOffset = data.readLong(index + 4).toInt();
-        int tagSize = data.readLong(index + 8).toInt();
-        IccTag tag = new IccTag(signature, tagOffset, tagSize);
-        tags.addTag(tag);
-        index += 12;
-      }
-    } catch (Exception ex) {
-    }
+  public String getDescription() {
+    return description;
   }
 
   /**
@@ -126,9 +99,8 @@ public class IccProfile extends abstractTiffType {
 
   @Override
   public String toString() {
+    if (description != null) return description;
     String s = "";
-    // for (IccTag tag : tags.tags)
-    // s += "[" + tag.signature + "->" + tag.offset + "]";
     String scr = "Unknown creator";
     if (creator != null)
       scr = creator.getCreator();
@@ -142,11 +114,41 @@ public class IccProfile extends abstractTiffType {
    * @param tv the tv
    */
   private void readVersion(TagValue tv) {
-    int maj = tv.getBytes(8, 1); // Major version
-    int min = (tv.getBytes(9, 1) & 0xF0) >> 4; // Minor version (in the first 4 bits of the byte)
-    // int z1 = tv.getBytes(10, 1);
-    // int z2 = tv.getBytes(11, 1);
+    int maj = tv.getBytesBigEndian(8, 1); // Major version
+    int min = (tv.getBytesBigEndian(9, 1) & 0xF0) >> 4; // Minor version (in the first 4 bits of the
+                                                        // byte)
     version = maj + "." + min;
+  }
+
+  /**
+   * Read class.
+   *
+   * @param tv the tv
+   */
+  private void readClass(TagValue tv) {
+    int profileClass = tv.getBytesBigEndian(12, 4);
+    String hex = Integer.toHexString(profileClass);
+    if (hex.equals("73636e72")) {
+      this.profileClass = ProfileClass.Input;
+    } else if (hex.equals("6d6e7472")) {
+      this.profileClass = ProfileClass.Display;
+    } else if (hex.equals("70727472")) {
+      this.profileClass = ProfileClass.Output;
+    } else if (hex.equals("6C696e6b")) {
+      this.profileClass = ProfileClass.DeviceLink;
+    } else if (hex.equals("73706163")) {
+      this.profileClass = ProfileClass.ColorSpace;
+    } else if (hex.equals("61627374")) {
+      this.profileClass = ProfileClass.Abstract;
+    } else if (hex.equals("6e6d636c")) {
+      this.profileClass = ProfileClass.NamedColor;
+    } else {
+      this.profileClass = ProfileClass.Unknown;
+    }
+  }
+
+  public ProfileClass getProfileClass() {
+    return profileClass;
   }
 
   /**
@@ -155,8 +157,43 @@ public class IccProfile extends abstractTiffType {
    * @param tv the tv
    */
   private void readCreator(TagValue tv) {
-    int creatorSignature = tv.getBytes(4, 4);
+    int creatorSignature = tv.getBytesBigEndian(4, 4);
     creator = IccProfileCreators.getIccProfile(creatorSignature);
+  }
+
+  /**
+   * Read description.
+   *
+   * @param tv the tag value
+   * @throws IOException exception
+   * @throws NumberFormatException exception
+   */
+  private void readDescription(TagValue tv) throws NumberFormatException, IOException {
+    int index = 128;
+    int tagCount = tv.getBytesBigEndian(index, 4);
+    index += 4;
+    for (int i = 0; i < tagCount; i++) {
+      int signature = tv.getBytesBigEndian(index, 4);
+      int tagOffset = tv.getBytesBigEndian(index + 4, 4);
+      if (Integer.toHexString(signature).equals("64657363")) {
+        String typedesc = Integer.toHexString(tv.getBytesBigEndian(tagOffset, 4));
+        if (typedesc.equals("64657363")) {
+          int size = tv.getBytesBigEndian(tagOffset + 8, 4) - 1;
+          String s = "";
+          int j = 0;
+          int begin = tagOffset + 12;
+          while (begin + j < begin + size) {
+            int unicode_char = tv.getBytesBigEndian(begin + j, 1);
+            s += Character.toString((char) unicode_char);
+            j++;
+          }
+          description = s;
+        } else {
+          description = "";
+        }
+      }
+      index += 12;
+    }
   }
 
   /**
@@ -166,8 +203,15 @@ public class IccProfile extends abstractTiffType {
    */
   @Override
   public void read(TagValue tv) {
+    readClass(tv);
     readVersion(tv);
     readCreator(tv);
+    try {
+      readDescription(tv);
+    } catch (NumberFormatException | IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     tv.clear();
     tv.add(this);

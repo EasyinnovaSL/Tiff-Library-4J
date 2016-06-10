@@ -31,7 +31,6 @@
  */
 package com.easyinnova;
 
-import com.easyinnova.tiff.io.TiffInputStream;
 import com.easyinnova.tiff.model.ReadIccConfigIOException;
 import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.easyinnova.tiff.model.TiffDocument;
@@ -40,7 +39,6 @@ import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.profiles.TiffITProfile;
 import com.easyinnova.tiff.reader.TiffReader;
-import com.easyinnova.tiff.writer.TiffWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,18 +102,18 @@ public class TiffReaderWriter {
         try {
           TiffReader tr = new TiffReader();
           int result = tr.readFile(filename);
-          tr.getModel().getMetadata().get("Creator");
+          // tr.getModel().getMetadata().get("Creator");
           reportResults(tr, result, filename, output_file);
   
-          TiffInputStream inputdata = new TiffInputStream(new File(filename));
-          TiffWriter tw = new TiffWriter(inputdata);
-          tw.SetModel(tr.getModel());
-          String filenameout = "out.tif";
+          // TiffInputStream inputdata = new TiffInputStream(new File(filename));
+          // TiffWriter tw = new TiffWriter(inputdata);
+          // tw.SetModel(tr.getModel());
+          // String filenameout = "out.tif";
           try {
-            tw.write(filenameout);
-            System.out.println("File '" + filenameout + "' written successfully");
+            // tw.write(filenameout);
+            // System.out.println("File '" + filenameout + "' written successfully");
           } catch (Exception ex) {
-            System.out.println("Error writting file '" + filenameout + "'");
+            // System.out.println("Error writting file '" + filenameout + "'");
           }
         } catch (ReadTagsIOException e) {
           System.out.println("Error loading TIFF dependencies");
@@ -123,6 +121,7 @@ public class TiffReaderWriter {
           System.out.println("Error loading ICC Profile dependencies");
         }
       }
+      System.out.println("Finished");
     }
   }
 
@@ -154,7 +153,7 @@ public class TiffReaderWriter {
             System.out.println("Everything ok in file '" + filename + "'");
             System.out.println("IFDs: " + to.getIfdCount());
             System.out.println("SubIFDs: " + to.getSubIfdCount());
-            
+
             to.printMetadata();
             TiffEPProfile bpep = new TiffEPProfile(to);
             bpep.validate();
@@ -172,11 +171,6 @@ public class TiffReaderWriter {
                 ifd.printTags();
               }
             }
-            nifd = 1;
-            /*
-             * for (TiffObject o : to.getSubIfds()) { IFD ifd = (IFD) o; if (ifd != null) {
-             * System.out.println("SubIFD " + nifd++ + " TAGS:"); ifd.printTags(); } }
-             */
           } else {
             // The file is not correct
             System.out.println("Errors in file '" + filename + "'");

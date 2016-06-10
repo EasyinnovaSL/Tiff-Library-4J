@@ -32,6 +32,7 @@
 package com.easyinnova.tiff.model;
 
 import com.easyinnova.tiff.model.types.IFD;
+import com.easyinnova.tiff.model.types.IccProfile;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
 import java.nio.ByteOrder;
@@ -103,6 +104,18 @@ public class TiffDocument {
    */
   public void setSize(long size) {
     this.size = size;
+  }
+
+  public IccProfile getIccProfile() {
+    if (getMetadata().contains("ICCProfile")) {
+      List<TiffObject> lobj = getMetadata().getList("ICCProfile");
+      for (TiffObject obj : lobj) {
+        if (obj instanceof IccProfile) {
+          return (IccProfile) obj;
+        }
+      }
+    }
+    return null;
   }
 
   /**

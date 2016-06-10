@@ -278,10 +278,10 @@ public class TagValue extends TiffObject {
    * @param j the j
    * @return the bytes
    */
-  public int getBytes(int i, int j) {
+  public int getBytesBigEndian(int i, int j) {
     int result = 0;
     for (int k = i; k < i + j; k++) {
-      result += value.get(k).toInt();
+      result += value.get(k).toUint();
       if (k + 1 < i + j)
         result <<= 8;
     }
