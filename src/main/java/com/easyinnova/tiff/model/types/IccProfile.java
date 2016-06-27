@@ -62,6 +62,9 @@ public class IccProfile extends abstractTiffType {
   /** Profile class */
   private ProfileClass profileClass;
 
+  /** Embedded Profile */
+  private boolean embedded;
+
   /**
    * Default Constructor.
    */
@@ -86,6 +89,15 @@ public class IccProfile extends abstractTiffType {
    */
   public String getVersion() {
     return version;
+  }
+
+  /**
+   * Gets the embedded.
+   *
+   * @return the embedded
+   */
+  public boolean getEmbedded() {
+    return embedded;
   }
 
   /**
@@ -118,6 +130,17 @@ public class IccProfile extends abstractTiffType {
     int min = (tv.getBytesBigEndian(9, 1) & 0xF0) >> 4; // Minor version (in the first 4 bits of the
                                                         // byte)
     version = maj + "." + min;
+  }
+
+  /**
+   * Read flags.
+   *
+   * @param tv the tv
+   */
+  private boolean readEmbedded(TagValue tv) {
+    int val = tv.getBytesBigEndian(44, 4);
+    embedded = val%2 == 1;
+    return embedded;
   }
 
   /**
@@ -206,6 +229,7 @@ public class IccProfile extends abstractTiffType {
     readClass(tv);
     readVersion(tv);
     readCreator(tv);
+    readEmbedded(tv);
     try {
       readDescription(tv);
     } catch (NumberFormatException | IOException e) {

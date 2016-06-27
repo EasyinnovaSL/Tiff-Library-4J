@@ -107,11 +107,13 @@ public class TiffDocument {
   }
 
   public IccProfile getIccProfile() {
-    if (getMetadata().contains("ICCProfile")) {
-      List<TiffObject> lobj = getMetadata().getList("ICCProfile");
-      for (TiffObject obj : lobj) {
-        if (obj instanceof IccProfile) {
-          return (IccProfile) obj;
+    if (getMetadata() != null) {
+      if (getMetadata().contains("ICCProfile")) {
+        List<TiffObject> lobj = getMetadata().getList("ICCProfile");
+        for (TiffObject obj : lobj) {
+          if (obj instanceof IccProfile) {
+            return (IccProfile) obj;
+          }
         }
       }
     }

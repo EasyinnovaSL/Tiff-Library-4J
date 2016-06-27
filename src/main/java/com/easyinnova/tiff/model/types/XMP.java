@@ -33,6 +33,17 @@ package com.easyinnova.tiff.model.types;
 import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.traversal.DocumentTraversal;
+import org.w3c.dom.traversal.NodeFilter;
+import org.w3c.dom.traversal.NodeIterator;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 /**
@@ -60,13 +71,30 @@ public class XMP extends XmlType {
   public Metadata createMetadata() throws Exception {
     if (metadata == null) {
       metadata = new Metadata();
+
+      /*DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      Document doc = builder.parse(new InputSource(xmlReader));
+      DocumentTraversal traversal = (DocumentTraversal) doc;
+
+      NodeIterator iterator = traversal.createNodeIterator(
+          doc.getDocumentElement(), NodeFilter.SHOW_ELEMENT, null, true);
+
+      for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
+        String tagname = ((Element) n).getTagName();
+        if(tagname.equals("title")) {
+          System.out.println("text=" + ((Element)n).getAttribute("text"));
+        }
+      }*/
+
       try {
+        final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader xmlModel = inputFactory.createXMLStreamReader(xmlReader);
         while (xmlModel.hasNext()) {
           int eventType = xmlModel.next();
           switch (eventType) {
             case XMLStreamReader.START_ELEMENT:
               String elementName = xmlModel.getLocalName();
-              eventType = xmlModel.next();
+              xmlModel.next();
               String elementData = xmlModel.getText();
               if (elementName.trim().length() > 0 && elementData.trim().length() > 0) {
                 Text txt = new Text(elementData);

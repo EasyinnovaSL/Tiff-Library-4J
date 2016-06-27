@@ -43,7 +43,7 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class XmlType extends abstractTiffType {
 	/** The xml model. */
-	protected XMLStreamReader xmlModel;
+	protected StringReader xmlReader;
 	/**
 	 * The xml.
 	 */
@@ -54,7 +54,7 @@ public class XmlType extends abstractTiffType {
 	 */
 	public XmlType() {
 		xml = null;
-		xmlModel = null;
+		xmlReader = null;
 	}
 
 	/**
@@ -63,9 +63,7 @@ public class XmlType extends abstractTiffType {
 	 * @throws XMLStreamException the XML stream exception
 	 */
 	private void loadXml() throws XMLStreamException {
-		final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-		final StringReader reader = new StringReader(xml);
-		xmlModel = inputFactory.createXMLStreamReader(reader);
+		xmlReader = new StringReader(xml);
 	}
 
 	/**
@@ -73,8 +71,8 @@ public class XmlType extends abstractTiffType {
 	 *
 	 * @return the xml model
 	 */
-	public XMLStreamReader getXmlModel() {
-		return xmlModel;
+	public StringReader getReader() {
+		return xmlReader;
 	}
 
 	@Override

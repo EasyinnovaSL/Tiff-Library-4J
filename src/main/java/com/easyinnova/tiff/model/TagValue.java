@@ -36,6 +36,7 @@ import com.easyinnova.tiff.model.types.abstractTiffType;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -153,24 +154,6 @@ public class TagValue extends TiffObject {
   }
 
   /**
-   * Sets the offset.
-   *
-   * @param off the new offset
-   */
-  public void setOffset(int off) {
-    offset = off;
-  }
-
-  /**
-   * Gets the offset.
-   *
-   * @return the offset
-   */
-  public int getOffset() {
-    return offset;
-  }
-
-  /**
    * Gets the tag id.
    *
    * @return the id
@@ -239,7 +222,7 @@ public class TagValue extends TiffObject {
           s += "]";
       }
     }
-    return s;
+    return s.replaceAll("\\p{C}", "?");
   }
 
   /**

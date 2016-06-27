@@ -355,10 +355,12 @@ public class TiffReader {
         // Reads the tags
         for (int i = 0; i < directoryEntries; i++) {
           int tagid = 0;
+          int tagType = -1;
+          int tagN = -1;
           try {
             tagid = data.readShort(index).toInt();
-            int tagType = data.readShort(index + 2).toInt();
-            int tagN = data.readLong(index + 4).toInt();
+            tagType = data.readShort(index + 2).toInt();
+            tagN = data.readLong(index + 4).toInt();
             checkType(tagid, tagType, n);
             TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd, n);
             if (ifd.containsTagId(tagid)) {
@@ -366,11 +368,14 @@ public class TiffReader {
                 validation.addWarning("Duplicate tag", "" + tagid, "IFD" + n);
               else
                 validation.addError("Duplicate tag", "IFD" + n, tagid);
-            } else {
-              ifd.addTag(tv);
             }
+            ifd.addTag(tv);
           } catch (Exception ex) {
             validation.addErrorLoc("Parse error in tag #" + i + " (" + tagid + ")", "IFD" + n);
+            TagValue tv = new TagValue(tagid, tagType);
+            tv.setReadOffset(index + 8);
+            tv.setReadLength(tagN);
+            ifd.addTag(tv);
           }
 
           index += 12;

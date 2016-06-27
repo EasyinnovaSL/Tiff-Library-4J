@@ -31,6 +31,7 @@
  */
 package com.easyinnova;
 
+import com.easyinnova.tiff.io.TiffInputStream;
 import com.easyinnova.tiff.model.ReadIccConfigIOException;
 import com.easyinnova.tiff.model.ReadTagsIOException;
 import com.easyinnova.tiff.model.TiffDocument;
@@ -39,6 +40,7 @@ import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.profiles.TiffITProfile;
 import com.easyinnova.tiff.reader.TiffReader;
+import com.easyinnova.tiff.writer.TiffWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,13 +107,14 @@ public class TiffReaderWriter {
           // tr.getModel().getMetadata().get("Creator");
           reportResults(tr, result, filename, output_file);
   
-          // TiffInputStream inputdata = new TiffInputStream(new File(filename));
-          // TiffWriter tw = new TiffWriter(inputdata);
-          // tw.SetModel(tr.getModel());
-          // String filenameout = "out.tif";
+          TiffInputStream inputdata = new TiffInputStream(new File(filename));
+          TiffWriter tw = new TiffWriter(inputdata);
+          TiffDocument tm = tr.getModel();
+          tw.SetModel(tm);
+          String filenameout = "out.tif";
           try {
-            // tw.write(filenameout);
-            // System.out.println("File '" + filenameout + "' written successfully");
+            tw.write(filenameout);
+            System.out.println("File '" + filenameout + "' written successfully");
           } catch (Exception ex) {
             // System.out.println("Error writting file '" + filenameout + "'");
           }

@@ -51,6 +51,8 @@ import com.easyinnova.tiff.model.types.abstractTiffType;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -207,7 +209,14 @@ public class TiffWriter {
 
     // Write IFD entries
     data.putShort((short) ntags);
-    for (TagValue tv : ifd.getMetadata().getTags()) {
+    ArrayList<TagValue> ltags = ifd.getTags().getTags();
+    Collections.sort(ltags, new Comparator<TagValue>() {
+      @Override
+      public int compare(TagValue a1, TagValue a2) {
+        return a1.getId()-a2.getId();
+      }
+    });
+    for (TagValue tv : ltags) {
       if (filtered(tv))
         continue;
       int n = tv.getCardinality();
@@ -347,8 +356,6 @@ public class TiffWriter {
    */
   private void writeTagValue(TagValue tag) throws IOException {
     int id = tag.getId();
-    long position = data.position();
-    tag.setOffset((int) position);
 
     // Write tag value
     for (abstractTiffType tt : tag.getValue()) {
@@ -435,6 +442,10 @@ public class TiffWriter {
         byte v = this.input.readByte(off).toByte();
         data.put(v);
       }
+      if (data.position() % 2 != 0) {
+        // Correct word alignment
+        data.put((byte) 0);
+      }
     }
     return newStripOffsets;
   }
@@ -462,6 +473,10 @@ public class TiffWriter {
       for (int j = 0; j < tileSizes.getValue().get(i).toInt(); j++) {
         byte v = this.input.readByte((int) tileOffsets.getValue().get(i).toInt()).toByte();
         data.put(v);
+      }
+      if (data.position() % 2 != 0) {
+        // Correct word alignment
+        data.put((byte) 0);
       }
     }
     return newTileOffsets;

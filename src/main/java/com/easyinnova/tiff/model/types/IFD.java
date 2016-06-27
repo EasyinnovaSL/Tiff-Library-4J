@@ -37,6 +37,7 @@ import com.easyinnova.tiff.model.ImageTiles;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffTags;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,6 +187,19 @@ public class IFD extends abstractTiffType {
    */
   public boolean hasSubIFD() {
     return tags.containsTagId(330);
+  }
+
+  public boolean isThumbnail() {
+    if (tags.containsTagId(254)) {
+      return BigInteger.valueOf(tags.get(254).getFirstNumericValue()).testBit(0);
+    }
+    if (tags.containsTagId(255)) {
+      return tags.get(255).getFirstNumericValue() == 2;
+    }
+    if (hasSubIFD() && getImageSize() < getsubIFD().getImageSize()) {
+      return true;
+    }
+    return false;
   }
 
   /**

@@ -64,17 +64,18 @@ public class IfdTags {
    * @param tag the tag to add
    */
   public void addTag(TagValue tag) {
-    int pos = 0;
-    while (pos < tags.size() && tags.get(pos).getId() < tag.getId()) {
-      pos++;
-    }
-    tags.add(pos, tag);
+    //int pos = 0;
+    //while (pos < tags.size() && tags.get(pos).getId() < tag.getId()) pos++;
+    //tags.add(pos, tag);
+    tags.add(tag);
     if (!hashTagsId.containsKey(tag.getId())) {
       hashTagsId.put(tag.getId(), tag);
     }
     Tag t = TiffTags.getTag(tag.getId());
     if (t != null) {
-      hashTagsName.put(t.getName(), tag);
+      if (hashTagsName.containsKey(t.getName())) {
+        hashTagsName.put(t.getName(), tag);
+      }
     }
   }
 

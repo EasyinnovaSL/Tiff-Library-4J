@@ -34,6 +34,7 @@ public class ICCProfileTest {
       assertEquals("sRGB IEC61966-2.1", icc.getDescription());
       assertEquals(null, icc.getCreator());
       assertEquals("2.1", icc.getVersion());
+      assertEquals(false, icc.getEmbedded());
       assertEquals(IccProfile.ProfileClass.Display, icc.getProfileClass());
     } catch (Exception e) {
       assertEquals(0, 1);
