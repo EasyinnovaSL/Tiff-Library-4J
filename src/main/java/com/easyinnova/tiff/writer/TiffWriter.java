@@ -226,7 +226,7 @@ public class TiffWriter {
       data.putShort((short) id);
       data.putShort((short) tagtype);
       if (id == 700)
-        n = tv.getValue().get(0).toString().length();
+        n = ((XMP)tv.getValue().get(0)).getBytes().length;
       if (id == 34675)
         n = tv.getReadlength();
       if (id == 33723)
@@ -362,7 +362,7 @@ public class TiffWriter {
     for (abstractTiffType tt : tag.getValue()) {
       if (id == 700) {
         XMP xmp = (XMP)tt;
-        for (byte c : xmp.getXml().getBytes()) {
+        for (byte c : xmp.getBytes()) {
           data.put(c);
         }
         data.put((byte) 0);
