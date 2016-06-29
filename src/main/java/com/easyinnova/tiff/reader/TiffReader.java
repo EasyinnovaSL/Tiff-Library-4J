@@ -456,6 +456,7 @@ public class TiffReader {
 
     // Create TagValue object
     TagValue tv = new TagValue(id, type);
+    tv.setTagOffset(beginOffset - 8);
 
     // Defined tags
     int offset = beginOffset;

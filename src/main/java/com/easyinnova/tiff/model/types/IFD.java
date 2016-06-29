@@ -136,6 +136,16 @@ public class IFD extends abstractTiffType {
   public int getOffset() { return offset; }
 
   /**
+   * Gets length.
+   *
+   * @return the length
+   */
+  public int getLength() {
+    int length = 2 + getTags().getTags().size()*12 + 4;
+    return length;
+  }
+
+  /**
    * Sets the parent.
    *
    * @param parent the new parent

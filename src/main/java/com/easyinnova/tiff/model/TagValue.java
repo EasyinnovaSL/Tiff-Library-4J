@@ -53,7 +53,7 @@ public class TagValue extends TiffObject {
   /** The list of values. */
   private List<abstractTiffType> value;
   
-  /** The offset where the tag has been written (only used in TiffWriter). */
+  /** The offset where the tag has been written. */
   private int offset;
 
   /** The offset where the tag has been read. */
@@ -62,10 +62,13 @@ public class TagValue extends TiffObject {
   /** The tag length that has been read. */
   private int readLength;
 
+  /** The offset of the tag in the directory entries list. */
+  private int tagOffset;
+
   /**
    * Instantiates a new tag value.
    *
-   * @param id tag id
+   * @param id   tag id
    * @param type tag type id
    */
   public TagValue(int id, int type) {
@@ -73,7 +76,7 @@ public class TagValue extends TiffObject {
     this.type = type;
     value = new ArrayList<abstractTiffType>();
   }
-  
+
   /**
    * Sets the read offset.
    *
@@ -91,6 +94,20 @@ public class TagValue extends TiffObject {
   public int getReadOffset() {
     return readOffset;
   }
+
+  /**
+   * Gets tag offset.
+   *
+   * @return the tag offset
+   */
+  public int getTagOffset() { return tagOffset; }
+
+  /**
+   * Sets tag offset.
+   *
+   * @param offset the offset
+   */
+  public void setTagOffset(int offset) { tagOffset = offset; }
 
   /**
    * Gets the descriptive value.
@@ -227,8 +244,8 @@ public class TagValue extends TiffObject {
 
   /**
    * Read string.
-   * 
-   * @return String
+   *
+   * @return String string
    */
   public String readString() {
     byte[] bbs = new byte[value.size() - 1];
