@@ -86,12 +86,17 @@ public class XMP extends XmlType {
     if (metadata == null) {
       metadata = new Metadata();
 
+      System.out.println("a");
       DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      System.out.println("b");
       Document doc = builder.parse(new InputSource(xmlReader));
+      System.out.println("c");
       DocumentTraversal traversal = (DocumentTraversal) doc;
+      System.out.println("d");
 
       NodeIterator iterator = traversal.createNodeIterator(
           doc.getDocumentElement(), NodeFilter.SHOW_ELEMENT, null, true);
+      System.out.println("e");
 
       for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
         Element elem = ((Element) n);
