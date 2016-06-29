@@ -46,6 +46,7 @@ import com.easyinnova.tiff.model.types.Rational;
 import com.easyinnova.tiff.model.types.SLong;
 import com.easyinnova.tiff.model.types.SRational;
 import com.easyinnova.tiff.model.types.SShort;
+import com.easyinnova.tiff.model.types.XMP;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
 import java.io.IOException;
@@ -360,7 +361,8 @@ public class TiffWriter {
     // Write tag value
     for (abstractTiffType tt : tag.getValue()) {
       if (id == 700) {
-        for (byte c : tt.toString().getBytes()) {
+        XMP xmp = (XMP)tt;
+        for (byte c : xmp.getXml().getBytes()) {
           data.put(c);
         }
         data.put((byte) 0);

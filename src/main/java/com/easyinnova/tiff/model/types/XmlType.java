@@ -49,6 +49,8 @@ public class XmlType extends abstractTiffType {
 	 */
 	private String xml;
 
+	private byte[] bytes;
+
 	/**
 	 * Default constructor.
 	 */
@@ -80,6 +82,14 @@ public class XmlType extends abstractTiffType {
 		return xml.replace('\n', ' ');
 	}
 
+	public String getXml() {
+		return xml;
+	}
+
+	public byte[] getBytes() {
+		return bytes;
+	}
+
 	/**
 	 * Reads the XML.
 	 * 
@@ -89,12 +99,12 @@ public class XmlType extends abstractTiffType {
 	public void read(TagValue tv) throws Exception {
 		xml = "";
 
-		byte[] text = new byte[tv.getCardinality()];
+		bytes = new byte[tv.getCardinality()];
 
 		for (int i = 0; i < tv.getCardinality(); i++) {
-			text[i]=tv.getValue().get(i).toByte();
+			bytes[i]=tv.getValue().get(i).toByte();
 		}
-		xml = new String(text,"UTF-8");
+		xml = new String(bytes,"UTF-8");
 
 		loadXml();
 
