@@ -70,15 +70,24 @@ public class IFD extends abstractTiffType {
   /** The next ifd offset. */
   private int nextOffset;
 
+  /** The ifd offset. */
+  private int offset;
+
   /**
    * The Enum ImageRepresentation.
    */
   public enum ImageRepresentation {
-    /** The image is stored in strips. */
+    /**
+     * The image is stored in strips.
+     */
     STRIPS,
-    /** The image is stored in tiles. */
+    /**
+     * The image is stored in tiles.
+     */
     TILES,
-    /** Undefined. */
+    /**
+     * Undefined.
+     */
     UNDEFINED
   }
 
@@ -111,6 +120,20 @@ public class IFD extends abstractTiffType {
   public void setNextOffset(int offset) {
     nextOffset = offset;
   }
+
+  /**
+   * Sets offset.
+   *
+   * @param offset the offset
+   */
+  public void setOffset(int offset) { this.offset = offset; }
+
+  /**
+   * Gets offset.
+   *
+   * @return the offset
+   */
+  public int getOffset() { return offset; }
 
   /**
    * Sets the parent.
@@ -189,6 +212,11 @@ public class IFD extends abstractTiffType {
     return tags.containsTagId(330);
   }
 
+  /**
+   * Is thumbnail boolean.
+   *
+   * @return the boolean
+   */
   public boolean isThumbnail() {
     if (tags.containsTagId(254)) {
       return BigInteger.valueOf(tags.get(254).getFirstNumericValue()).testBit(0);
@@ -419,7 +447,7 @@ public class IFD extends abstractTiffType {
   /**
    * Adds a tag.
    *
-   * @param tagName the tag name
+   * @param tagName  the tag name
    * @param tagValue the tag value
    */
   public void addTag(String tagName, String tagValue) {

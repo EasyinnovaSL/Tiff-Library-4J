@@ -331,6 +331,7 @@ public class TiffReader {
    */
   private IfdReader readIFD(int offset, boolean isImage, int n) {
     IFD ifd = new IFD(isImage);
+    ifd.setOffset(offset);
     IfdReader ir = new IfdReader();
     ir.setIfd(ifd);
     int nextIfdOffset = 0;
