@@ -30,6 +30,7 @@
  */
 package com.easyinnova.tiff.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -96,25 +97,53 @@ public class Metadata {
   public TiffObject get(String name) {
     TiffObject result = null;
     String container = null;
+
+    ArrayList<TiffObject> found = new ArrayList<>();
     if (contains(name)) {
+      // Find objects with this exact name
       if (metadata.get(name).getObjectList().size() == 1) {
-        result = getFirst(name);
+        found.add(getFirst(name));
       } else {
         for (TiffObject to : metadata.get(name).getObjectList()) {
-          if (result == null) {
-            result = to;
-            container = to.getContainer();
-          } else if (to.getContainer() != null) {
-            // Preferences in (descending) order: EXIF, XMP, IPTC, Tiff tag
-            if (container == null || to.getContainer().equals("EXIF")
-                || (to.getContainer().equals("XMP") && container.equals("IPTC"))) {
-              result = to;
-              container = to.getContainer();
-            }
+          found.add(to);
+        }
+      }
+    } else {
+      // Find objects with similar or equivalent name
+      for (String key : metadata.keySet()) {
+        boolean similar = key.toLowerCase().equals(name.toLowerCase());
+        if (!similar) similar = name.toLowerCase().equals("date") && key.toLowerCase().equals("datetime");
+        if (!similar) similar = name.toLowerCase().equals("date") && key.toLowerCase().equals("creatordate");
+        if (!similar) similar = name.toLowerCase().equals("description") && key.toLowerCase().equals("imagedescription");
+        if (!similar) similar = name.toLowerCase().equals("creator") && key.toLowerCase().equals("artist");
+        if (!similar) similar = name.toLowerCase().equals("creator") && key.toLowerCase().equals("creatortool");
+        if (similar) {
+          for (TiffObject to : metadata.get(key).getObjectList()) {
+            found.add(to);
           }
         }
       }
     }
+
+    // Return the most prioritary result
+    if (found.size()==1) {
+      result = found.get(0);
+    } else {
+      for (TiffObject to : found) {
+        if (result == null) {
+          result = to;
+          container = to.getContainer();
+        } else if (to.getContainer() != null) {
+          // Preferences in (descending) order: EXIF, XMP, IPTC, Tiff tag
+          if (container == null || to.getContainer().equals("EXIF")
+              || (to.getContainer().equals("XMP") && container.equals("IPTC"))) {
+            result = to;
+            container = to.getContainer();
+          }
+        }
+      }
+    }
+
     return result;
   }
 
