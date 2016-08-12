@@ -31,7 +31,7 @@
  */
 package com.easyinnova.tiff.model;
 
-import com.easyinnova.tiff.model.types.Ascii;
+import com.easyinnova.tiff.model.types.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +77,22 @@ public class IfdTags {
         hashTagsName.put(t.getName(), tag);
       }
     }
+  }
+
+  /**
+   * Adds the tag.
+   *
+   * @param tagName the tag name
+   * @param tagValue the tag value
+   */
+  public void addTag(String tagName, int[] tagValue) {
+    int id = TiffTags.getTagId(tagName);
+    TagValue tag = new TagValue(id, 3);
+    for (int i = 0; i < tagValue.length; i++) {
+      com.easyinnova.tiff.model.types.Short val = new com.easyinnova.tiff.model.types.Short(tagValue[i]);
+      tag.add(val);
+    }
+    addTag(tag);
   }
 
   /**

@@ -45,7 +45,7 @@ public class OutputBuffer {
   private boolean[] isByte;
 
   /** The maximum internal buffer size. */
-  private int maxBufferSize = 10000;
+  private int maxBufferSize = 1000;
 
   /** The current buffer size. */
   private int currentBufferSize;
@@ -105,7 +105,7 @@ public class OutputBuffer {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void seek(int offset) throws IOException {
-    if (!(offset >= bufferOffset && offset < position)) { // TODO: position -> currentBufferSize
+    if (!(offset >= bufferOffset && offset < bufferOffset + maxBufferSize)) {
       writeBuffer();
       newBuffer(offset);
       aFile.seek(offset);
@@ -134,12 +134,12 @@ public class OutputBuffer {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void writeByteCurrentPosition(byte v) throws IOException {
-    if (position - bufferOffset < maxBufferSize) {
-      int pos = position - (int) bufferOffset;
-      buffer[pos] = v;
-      isByte[pos] = true;
-      currentBufferSize++;
-      if (currentBufferSize == maxBufferSize) {
+    int index = (int)(position - bufferOffset);
+    if (index < maxBufferSize) {
+      buffer[index] = v;
+      isByte[index] = true;
+      if (index + 1 > currentBufferSize) currentBufferSize = index + 1;
+      if (index + 1 >= maxBufferSize) {
         writeBuffer();
         newBuffer(position + 1);
       }
@@ -156,12 +156,12 @@ public class OutputBuffer {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public void writeIntCurrentPosition(int v) throws IOException {
-    if (position - bufferOffset < maxBufferSize) {
-      int pos = position - (int) bufferOffset;
-      buffer[pos] = v;
-      isByte[pos] = false;
-      currentBufferSize++;
-      if (currentBufferSize == maxBufferSize) {
+    int index = (int)(position - bufferOffset);
+    if (index < maxBufferSize) {
+      buffer[index] = v;
+      isByte[index] = false;
+      if (index + 1 > currentBufferSize) currentBufferSize = index + 1;
+      if (index + 1 >= maxBufferSize) {
         writeBuffer();
         newBuffer(position + 1);
       }

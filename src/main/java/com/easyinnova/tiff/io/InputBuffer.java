@@ -37,10 +37,10 @@ import java.io.IOException;
  */
 public class InputBuffer {
   /** The internal buffer. */
-  private int[] buffer;
+  private byte[] buffer;
 
   /** The maximum internal buffer size. */
-  private int maxBufferSize = 100;
+  private int maxBufferSize = 100000;
 
   /** The current buffer size. */
   private int currentBufferSize;
@@ -61,7 +61,7 @@ public class InputBuffer {
     bufferOffset = 0;
     currentBufferSize = 0;
     if (maxBufferSize >= 0)
-      buffer = new int[maxBufferSize];
+      buffer = new byte[maxBufferSize];
   }
 
   /**
@@ -71,23 +71,29 @@ public class InputBuffer {
    * @param offset the offset to check
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  private void checkBuffer(long offset) throws IOException {
+  private boolean checkBuffer(long offset) throws IOException {
     if (offset - bufferOffset < 0 || offset - bufferOffset >= currentBufferSize) {
       // the given offset is not contained in the buffer
       bufferOffset = offset;
       int index = 0;
       input.seek(offset);
       try {
+        //input.read(buffer, 0, maxBufferSize);
         for (long pos = offset; pos < offset + maxBufferSize; pos++) {
           int ch = input.read();
-          buffer[index] = ch;
-          index++;
+          if (ch > -1) {
+            buffer[index] = (byte)ch;
+            index++;
+          }
         }
       } catch (IOException ex) {
-        // end of file reached -> do nothing
+        // not possible
+        ex.printStackTrace();
       }
       currentBufferSize = index;
+      return true;
     }
+    return false;
   }
 
   /**
@@ -120,6 +126,20 @@ public class InputBuffer {
     } else {
       checkBuffer(offset);
       b = buffer[(int) (offset - bufferOffset)];
+    }
+    if (b < 0) return 256+b;
+    return b;
+  }
+
+  public byte readByte(long offset) throws IOException {
+    byte b;
+    if (maxBufferSize <= 0) {
+      // old-school (no buffer optimization)
+      b = (byte)input.read();
+    } else {
+      if (checkBuffer(offset))
+        offset = offset;
+      b = (byte)buffer[(int) (offset - bufferOffset)];
     }
     return b;
   }

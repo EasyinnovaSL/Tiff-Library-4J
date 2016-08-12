@@ -65,25 +65,27 @@ public class PagedInputBuffer {
    * @param offset the offset
    */
   private void selectPage(long offset) {
-    currentBuffer = null;
-    int i = 0;
+    if (currentBuffer == null || currentBuffer.seekSuccessful(offset)) {
+      currentBuffer = null;
+      int i = 0;
 
-    // Look if the given offset is already stored in a page
-    while (i < pages.size() && currentBuffer == null) {
-      if (pages.get(i).seekSuccessful(offset))
-        currentBuffer = pages.get(i);
-      i++;
-    }
+      // Look if the given offset is already stored in a page
+      while (i < pages.size() && currentBuffer == null) {
+        if (pages.get(i).seekSuccessful(offset))
+          currentBuffer = pages.get(i);
+        i++;
+      }
 
-    if (currentBuffer == null) {
-      // If the offset is not contained in any of the loaded pages, create a new one
+      if (currentBuffer == null) {
+        // If the offset is not contained in any of the loaded pages, create a new one
 
-      // FIFO
-      if (pages.size() >= MaxPages)
-        pages.remove(0);
-      pages.add(new InputBuffer(input));
+        // FIFO
+        if (pages.size() >= MaxPages)
+          pages.remove(0);
+        pages.add(new InputBuffer(input));
 
-      currentBuffer = pages.get(pages.size() - 1);
+        currentBuffer = pages.get(pages.size() - 1);
+      }
     }
   }
 
@@ -108,5 +110,10 @@ public class PagedInputBuffer {
   public int read(long offset) throws IOException {
     selectPage(offset);
     return currentBuffer.read(offset);
+  }
+
+  public byte readByte(long offset) throws IOException {
+    selectPage(offset);
+    return currentBuffer.readByte(offset);
   }
 }

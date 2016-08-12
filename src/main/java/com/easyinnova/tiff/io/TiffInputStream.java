@@ -49,11 +49,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteOrder;
+import java.nio.MappedByteBuffer;
 
-/**
+ /**
  * The Class TiffInputStream.
  */
-public class TiffInputStream extends RandomAccessFileInputStream implements TiffDataIntput {
+public class TiffInputStream extends MappedByteInputStream implements TiffDataIntput {
 
   /** The Byte order. */
   private ByteOrder byteOrder;
@@ -126,6 +127,12 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     return b;
   }
 
+  private byte readCurrentDirectByte() throws IOException {
+    byte b = buffer.readByte(fileOffset);
+    fileOffset++;
+    return b;
+  }
+
   /**
    * Read byte.
    *
@@ -145,7 +152,12 @@ public class TiffInputStream extends RandomAccessFileInputStream implements Tiff
     }
     return new Byte(ch);
   }
-  
+
+  public byte readDirectByte() throws IOException {
+    byte ch = readCurrentDirectByte();
+    return ch;
+  }
+
   /**
    * Read ascii.
    *

@@ -110,6 +110,10 @@ public class TiffReaderWriter {
           TiffInputStream inputdata = new TiffInputStream(new File(filename));
           TiffWriter tw = new TiffWriter(inputdata);
           TiffDocument tm = tr.getModel();
+          int[] val = new int[2];
+          val[0] = 2;
+          val[1] = 1;
+          tm.getFirstIFD().addTag("PageNumber", val);
           tw.SetModel(tm);
           String filenameout = "out.tif";
           try {

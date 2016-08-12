@@ -463,5 +463,15 @@ public class IFD extends abstractTiffType {
   public void addTag(String tagName, String tagValue) {
     this.tags.addTag(tagName, tagValue);
   }
+
+  /**
+   * Adds a tag.
+   *
+   * @param tagName  the tag name
+   * @param tagValue the tag value
+   */
+  public void addTag(String tagName, int[] tagValue) {
+    this.tags.addTag(tagName, tagValue);
+  }
 }
 

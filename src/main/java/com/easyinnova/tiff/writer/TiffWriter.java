@@ -308,6 +308,7 @@ public class TiffWriter {
       data.putInt((int) tilesOffsetsPointer);
       data.seek(currentPosition);
     }
+    ifd.toString();
   }
 
   /**
@@ -438,10 +439,11 @@ public class TiffWriter {
     for (int i = 0; i < stripOffsets.getCardinality(); i++) {
       int pos = (int) data.position();
       newStripOffsets.add(pos);
-      int start = (int) stripOffsets.getValue().get(i).toInt();
+      int start = stripOffsets.getValue().get(i).toInt();
       int size = stripSizes.getValue().get(i).toInt();
+      this.input.seekOffset(start);
       for (int off = start; off < start + size; off++) {
-        byte v = this.input.readByte(off).toByte();
+        byte v = this.input.readDirectByte();
         data.put(v);
       }
       if (data.position() % 2 != 0) {
@@ -472,8 +474,9 @@ public class TiffWriter {
         pos = (int) data.position();
       }
       newTileOffsets.add(pos);
+      this.input.seekOffset(tileOffsets.getValue().get(i).toInt());
       for (int j = 0; j < tileSizes.getValue().get(i).toInt(); j++) {
-        byte v = this.input.readByte((int) tileOffsets.getValue().get(i).toInt()).toByte();
+        byte v = this.input.readDirectByte();
         data.put(v);
       }
       if (data.position() % 2 != 0) {
