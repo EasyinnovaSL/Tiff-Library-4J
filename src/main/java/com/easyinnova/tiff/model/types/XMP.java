@@ -122,41 +122,50 @@ public class XMP extends XmlType {
       transformer.transform(new DOMSource(doc), new StreamResult(writer));
       String sXml = writer.getBuffer().toString().replaceAll("\n|\r", "");
       history = null;
-      if (sXml.contains("xmpMM:History")) {
-        history = new ArrayList<>();
-        int index = sXml.indexOf("xmpMM:History");
-        while (sXml.indexOf("<rdf:li", index) > 0) {
-          index = sXml.indexOf("<rdf:li", index);
-          String subs = sXml.substring(index);
-          subs = subs.substring(0, subs.indexOf("</rdf:li"));
-          Hashtable<String, String> action = new Hashtable<String, String>();
-          int index2 = 0;
-          while (subs.indexOf("stEvt:", index2) > 0) {
-            if (subs.indexOf("<stEvt:", index2) > -1) {
-              index2 = subs.indexOf("stEvt:", index2);
-              String stevt = subs.substring(index2);
-              stevt = stevt.substring(0, stevt.indexOf("</stEvt") + 2);
-              String name = stevt.substring(stevt.indexOf(":") + 1);
-              name = name.substring(0, name.indexOf(">"));
-              String value = stevt.substring(stevt.indexOf(">") + 1);
-              value = value.substring(0, value.indexOf("</"));
-              action.put(name, value);
-              index2 = subs.indexOf("</stEvt:", index2);
-            } else {
-              index2 = subs.indexOf("stEvt:", index2);
-              String stevt = subs.substring(index2);
-              int fin = stevt.indexOf("\"", stevt.indexOf("\"") + 1);
-              stevt = stevt.substring(0, fin);
-              String name = stevt.substring(stevt.indexOf(":") + 1);
-              name = name.substring(0, name.indexOf("="));
-              String value = stevt.substring(stevt.indexOf("\"") + 1);
-              action.put(name, value);
-              index2 += fin;
+      try {
+        if (sXml.contains("xmpMM:History")) {
+          String sHistory = sXml.substring(sXml.indexOf("xmpMM:History"));
+          sHistory = sHistory.substring(0, sHistory.indexOf("</xmpMM:History>"));
+          history = new ArrayList<>();
+          int index = sHistory.indexOf("xmpMM:History");
+          while (sHistory.indexOf("<rdf:li", index) > 0) {
+            index = sHistory.indexOf("<rdf:li", index);
+            String subs = sHistory.substring(index);
+            int fi = subs.indexOf("</rdf:li");
+            if (subs.indexOf("/>") != -1 && (fi == -1 || subs.indexOf("/>") < fi))
+              fi = subs.indexOf("/>");
+            subs = subs.substring(0, fi);
+            Hashtable<String, String> action = new Hashtable<String, String>();
+            int index2 = 0;
+            while (subs.indexOf("stEvt:", index2) > 0) {
+              if (subs.indexOf("<stEvt:", index2) > -1) {
+                index2 = subs.indexOf("stEvt:", index2);
+                String stevt = subs.substring(index2);
+                stevt = stevt.substring(0, stevt.indexOf("</stEvt") + 2);
+                String name = stevt.substring(stevt.indexOf(":") + 1);
+                name = name.substring(0, name.indexOf(">"));
+                String value = stevt.substring(stevt.indexOf(">") + 1);
+                value = value.substring(0, value.indexOf("</"));
+                action.put(name, value);
+                index2 = subs.indexOf("</stEvt:", index2) + 9;
+              } else {
+                index2 = subs.indexOf("stEvt:", index2);
+                String stevt = subs.substring(index2);
+                int fin = stevt.indexOf("\"", stevt.indexOf("\"") + 1);
+                stevt = stevt.substring(0, fin);
+                String name = stevt.substring(stevt.indexOf(":") + 1);
+                name = name.substring(0, name.indexOf("="));
+                String value = stevt.substring(stevt.indexOf("\"") + 1);
+                action.put(name, value);
+                index2 += fin;
+              }
             }
+            history.add(action);
+            index += fi;
           }
-          history.add(action);
-          index = sXml.indexOf("</rdf:li", index);
         }
+      } catch (Exception ex) {
+        ex.printStackTrace();
       }
     }
     return metadata;
