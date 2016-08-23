@@ -34,6 +34,7 @@ package com.easyinnova.tiff.model.types;
 import com.easyinnova.tiff.model.IfdTags;
 import com.easyinnova.tiff.model.ImageStrips;
 import com.easyinnova.tiff.model.ImageTiles;
+import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffTags;
 
@@ -253,6 +254,32 @@ public class IFD extends abstractTiffType {
       }
     }
     return l;
+  }
+
+  /**
+   * Create IFD metadata.
+   */
+  public Metadata createMetadata() {
+    Metadata metadata = new Metadata();
+    for (TagValue tag : getMetadata().getTags()) {
+      if (tag.getCardinality() == 1) {
+        abstractTiffType t = tag.getValue().get(0);
+        if (t.isIFD()) {
+          Metadata metadata2 = ((IFD) t).createMetadata();
+          for (String key : metadata2.keySet()) {
+            metadata.add(key, metadata2.get(key));
+          }
+        } else if (t.containsMetadata()) {
+          try {
+            Metadata meta = t.createMetadata();
+            metadata.addMetadata(meta);
+          } catch (Exception ex) {
+            // TODO: What?
+          }
+        }
+      }
+    }
+    return metadata;
   }
 
   /**
