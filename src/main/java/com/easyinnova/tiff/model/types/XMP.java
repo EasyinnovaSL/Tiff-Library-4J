@@ -131,16 +131,28 @@ public class XMP extends XmlType {
           subs = subs.substring(0, subs.indexOf("</rdf:li"));
           Hashtable<String, String> action = new Hashtable<String, String>();
           int index2 = 0;
-          while (subs.indexOf("<stEvt:", index2) > 0) {
-            index2 = subs.indexOf("<stEvt:", index2);
-            String stevt = subs.substring(index2);
-            stevt = stevt.substring(0, stevt.indexOf("</stEvt")+2);
-            String name = stevt.substring(stevt.indexOf(":")+1);
-            name = name.substring(0, name.indexOf(">"));
-            String value = stevt.substring(stevt.indexOf(">")+1);
-            value = value.substring(0, value.indexOf("</"));
-            action.put(name, value);
-            index2 = subs.indexOf("</stEvt:", index2);
+          while (subs.indexOf("stEvt:", index2) > 0) {
+            if (subs.indexOf("<stEvt:", index2) > -1) {
+              index2 = subs.indexOf("stEvt:", index2);
+              String stevt = subs.substring(index2);
+              stevt = stevt.substring(0, stevt.indexOf("</stEvt") + 2);
+              String name = stevt.substring(stevt.indexOf(":") + 1);
+              name = name.substring(0, name.indexOf(">"));
+              String value = stevt.substring(stevt.indexOf(">") + 1);
+              value = value.substring(0, value.indexOf("</"));
+              action.put(name, value);
+              index2 = subs.indexOf("</stEvt:", index2);
+            } else {
+              index2 = subs.indexOf("stEvt:", index2);
+              String stevt = subs.substring(index2);
+              int fin = stevt.indexOf("\"", stevt.indexOf("\"") + 1);
+              stevt = stevt.substring(0, fin);
+              String name = stevt.substring(stevt.indexOf(":") + 1);
+              name = name.substring(0, name.indexOf("="));
+              String value = stevt.substring(stevt.indexOf("\"") + 1);
+              action.put(name, value);
+              index2 += fin;
+            }
           }
           history.add(action);
           index = sXml.indexOf("</rdf:li", index);
