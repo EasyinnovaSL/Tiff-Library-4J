@@ -147,8 +147,13 @@ public class TiffWriter {
     IFD first = model.getFirstIFD();
     IFD current = first;
 
+    if (current != null) {
+      // First IFD offset
+      data.putInt((int) data.position() + 4);
+    }
+
     while (current != null) {
-      writeIFD(current, true);
+      writeIFD(current);
       current = current.getNextIFD();
     }
   }
@@ -165,8 +170,6 @@ public class TiffWriter {
     int tagValueSize = 4;
     int n = 0;
     for (TagValue tag : ifd.getMetadata().getTags()) {
-      if (filtered(tag))
-        continue;
       int tagsize = getTagSize(tag);
       if (tagsize > tagValueSize) {
         oversized.add(tag);
@@ -179,32 +182,15 @@ public class TiffWriter {
   }
 
   /**
-   * Filtered.
-   *
-   * @param tv the tv
-   * @return true, if successful
-   */
-  private boolean filtered(TagValue tv) {
-    // if (tv.getId() == 33723)
-    // return true;
-    return false;
-  }
-
-  /**
    * Write IFD data.
    *
    * @param ifd the ifd
-   * @param writeOffset the write offset
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  public void writeIFD(IFD ifd, boolean writeOffset) throws IOException {
+  public void writeIFD(IFD ifd) throws IOException {
     ArrayList<TagValue> oversizedTags = new ArrayList<TagValue>();
     ArrayList<TagValue> undersizedTags = new ArrayList<TagValue>();
     int ntags = classifyTags(ifd, oversizedTags, undersizedTags);
-
-    int offset = (int) data.position() + 4;
-    if (writeOffset)
-      data.putInt(offset);
 
     HashMap<Integer, Integer> pointers = new HashMap<Integer, Integer>();
 
@@ -218,19 +204,17 @@ public class TiffWriter {
       }
     });
     for (TagValue tv : ltags) {
-      if (filtered(tv))
-        continue;
       int n = tv.getCardinality();
       int id = tv.getId();
       int tagtype = tv.getType();
       data.putShort((short) id);
       data.putShort((short) tagtype);
       if (id == 700)
-        n = ((XMP)tv.getValue().get(0)).getBytes().length;
+        n = ((XMP)tv.getValue().get(0)).getLength();
       if (id == 34675)
         n = tv.getReadlength();
       if (id == 33723)
-        n = ((IPTC) tv.getValue().get(0)).getOriginal().size();
+        n = ((IPTC) tv.getValue().get(0)).getLength();
       data.putInt(n);
 
       pointers.put(id, (int) data.position());
@@ -243,14 +227,12 @@ public class TiffWriter {
           data.put((byte) 0);
       }
     }
-    int offsetNext = 0;
-    if (ifd.hasNextIFD())
-      offsetNext = (int) data.position() + 4;
-    data.putInt(offsetNext);
+
+    long positionNextIfdOffset = data.position();
+    data.putInt(0); // No next IFD (later we will update this value if there is a next IFD)
 
     // Update pointers and write tag values
     for (TagValue tv : oversizedTags) {
-      if (!filtered(tv)) {
         // Update pointer of the tag entry
         int currentPosition = (int) data.position();
         if (currentPosition % 2 != 0)
@@ -260,7 +242,6 @@ public class TiffWriter {
         data.seek(currentPosition);
 
         writeTagValue(tv);
-      }
     }
 
     if (ifd.hasStrips()) {
@@ -270,6 +251,8 @@ public class TiffWriter {
         data.put((byte) 0);
         stripOffsetsPointer = (int) data.position();
       }
+
+      // Write strips and return its offsets
       ArrayList<Integer> offsets = writeStripData(ifd);
 
       if (offsets.size() > 1) {
@@ -280,7 +263,7 @@ public class TiffWriter {
         }
       }
 
-      // Update pointer of the tag entry
+      // Update pointer of the strip offets
       int currentPosition = (int) data.position();
       data.seek(pointers.get(273));
       data.putInt((int) stripOffsetsPointer);
@@ -308,7 +291,16 @@ public class TiffWriter {
       data.putInt((int) tilesOffsetsPointer);
       data.seek(currentPosition);
     }
-    ifd.toString();
+
+    if (ifd.hasNextIFD()) {
+      // Update pointer of the next IFD offset
+      int currentPosition = (int) data.position();
+      if (currentPosition % 2 != 0)
+        currentPosition++; // Word alignment check
+      data.seek((int)positionNextIfdOffset);
+      data.putInt(currentPosition);
+      data.seek(currentPosition);
+    }
   }
 
   /**
@@ -362,24 +354,23 @@ public class TiffWriter {
     // Write tag value
     for (abstractTiffType tt : tag.getValue()) {
       if (id == 700) {
+        // XMP
         XMP xmp = (XMP)tt;
-        for (byte c : xmp.getBytes()) {
-          data.put(c);
-        }
-        data.put((byte) 0);
+        xmp.write(data);
       } else if (id == 33723) {
+        // IPTC
         IPTC iptc = (IPTC) tag.getValue().get(0);
-        for (int i = 0; i < iptc.getOriginal().size(); i++) {
-          data.put(iptc.getOriginal().get(i).toByte());
-        }
-        data.put((byte) 0);
+        iptc.write(data);
       } else if (id == 330) {
+        // SubIFD
         IFD subifd = ((IFD) tag.getValue().get(0));
-        writeIFD(subifd, false);
+        writeIFD(subifd);
       } else if (id == 34665) {
+        // EXIF
         IFD exif = (IFD) tag.getValue().get(0);
-        writeIFD(exif, false);
+        writeIFD(exif);
       } else if (id == 34675) {
+        // ICC
         for (int off = tag.getReadOffset(); off < tag.getReadOffset() + tag.getReadlength(); off++) {
           data.put(input.readByte(off).toByte());
         }
@@ -402,7 +393,7 @@ public class TiffWriter {
             data.putFloat((Float) tt);
             break;
           case 13:
-            data.putInt((int) tt.toInt());
+            data.putInt(tt.toInt());
             break;
           case 5:
             data.putRational((Rational) tt);

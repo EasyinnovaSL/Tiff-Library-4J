@@ -33,11 +33,14 @@ package com.easyinnova.tiff.model.types;
 import com.easyinnova.iptc.IptcTags;
 import com.easyinnova.iptc.Tag;
 import com.easyinnova.iptc.abstractIptcType;
+import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.ValidationResult;
+import com.easyinnova.tiff.writer.TiffWriter;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -252,6 +255,17 @@ public class IPTC extends abstractTiffType {
     originalValue = tv.getValue();
     tv.reset();
     tv.add(this);
+  }
+
+  public void write(TiffOutputStream data) throws IOException {
+    for (int i = 0; i < getOriginal().size(); i++) {
+      data.put(getOriginal().get(i).toByte());
+    }
+    data.put((byte) 0);
+  }
+
+  public int getLength() {
+    return getOriginal().size();
   }
 
   @Override

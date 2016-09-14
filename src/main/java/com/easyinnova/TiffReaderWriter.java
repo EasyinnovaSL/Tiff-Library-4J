@@ -113,7 +113,7 @@ public class TiffReaderWriter {
           int[] val = new int[2];
           val[0] = 2;
           val[1] = 1;
-          tm.getFirstIFD().addTag("PageNumber", val);
+          //tm.getFirstIFD().addTag("PageNumber", val);
           tw.SetModel(tm);
           String filenameout = "out.tif";
           try {

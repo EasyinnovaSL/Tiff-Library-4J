@@ -30,6 +30,7 @@
  */
 package com.easyinnova.tiff.model.types;
 
+import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 
@@ -42,6 +43,7 @@ import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -186,6 +188,26 @@ public class XMP extends XmlType {
   public void read(TagValue tv) throws Exception {
     super.read(tv);
     createMetadata();
+  }
+
+  public void write(TiffOutputStream data) throws IOException {
+    for (char c : getXml().toCharArray()) {
+      if (c == 65279) {
+        // Special begin char
+        data.put((byte) 65519);
+        data.put((byte) 65467);
+        data.put((byte) 65471);
+      } else {
+        data.put((byte) c);
+      }
+    }
+    //for (byte c : getBytes()) data.put(c);
+    data.put((byte) 0);
+  }
+
+  public int getLength() {
+    return getXml().toCharArray().length + 2; // Special begin char adds 2 extra chars
+    //return getBytes().length;
   }
 
   public List<Hashtable<String, String>> getHistory() {
