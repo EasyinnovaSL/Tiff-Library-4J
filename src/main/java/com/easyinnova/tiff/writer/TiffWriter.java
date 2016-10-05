@@ -31,6 +31,7 @@
  */
 package com.easyinnova.tiff.writer;
 
+import com.adobe.xmp.XMPException;
 import com.easyinnova.tiff.io.TiffInputStream;
 import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.IfdTags;
@@ -356,7 +357,12 @@ public class TiffWriter {
       if (id == 700) {
         // XMP
         XMP xmp = (XMP)tt;
-        xmp.write(data);
+        try {
+          xmp.write(data);
+        }catch (XMPException ex) {
+          ex.printStackTrace();
+          throw new IOException();
+        }
       } else if (id == 33723) {
         // IPTC
         IPTC iptc = (IPTC) tag.getValue().get(0);

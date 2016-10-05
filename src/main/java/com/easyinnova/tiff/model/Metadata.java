@@ -56,6 +56,20 @@ public class Metadata {
    * @param name the name
    * @param value the value
    */
+  public void add(String name, TiffObject value, String path) {
+    if (!metadata.containsKey(name)) {
+      metadata.put(name, new MetadataObject());
+    }
+    metadata.get(name).getObjectList().add(value);
+    metadata.get(name).setPath(path);
+  }
+
+  /**
+   * Adds a metadata value to the dictionary.
+   *
+   * @param name the name
+   * @param value the value
+   */
   public void add(String name, TiffObject value) {
     if (!metadata.containsKey(name)) {
       metadata.put(name, new MetadataObject());
@@ -70,10 +84,11 @@ public class Metadata {
    * @param value the value
    * @param isDC the is dublin core
    */
-  public void add(String name, TiffObject value, boolean isDC) {
+  public void add(String name, TiffObject value, boolean isDC, String path) {
     if (!metadata.containsKey(name)) {
       metadata.put(name, new MetadataObject());
       metadata.get(name).setIsDublinCore(isDC);
+      metadata.get(name).setPath(path);
     }
     metadata.get(name).getObjectList().add(value);
   }
@@ -194,7 +209,7 @@ public class Metadata {
   public void addMetadata(Metadata meta) {
     for (String k : meta.keySet()) {
       for (TiffObject to : meta.getList(k)) {
-        add(k, to, meta.getMetadataObject(k).isDublinCore());
+        add(k, to, meta.getMetadataObject(k).isDublinCore(), meta.getMetadataObject(k).getPath());
       }
     }
   }

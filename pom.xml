@@ -37,6 +37,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
       <artifactId>junit-dep</artifactId>
       <version>4.8.2</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.adobe.xmp/xmpcore -->
+    <dependency>
+      <groupId>com.adobe.xmp</groupId>
+      <artifactId>xmpcore</artifactId>
+      <version>5.1.2</version>
+    </dependency>
   </dependencies>
   <developers>
     <developer>

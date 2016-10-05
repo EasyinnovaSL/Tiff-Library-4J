@@ -44,6 +44,9 @@ public class MetadataObject {
   /** The is dublin core. */
   private boolean isDublinCore;
 
+  /** The path. */
+  private String path;
+
   /**
    * Instantiates a new metadata object.
    *
@@ -69,6 +72,23 @@ public class MetadataObject {
    */
   public void setIsDublinCore(boolean isDC) {
     isDublinCore = isDC;
+  }
+
+  /**
+   * Sets the path.
+   *
+   * @param path the new checks if is dublin core
+   */
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  /**
+   * Gets the path.
+   *
+   */
+  public String getPath() {
+    return path;
   }
 
   /**

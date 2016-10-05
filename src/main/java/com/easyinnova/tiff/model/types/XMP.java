@@ -30,6 +30,13 @@
  */
 package com.easyinnova.tiff.model.types;
 
+import com.adobe.xmp.XMPException;
+import com.adobe.xmp.XMPIterator;
+import com.adobe.xmp.XMPMeta;
+import com.adobe.xmp.XMPMetaFactory;
+import com.adobe.xmp.XMPSchemaRegistry;
+import com.adobe.xmp.options.SerializeOptions;
+import com.adobe.xmp.properties.XMPPropertyInfo;
 import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
@@ -42,6 +49,7 @@ import org.w3c.dom.traversal.DocumentTraversal;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -51,10 +59,13 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -63,6 +74,7 @@ import javax.xml.transform.stream.StreamResult;
  * The Class XMP.
  */
 public class XMP extends XmlType {
+  private XMPMeta xmpMeta;
 
   /** The metadata. */
   private Metadata metadata;
@@ -88,89 +100,122 @@ public class XMP extends XmlType {
     if (metadata == null) {
       metadata = new Metadata();
 
-      DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-      Document doc = builder.parse(new InputSource(xmlReader));
-      DocumentTraversal traversal = (DocumentTraversal) doc;
-
-      NodeIterator iterator = traversal.createNodeIterator(
-          doc.getDocumentElement(), NodeFilter.SHOW_ELEMENT, null, true);
-
-      for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
-        Element elem = ((Element) n);
-        String name = elem.getTagName();
-        String content = elem.getTextContent();
-        String nameWithoutPrefix = name;
-        String prefix = "";
-        if (name.contains(":")) {
-          nameWithoutPrefix = name.substring(name.indexOf(":") + 1);
-          prefix = name.substring(0, name.indexOf(":"));
-        }
-        if (prefix.equals("x") || prefix.equals("rdf") || prefix.toLowerCase().equals("stevt")) continue;
-        //System.out.println(name + "=" + content);
-        Text txt = new Text(content);
-        txt.setContainer("XMP");
-        metadata.add(nameWithoutPrefix, txt);
-        if (name.toLowerCase().startsWith("dc")) {
-          // Dublin Core
-          metadata.getMetadataObject(nameWithoutPrefix).setIsDublinCore(true);
-        }
-      }
-
-      // History
-      TransformerFactory tf = TransformerFactory.newInstance();
-      Transformer transformer = tf.newTransformer();
-      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-      StringWriter writer = new StringWriter();
-      transformer.transform(new DOMSource(doc), new StreamResult(writer));
-      String sXml = writer.getBuffer().toString().replaceAll("\n|\r", "");
-      history = null;
-      try {
-        if (sXml.contains("xmpMM:History")) {
-          String sHistory = sXml.substring(sXml.indexOf("xmpMM:History"));
-          sHistory = sHistory.substring(0, sHistory.indexOf("</xmpMM:History>"));
-          history = new ArrayList<>();
-          int index = sHistory.indexOf("xmpMM:History");
-          while (sHistory.indexOf("<rdf:li", index) > 0) {
-            index = sHistory.indexOf("<rdf:li", index);
-            String subs = sHistory.substring(index);
-            int fi = subs.indexOf("</rdf:li");
-            if (subs.indexOf("/>") != -1 && (fi == -1 || subs.indexOf("/>") < fi))
-              fi = subs.indexOf("/>");
-            subs = subs.substring(0, fi);
-            Hashtable<String, String> action = new Hashtable<String, String>();
-            int index2 = 0;
-            while (subs.indexOf("stEvt:", index2) > 0) {
-              if (subs.indexOf("<stEvt:", index2) > -1) {
-                index2 = subs.indexOf("stEvt:", index2);
-                String stevt = subs.substring(index2);
-                stevt = stevt.substring(0, stevt.indexOf("</stEvt") + 2);
-                String name = stevt.substring(stevt.indexOf(":") + 1);
-                name = name.substring(0, name.indexOf(">"));
-                String value = stevt.substring(stevt.indexOf(">") + 1);
-                value = value.substring(0, value.indexOf("</"));
-                action.put(name, value);
-                index2 = subs.indexOf("</stEvt:", index2) + 9;
-              } else {
-                index2 = subs.indexOf("stEvt:", index2);
-                String stevt = subs.substring(index2);
-                int fin = stevt.indexOf("\"", stevt.indexOf("\"") + 1);
-                stevt = stevt.substring(0, fin);
-                String name = stevt.substring(stevt.indexOf(":") + 1);
-                name = name.substring(0, name.indexOf("="));
-                String value = stevt.substring(stevt.indexOf("\"") + 1);
-                action.put(name, value);
-                index2 += fin;
+      if (xmpMeta != null) {
+        for (XMPIterator iterator = xmpMeta.iterator(); iterator.hasNext(); ) {
+          XMPPropertyInfo propInfo = (XMPPropertyInfo) iterator.next();
+          String path = propInfo.getPath();
+          String value = propInfo.getValue();
+          if (path != null && value != null && path.length() > 0 && value.length() > 0) {
+            if (path.contains("xmpMM:History") && path.contains("stEvt")) {
+              if (history == null) history = new ArrayList<>();
+              Hashtable<String, String> action = new Hashtable<String, String>();
+              String name = path;
+              if (path.contains(":")) name = path.substring(path.lastIndexOf(":") + 1);
+              action.put(name, value);
+              history.add(action);
+            } else {
+              String name = path;
+              if (path.contains(":")) name = path.substring(path.indexOf(":") + 1);
+              Text txt = new Text(value);
+              txt.setContainer("XMP");
+              metadata.add(name, txt, path);
+              if (path.toLowerCase().startsWith("dc")) {
+                // Dublin Core
+                metadata.getMetadataObject(name).setIsDublinCore(true);
               }
             }
-            history.add(action);
-            index += fi;
           }
         }
-      } catch (Exception ex) {
-        ex.printStackTrace();
+      } else {
+        oldSchool();
       }
     }
     return metadata;
+  }
+
+  @Deprecated
+  void oldSchool() throws ParserConfigurationException, IOException, SAXException, TransformerException {
+    DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    Document doc = builder.parse(new InputSource(xmlReader));
+    DocumentTraversal traversal = (DocumentTraversal) doc;
+
+    NodeIterator iterator = traversal.createNodeIterator(
+        doc.getDocumentElement(), NodeFilter.SHOW_ELEMENT, null, true);
+
+    for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
+      Element elem = ((Element) n);
+      String name = elem.getTagName();
+      String content = elem.getTextContent();
+      String nameWithoutPrefix = name;
+      String prefix = "";
+      if (name.contains(":")) {
+        nameWithoutPrefix = name.substring(name.indexOf(":") + 1);
+        prefix = name.substring(0, name.indexOf(":"));
+      }
+      if (prefix.equals("x") || prefix.equals("rdf") || prefix.toLowerCase().equals("stevt")) continue;
+      //System.out.println(name + "=" + content);
+      Text txt = new Text(content);
+      txt.setContainer("XMP");
+      metadata.add(nameWithoutPrefix, txt, null);
+      if (name.toLowerCase().startsWith("dc")) {
+        // Dublin Core
+        metadata.getMetadataObject(nameWithoutPrefix).setIsDublinCore(true);
+      }
+    }
+
+    // History
+    TransformerFactory tf = TransformerFactory.newInstance();
+    Transformer transformer = tf.newTransformer();
+    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+    StringWriter writer = new StringWriter();
+    transformer.transform(new DOMSource(doc), new StreamResult(writer));
+    String sXml = writer.getBuffer().toString().replaceAll("\n|\r", "");
+    history = null;
+    try {
+      if (sXml.contains("xmpMM:History")) {
+        String sHistory = sXml.substring(sXml.indexOf("xmpMM:History"));
+        sHistory = sHistory.substring(0, sHistory.indexOf("</xmpMM:History>"));
+        history = new ArrayList<>();
+        int index = sHistory.indexOf("xmpMM:History");
+        while (sHistory.indexOf("<rdf:li", index) > 0) {
+          index = sHistory.indexOf("<rdf:li", index);
+          String subs = sHistory.substring(index);
+          int fi = subs.indexOf("</rdf:li");
+          if (subs.indexOf("/>") != -1 && (fi == -1 || subs.indexOf("/>") < fi))
+            fi = subs.indexOf("/>");
+          subs = subs.substring(0, fi);
+          Hashtable<String, String> action = new Hashtable<String, String>();
+          int index2 = 0;
+          while (subs.indexOf("stEvt:", index2) > 0) {
+            if (subs.indexOf("<stEvt:", index2) > -1) {
+              index2 = subs.indexOf("stEvt:", index2);
+              String stevt = subs.substring(index2);
+              stevt = stevt.substring(0, stevt.indexOf("</stEvt") + 2);
+              String name = stevt.substring(stevt.indexOf(":") + 1);
+              name = name.substring(0, name.indexOf(">"));
+              String value = stevt.substring(stevt.indexOf(">") + 1);
+              value = value.substring(0, value.indexOf("</"));
+              action.put(name, value);
+              index2 = subs.indexOf("</stEvt:", index2) + 9;
+            } else {
+              index2 = subs.indexOf("stEvt:", index2);
+              String stevt = subs.substring(index2);
+              int fin = stevt.indexOf("\"", stevt.indexOf("\"") + 1);
+              stevt = stevt.substring(0, fin);
+              String name = stevt.substring(stevt.indexOf(":") + 1);
+              name = name.substring(0, name.indexOf("="));
+              String value = stevt.substring(stevt.indexOf("\"") + 1);
+              action.put(name, value);
+              index2 += fin;
+            }
+          }
+          history.add(action);
+          index += fi;
+        }
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 
   @Override
@@ -187,27 +232,29 @@ public class XMP extends XmlType {
   @Override
   public void read(TagValue tv) throws Exception {
     super.read(tv);
+
+    xmpMeta = XMPMetaFactory.parseFromBuffer(getBytes());
+
     createMetadata();
   }
 
-  public void write(TiffOutputStream data) throws IOException {
-    for (char c : getXml().toCharArray()) {
-      if (c == 65279) {
-        // Special begin char
-        data.put((byte) 65519);
-        data.put((byte) 65467);
-        data.put((byte) 65471);
-      } else {
-        data.put((byte) c);
-      }
+  public void write(TiffOutputStream data) throws IOException, XMPException {
+    SerializeOptions options = new SerializeOptions();
+    byte[] buffer = XMPMetaFactory.serializeToBuffer(xmpMeta, options);
+    for (byte b : buffer) {
+      data.put(b);
     }
-    //for (byte c : getBytes()) data.put(c);
-    data.put((byte) 0);
   }
 
   public int getLength() {
-    return getXml().toCharArray().length + 2; // Special begin char adds 2 extra chars
-    //return getBytes().length;
+    SerializeOptions options = new SerializeOptions();
+    try {
+      byte[] buffer = XMPMetaFactory.serializeToBuffer(xmpMeta, options);
+      return buffer.length;
+    } catch (XMPException e) {
+      e.printStackTrace();
+      return 0;
+    }
   }
 
   public List<Hashtable<String, String>> getHistory() {
