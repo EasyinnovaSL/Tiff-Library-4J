@@ -32,7 +32,7 @@ public class XMPTest {
 
       result =
           tr.readFile("src" + separator + "test" + separator + "resources" + separator + "Small"
-              + separator + "RGB.TIF");
+              + separator + "RGB.tif");
       assertEquals(0, result);
       assertEquals(true, tr.getBaselineValidation().isCorrect());
 
