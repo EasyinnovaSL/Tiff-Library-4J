@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.ByteOrder;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -139,8 +140,10 @@ public class IPTCTest {
       assertEquals("Antonio Lopez", oCreator);
       assertEquals("copyleft", oCopyright);
       assertEquals("This is the description of a sample image", oDescription);
-      System.out.println(oDatetime.toString());
-      assertEquals("Thu Jun 04 00:00:00 CEST 2015", oDatetime.toString());
+
+      Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      String s = formatter.format(oDatetime);
+      assertEquals("2015-06-04 00:00:00", s);
 
       assertEquals("Test Creator", iptc2.getCreator());
       assertEquals("Test Copyright", iptc2.getCopyright());
