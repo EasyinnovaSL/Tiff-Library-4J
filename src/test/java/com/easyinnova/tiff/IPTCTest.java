@@ -139,6 +139,7 @@ public class IPTCTest {
       assertEquals("Antonio Lopez", oCreator);
       assertEquals("copyleft", oCopyright);
       assertEquals("This is the description of a sample image", oDescription);
+      System.out.println(oDatetime.toString());
       assertEquals("Thu Jun 04 00:00:00 CEST 2015", oDatetime.toString());
 
       assertEquals("Test Creator", iptc2.getCreator());
