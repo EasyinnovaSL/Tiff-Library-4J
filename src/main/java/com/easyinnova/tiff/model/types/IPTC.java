@@ -54,7 +54,6 @@ import com.nmote.iim4j.stream.FileIIMInputStream;
 import com.nmote.iim4j.stream.IIMOutputStream;
 import com.nmote.iim4j.stream.JPEGIIMInputStream;
 import com.nmote.iim4j.stream.SubIIMInputStream;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
