@@ -76,6 +76,10 @@ public class OutputBuffer {
     }
   }
 
+  public RandomAccessFile getStream() {
+    return aFile;
+  }
+
   /**
    * Creates the file.
    *

@@ -46,6 +46,7 @@ public class MetadataObject {
 
   /** The path. */
   private String path;
+  private String schema;
 
   /**
    * Instantiates a new metadata object.
@@ -81,6 +82,23 @@ public class MetadataObject {
    */
   public void setPath(String path) {
     this.path = path;
+  }
+
+  /**
+   * Gets the path.
+   *
+   */
+  public String getSchema() {
+    return schema;
+  }
+
+  /**
+   * Sets the path.
+   *
+   * @param schema the new checks if is dublin core
+   */
+  public void setSchema(String schema) {
+    this.schema = schema;
   }
 
   /**

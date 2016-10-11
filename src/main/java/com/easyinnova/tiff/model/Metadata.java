@@ -56,12 +56,13 @@ public class Metadata {
    * @param name the name
    * @param value the value
    */
-  public void add(String name, TiffObject value, String path) {
+  public void add(String name, TiffObject value, String path, String schema) {
     if (!metadata.containsKey(name)) {
       metadata.put(name, new MetadataObject());
     }
     metadata.get(name).getObjectList().add(value);
     metadata.get(name).setPath(path);
+    metadata.get(name).setSchema(schema);
   }
 
   /**
