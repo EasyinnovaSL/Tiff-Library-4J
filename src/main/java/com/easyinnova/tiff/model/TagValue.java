@@ -213,7 +213,7 @@ public class TagValue extends TiffObject {
    */
   public String toString() {
     String s = "";
-    if (type == 2) {
+    if (type == 2 || type == 7) {
       s = readString();
     } else {
       int max = 200;
@@ -250,7 +250,8 @@ public class TagValue extends TiffObject {
   public String readString() {
     byte[] bbs = new byte[value.size() - 1];
     for (int i = 0; i < value.size() - 1; i++) {
-      bbs[i] = ((Ascii) value.get(i)).toByte();
+      abstractTiffType att = value.get(i);
+      bbs[i] = att.toByte();
     }
     try {
       return new String(bbs, "UTF8");

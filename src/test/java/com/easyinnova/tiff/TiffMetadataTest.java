@@ -126,7 +126,7 @@ public class TiffMetadataTest {
 
     assertEquals("1", to.getMetadataSingleString("Compression"));
     assertEquals("82750", to.getMetadataSingleString("StripBYTECount"));
-    assertEquals("[48,49,48,48]", to.getMetadataSingleString("FlashPixVersion"));
+    assertEquals("010", to.getMetadataSingleString("FlashPixVersion"));
     assertEquals("11/5", to.getMetadataSingleString("42240"));
     assertEquals("Adobe Photoshop CS6 (Macintosh)", to.getMetadataSingleString("CreatorTool"));
     assertEquals("3", to.getMetadataSingleString("ExposureProgram"));
