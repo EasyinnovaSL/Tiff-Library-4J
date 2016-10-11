@@ -91,6 +91,9 @@ public class abstractTiffType extends TiffObject {
   public void read(TagValue tv) throws Exception {
   }
 
+  public void read(TagValue tv, String filePath) throws Exception {
+  }
+
   /**
    * Checks if is ifd.
    *

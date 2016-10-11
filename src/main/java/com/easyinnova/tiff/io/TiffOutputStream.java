@@ -40,6 +40,7 @@ import com.easyinnova.tiff.model.types.SRational;
 import com.easyinnova.tiff.model.types.SShort;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 
 /**
@@ -68,6 +69,10 @@ public class TiffOutputStream {
     originalFile = in;
     byteOrder = ByteOrder.BIG_ENDIAN;
     output = new OutputBuffer(byteOrder);
+  }
+
+  public RandomAccessFile getOutputStream() {
+    return output.getStream();
   }
 
   /**

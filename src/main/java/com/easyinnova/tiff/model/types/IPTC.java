@@ -39,10 +39,37 @@ import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.ValidationResult;
 import com.easyinnova.tiff.writer.TiffWriter;
+import com.nmote.iim4j.IIMDataSetInfoFactory;
+import com.nmote.iim4j.IIMFile;
+import com.nmote.iim4j.IIMReader;
+import com.nmote.iim4j.IIMWriter;
+import com.nmote.iim4j.dataset.DataSet;
+import com.nmote.iim4j.dataset.DataSetInfo;
+import com.nmote.iim4j.dataset.DefaultDataSet;
+import com.nmote.iim4j.dataset.InvalidDataSetException;
+import com.nmote.iim4j.serialize.SerializationException;
+import com.nmote.iim4j.serialize.Serializer;
+import com.nmote.iim4j.stream.DefaultIIMOutputStream;
+import com.nmote.iim4j.stream.FileIIMInputStream;
+import com.nmote.iim4j.stream.IIMOutputStream;
+import com.nmote.iim4j.stream.JPEGIIMInputStream;
+import com.nmote.iim4j.stream.SubIIMInputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.channels.Channels;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,11 +88,10 @@ public class IPTC extends abstractTiffType {
    */
   public ValidationResult validation;
 
-  /** The content. */
-  private HashMap<Byte, List<abstractIptcType>> content;
-
   /** The original value. */
   private List<abstractTiffType> originalValue;
+
+  private IIMFile iimFile;
 
   /**
    * Instantiates a new IPTC.
@@ -92,14 +118,17 @@ public class IPTC extends abstractTiffType {
   public Metadata createMetadata() {
     Metadata metadata = new Metadata();
     try {
-      for (Map.Entry<Byte, List<abstractIptcType>> entry : content.entrySet()) {
-        Byte b = entry.getKey();
-        List<abstractIptcType> valueList = entry.getValue();
-        for (abstractIptcType element : valueList) {
-          Text txt = new Text(element.toString());
-          String tagName = IptcTags.tagMap.get(Integer.parseInt(b.toString())).getShortName();
-          metadata.add(tagName, txt);
+      for (DataSet ds : iimFile.getDataSets()) {
+        Object value = "";
+        try {
+          value = ds.getValue();
+        } catch (Exception ex) {
+
         }
+        DataSetInfo info = ds.getInfo();
+        //System.out.println(info.toString() + " " + info.getName() + ": " + value);
+
+        metadata.add(info.getName(), new Text(value.toString()));
       }
     } catch (Exception ex) {
       /*Nothing to be shown*/
@@ -110,7 +139,18 @@ public class IPTC extends abstractTiffType {
 
   @Override
   public String toString() {
-    return content.toString();
+    String s = "";
+    for (DataSet ds : iimFile.getDataSets()) {
+      Object value = "";
+      try {
+        value = ds.getValue();
+      } catch (Exception ex) {
+
+      }
+      DataSetInfo info = ds.getInfo();
+      s += info.toString() + " " + info.getName() + ": " + value + "\n";
+    }
+    return s;
   }
 
   /**
@@ -119,76 +159,101 @@ public class IPTC extends abstractTiffType {
    * @param tagName the tag name
    */
   public void removeTag(String tagName) {
-    List<abstractTiffType> l = new ArrayList<abstractTiffType>();
-    for (int i = 0; i < originalValue.size(); i++) {
-      l.add(originalValue.get(i));
+    int ids = -1;
+    for (DataSet ds : iimFile.getDataSets()) {
+      if (ds.getInfo().getName().equals(tagName))
+        ids = ds.getInfo().getDataSetNumber();
     }
-    for (int i = 0; i < l.size(); i++) {
-      if (l.get(i).toInt() == SEGMENT_MARKER[0]) {
-        // Check if segment contains type, size and content
-        if ((i + 5) < l.size() && l.get(i + 1).toInt() == SEGMENT_MARKER[1]) {
-          // Get tag type and size
-          Byte type = new Byte(0);
-          type.setValue(l.get(i + 2).toByte());
-          int size =
- ((l.get(i + 3).toByte() & 0xff) << 8) | (l.get(i + 4).toByte() & 0xff);
-          if ((i + 4 + size) < l.size()) {
-            List<Byte> value = new ArrayList<Byte>();
-            // Read the value of the tag
-            for (int j = (i + 5); j <= (i + 4 + size); j++) {
-              Byte current = new Byte(0);
-              current.setValue(l.get(j).toByte());
-              value.add(current);
-            }
+    if (ids != -1)
+      iimFile.remove(ids);
+  }
 
-            abstractIptcType object = null;
-            if (IptcTags.hasTag(type.getValue())) {
-              // Known tag
-              Tag t = IptcTags.getTag(type.getValue());
-              if (t.hasType()) {
-                String tagClass = t.getType();
+  public void editCopyright(String value) {
+    editTag("Copyright Notice", value);
+  }
 
-                try {
-                  object =
-                      (abstractIptcType) Class.forName("com.easyinnova.iptc." + tagClass)
-                          .getConstructor().newInstance();
-                  object.read(value);
-                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException
-                    | InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                  validation.addErrorLoc("Parse error getting IPTC tag " + type.toString(), "IPTC");
-                }
-              }
-            }
+  public void editCreator(String value) {
+    editTag("Writer/Editor", value);
+  }
 
-            if (object != null) {
-              // Add content
-              List<abstractIptcType> list = content.get(type);
-              if (list == null) {
-                list = new ArrayList<abstractIptcType>();
-              }
-              list.add(object);
+  public void editDescription(String value) {
+    editTag("Caption/Abstract", value);
+  }
 
-              String tagname =
-                  IptcTags.tagMap.get(Integer.parseInt(type.toString())).getShortName();
-              if (tagname.equals(tagName)) {
-                int tagSize = size + 3;
-                for (int ii = 0; ii < tagSize; ii++) {
-                  l.remove(i + 2);
-                }
-                i -= tagSize;
-              }
-            }
-            // Jump to the end of read tag
-            i = i + 4 + size;
-          }
+  String zeros(int value, int digits) {
+    String s = value+"";
+    while (s.length() < digits)
+      s = "0" + s;
+    return s;
+  }
+
+  public void editDatetime(Date date) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    int year = cal.get(Calendar.YEAR);
+    int month = cal.get(Calendar.MONTH) + 1;
+    int day = cal.get(Calendar.DAY_OF_MONTH);
+    int hour = cal.get(Calendar.HOUR_OF_DAY);
+    int minute = cal.get(Calendar.MINUTE);
+    int second = cal.get(Calendar.SECOND);
+
+    editTag("Date Created", zeros(year, 4) + "" + zeros(month, 2) + zeros(day, 2));
+    editTag("Time Created", zeros(hour, 2) + "" + zeros(minute, 2) + zeros(second, 2) + "+000000");
+  }
+
+  public String getCopyright() {
+    return getTag("Copyright Notice");
+  }
+
+  public String getCreator() {
+    return getTag("Writer/Editor");
+  }
+
+  public String getDescription() {
+    return getTag("Caption/Abstract");
+  }
+
+  public Date getDatetime() {
+    String dateField = getTag("Date Created");
+    String timeField = getTag("Time Created");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd hhmmss+SSSSSS");
+    Date date = null;
+    try {
+      date = sdf.parse(dateField + " " + timeField);
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
+    return date;
+  }
+
+  public String getTag(String name) {
+    for (DataSet ds : iimFile.getDataSets()) {
+      if (ds.getInfo().getName().equals(name)) {
+        try {
+          return ds.getValue().toString();
+        } catch (SerializationException e) {
+          e.printStackTrace();
         }
       }
     }
-    originalValue = l;
-    TagValue tv = new TagValue(TiffTags.getTagId("IPTC"), 7);
-    tv.setValue(originalValue);
-    read(tv);
+    return null;
+  }
+
+  public void editTag(String name, String value) {
+    int ids = -1;
+    DataSet dataSet = null;
+    for (DataSet ds : iimFile.getDataSets()) {
+      if (ds.getInfo().getName().equals(name)) {
+        ids = ds.getInfo().getDataSetNumber();
+        dataSet = ds;
+      }
+    }
+    if (ids != -1) {
+      iimFile.remove(ids);
+      DefaultDataSet ds = new DefaultDataSet(dataSet.getInfo(), value.getBytes());
+      iimFile.add(ds);
+    }
   }
 
   /**
@@ -196,75 +261,72 @@ public class IPTC extends abstractTiffType {
    *
    * @param tv the TagValue containing the array of bytes of the IPTC
    */
-  @Override
-  public void read(TagValue tv) {
-    content = new HashMap<Byte, List<abstractIptcType>>();
+  public void read(TagValue tv, String filename) {
+    File file = new File(filename);
+    try {
+      int offset = tv.getReadOffset();
+      int length = tv.getReadlength();
+      SubIIMInputStream subStream = new SubIIMInputStream(new FileIIMInputStream(file), offset, length);
 
-    for (int i = 0; i < tv.getCardinality(); i++) {
-      if (tv.getValue().get(i).toInt() == SEGMENT_MARKER[0]) {
-        // Check if segment contains type, size and content
-        if ((i + 5) < tv.getCardinality() && tv.getValue().get(i + 1).toInt() == SEGMENT_MARKER[1]) {
-          // Get tag type and size
-          Byte type = new Byte(0);
-          type.setValue(tv.getValue().get(i + 2).toByte());
-          int size =
-              ((tv.getValue().get(i + 3).toByte() & 0xff) << 8)
-                  | (tv.getValue().get(i + 4).toByte() & 0xff);
-          if ((i + 4 + size) < tv.getCardinality()) {
-            List<Byte> value = new ArrayList<Byte>();
-            // Read the value of the tag
-            for (int j = (i + 5); j <= (i + 4 + size); j++) {
-              Byte current = new Byte(0);
-              current.setValue(tv.getValue().get(j).toByte());
-              value.add(current);
-            }
+      IIMReader reader = new IIMReader(subStream,
+          new IIMDataSetInfoFactory());
 
-            abstractIptcType object = null;
-            if (IptcTags.hasTag(type.getValue())) {
-              // Known tag
-              Tag t = IptcTags.getTag(type.getValue());
-              if (t.hasType()) {
-                String tagClass = t.getType();
+      iimFile = new IIMFile();
+      iimFile.readFrom(reader, 0);
 
-                try {
-                  object = (abstractIptcType) Class.forName("com.easyinnova.iptc." + tagClass)
-                      .getConstructor().newInstance();
-                  object.read(value);
-                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                  validation.addErrorLoc("Parse error getting IPTC tag " + type.toString(), "IPTC");
-                }
-              }
-            }
-
-            if (object != null) {
-              // Add content
-              List<abstractIptcType> list = content.get(type);
-              if (list == null) {
-                list = new ArrayList<abstractIptcType>();
-              }
-              list.add(object);
-              content.put(type, list);
-            }
-            // Jump to the end of read tag
-            i = i + 4 + size;
-          }
-        }
-      }
+      tv.clear();
+      tv.add(this);
+      reader.close();
+    } catch (IOException e) {
+      //e.printStackTrace();
+    } catch (InvalidDataSetException e) {
+      e.printStackTrace();
     }
-
-    originalValue = tv.getValue();
-    tv.reset();
-    tv.add(this);
   }
 
   public void write(TiffOutputStream data) throws IOException {
-    for (int i = 0; i < getOriginal().size(); i++) {
-      data.put(getOriginal().get(i).toByte());
+    try {
+      String dest = "temp.iptc";
+      int index = 0;
+      while (new File(dest).exists()) dest = "temp" + index++ + ".iptc";
+      IIMWriter writer = new IIMWriter(new DefaultIIMOutputStream(new FileOutputStream(dest)));
+      iimFile.writeTo(writer);
+      writer.close();
+
+      byte[] bytes = Files.readAllBytes(Paths.get(dest));
+      for (byte b : bytes) {
+        data.put(b);
+      }
+      data.put((byte) 0);
+
+      new File(dest).delete();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+
+      // write original (deprecated)
+      for (int i = 0; i < getOriginal().size(); i++) {
+        data.put(getOriginal().get(i).toByte());
+      }
+      data.put((byte) 0);
     }
-    data.put((byte) 0);
   }
 
   public int getLength() {
+    try {
+      String dest = "temp.iptc";
+      int index = 0;
+      while (new File(dest).exists()) dest = "temp" + index++ + ".iptc";
+      IIMWriter writer = new IIMWriter(new DefaultIIMOutputStream(new FileOutputStream(dest)));
+      iimFile.writeTo(writer);
+      writer.close();
+      long length = new File(dest).length();
+      new File(dest).delete();
+      return (int)length;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    //return iimFile.toString().length();
     return getOriginal().size();
   }
 

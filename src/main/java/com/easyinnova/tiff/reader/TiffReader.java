@@ -42,6 +42,7 @@ import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.ValidationResult;
 import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.abstractTiffType;
+import com.easyinnova.tiff.model.types.IPTC;
 import com.easyinnova.tiff.profiles.BaselineProfile;
 import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.profiles.TiffITProfile;
@@ -570,7 +571,10 @@ public class TiffReader {
               validation.addErrorLoc("Parse error in Exif", "IFD" + nifd);
             }
           } else {
-            instanceOfMyClass.read(tv);
+            if (tv.getId() == 33723)
+              instanceOfMyClass.read(tv, data.getFilePath());
+            else
+              instanceOfMyClass.read(tv);
           }
         } catch (ClassNotFoundException e) {
           validation.addErrorLoc("Parse error getting tag " + id + " value", "IFD" + nifd);

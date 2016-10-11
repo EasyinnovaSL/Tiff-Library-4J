@@ -86,6 +86,10 @@ public class TiffInputStream extends MappedByteInputStream implements TiffDataIn
     return byteOrder;
   }
 
+   public String getFilePath() {
+     return getPath();
+   }
+
   /**
    * Gets the stream.
    *

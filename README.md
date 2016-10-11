@@ -37,7 +37,7 @@ If you want to build the code from source you'll require:
 ####Downloading the latest release source
 You can use [Git](https://git-scm.com/) to download the source code.
 ```
-git clone https://github.com/EasyinnovaSL/TiffLibrary.git
+git clone https://github.com/EasyinnovaSL/Tiff-Library-4J.git
 ```
 or download the latest release from [GitHub] (https://github.com/EasyinnovaSL/Tiff-Library-4J/releases).
 

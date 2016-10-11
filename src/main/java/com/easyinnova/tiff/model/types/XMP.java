@@ -35,10 +35,12 @@ import com.adobe.xmp.XMPIterator;
 import com.adobe.xmp.XMPMeta;
 import com.adobe.xmp.XMPMetaFactory;
 import com.adobe.xmp.XMPSchemaRegistry;
+import com.adobe.xmp.impl.XMPIteratorImpl;
 import com.adobe.xmp.options.SerializeOptions;
 import com.adobe.xmp.properties.XMPPropertyInfo;
 import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.Metadata;
+import com.easyinnova.tiff.model.MetadataObject;
 import com.easyinnova.tiff.model.TagValue;
 
 import org.w3c.dom.Document;
@@ -98,39 +100,126 @@ public class XMP extends XmlType {
   @Override
   public Metadata createMetadata() throws Exception {
     if (metadata == null) {
-      metadata = new Metadata();
-
-      if (xmpMeta != null) {
-        for (XMPIterator iterator = xmpMeta.iterator(); iterator.hasNext(); ) {
-          XMPPropertyInfo propInfo = (XMPPropertyInfo) iterator.next();
-          String path = propInfo.getPath();
-          String value = propInfo.getValue();
-          if (path != null && value != null && path.length() > 0 && value.length() > 0) {
-            if (path.contains("xmpMM:History") && path.contains("stEvt")) {
-              if (history == null) history = new ArrayList<>();
-              Hashtable<String, String> action = new Hashtable<String, String>();
-              String name = path;
-              if (path.contains(":")) name = path.substring(path.lastIndexOf(":") + 1);
-              action.put(name, value);
-              history.add(action);
-            } else {
-              String name = path;
-              if (path.contains(":")) name = path.substring(path.indexOf(":") + 1);
-              Text txt = new Text(value);
-              txt.setContainer("XMP");
-              metadata.add(name, txt, path);
-              if (path.toLowerCase().startsWith("dc")) {
-                // Dublin Core
-                metadata.getMetadataObject(name).setIsDublinCore(true);
-              }
-            }
-          }
-        }
-      } else {
-        oldSchool();
-      }
+      reCreateMetadata();
     }
     return metadata;
+  }
+
+  void reCreateMetadata() throws ParserConfigurationException, TransformerException, SAXException, IOException, XMPException {
+    metadata = new Metadata();
+
+    if (xmpMeta != null) {
+      String parentDNS = null;
+      for (XMPIterator iterator = xmpMeta.iterator(); iterator.hasNext(); ) {
+        XMPPropertyInfo propInfo = (XMPPropertyInfo) iterator.next();
+        String path = propInfo.getPath();
+        String value = propInfo.getValue();
+        if (path != null && value != null && path.length() > 0 && value.length() > 0) {
+          if (path.contains("xmpMM:History") && path.contains("stEvt")) {
+            if (history == null) history = new ArrayList<>();
+            Hashtable<String, String> action = new Hashtable<String, String>();
+            String name = path;
+            if (path.contains(":")) name = path.substring(path.lastIndexOf(":") + 1);
+            action.put(name, value);
+            history.add(action);
+          } else {
+            String name = path;
+            if (path.contains(":")) name = path.substring(path.indexOf(":") + 1);
+            if (name.contains("[")) name = name.substring(0, name.indexOf("[")).trim();
+            Text txt = new Text(value);
+            txt.setContainer("XMP");
+            metadata.add(name, txt, path, propInfo.getNamespace());
+            if (path.toLowerCase().startsWith("dc")) {
+              // Dublin Core
+              metadata.getMetadataObject(name).setIsDublinCore(true);
+              metadata.getMetadataObject(name).setSchema(parentDNS);
+            }
+          }
+        } else {
+          parentDNS = propInfo.getNamespace();
+        }
+      }
+    } else {
+      oldSchool();
+    }
+  }
+
+  public String getCreator() {
+    return getTag("creator");
+  }
+
+  public String getCopyright() {
+    return getTag("rights");
+  }
+
+  public String getDescription() {
+    return getTag("description");
+  }
+
+  public String getDatetime() {
+    return getTag("CreateDate");
+  }
+
+  public String getTag(String name) {
+    if (metadata == null) try {
+      createMetadata();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+    if (metadata.contains(name)) {
+      return metadata.get(name).toString();
+    }
+    return null;
+  }
+
+  public void editCopyright(String value) {
+    try {
+      editTag("rights", value);
+    } catch (XMPException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void editCreator(String value) {
+    try {
+      editTag("creator", value);
+    } catch (XMPException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void editDescription(String value) {
+    try {
+      editTag("description", value);
+    } catch (XMPException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void editDatetime(String value) {
+    try {
+      editTag("CreateDate", value);
+    } catch (XMPException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void editTag(String tagName, String tagValue) throws Exception {
+    MetadataObject mdo = metadata.getMetadataObject(tagName);
+    String schema = mdo.getSchema();
+    String name = tagName;
+    if (mdo.isDublinCore()) name = "dc:" + name + "[1]";
+    xmpMeta.setProperty(schema, name, tagValue);
+    reCreateMetadata();
   }
 
   @Deprecated
@@ -156,7 +245,7 @@ public class XMP extends XmlType {
       //System.out.println(name + "=" + content);
       Text txt = new Text(content);
       txt.setContainer("XMP");
-      metadata.add(nameWithoutPrefix, txt, null);
+      metadata.add(nameWithoutPrefix, txt, null, null);
       if (name.toLowerCase().startsWith("dc")) {
         // Dublin Core
         metadata.getMetadataObject(nameWithoutPrefix).setIsDublinCore(true);

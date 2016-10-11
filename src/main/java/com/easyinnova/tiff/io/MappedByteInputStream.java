@@ -21,6 +21,7 @@ public class MappedByteInputStream extends InputStream {
   private long mbsize;
   private FileChannel ch;
   private FileInputStream f;
+  private String path;
 
   /**
    * Instantiates a new tiff file input stream.
@@ -29,6 +30,7 @@ public class MappedByteInputStream extends InputStream {
    * @throws FileNotFoundException the file not found exception
    */
   public MappedByteInputStream(File file) throws FileNotFoundException {
+    path = file.getPath();
     f = new FileInputStream(file);
     ch = f.getChannel();
     try {
@@ -37,6 +39,10 @@ public class MappedByteInputStream extends InputStream {
     } catch (Exception ex) {
       ex.printStackTrace();
     }
+  }
+
+  public String getPath() {
+    return path;
   }
 
   @Override public int read() throws IOException {
