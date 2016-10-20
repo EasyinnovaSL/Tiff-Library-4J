@@ -56,11 +56,13 @@ import com.nmote.iim4j.stream.JPEGIIMInputStream;
 import com.nmote.iim4j.stream.SubIIMInputStream;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.Channels;
 import java.nio.file.Files;
@@ -98,6 +100,14 @@ public class IPTC extends abstractTiffType {
    */
   public IPTC() {
     validation = new ValidationResult();
+  }
+
+  /**
+   * Sets the original.
+   *
+   */
+  public void setOriginal(List<abstractTiffType> value) {
+    originalValue = value;
   }
 
   /**
@@ -262,6 +272,7 @@ public class IPTC extends abstractTiffType {
    * @param tv the TagValue containing the array of bytes of the IPTC
    */
   public void read(TagValue tv, String filename) {
+    originalValue = tv.getValue();
     File file = new File(filename);
     try {
       int offset = tv.getReadOffset();
@@ -271,14 +282,24 @@ public class IPTC extends abstractTiffType {
       IIMReader reader = new IIMReader(subStream,
           new IIMDataSetInfoFactory());
 
-      iimFile = new IIMFile();
-      iimFile.readFrom(reader, 0);
+      IIMFile iimFileReader = new IIMFile();
+      iimFileReader.readFrom(reader, 0);
+      List<DataSet> lds = new ArrayList<DataSet>();
+      for (DataSet ds : iimFileReader.getDataSets()) {
+        ds.getData();
+        lds.add(ds);
+      }
 
-      tv.clear();
+      iimFile = new IIMFile();
+      iimFile.setDataSets(lds);
+
+      tv.reset();
       tv.add(this);
       reader.close();
+
+      subStream.close();
     } catch (IOException e) {
-      //e.printStackTrace();
+      e.printStackTrace();
     } catch (InvalidDataSetException e) {
       e.printStackTrace();
     }
@@ -286,42 +307,30 @@ public class IPTC extends abstractTiffType {
 
   public void write(TiffOutputStream data) throws IOException {
     try {
-      String dest = "temp.iptc";
-      int index = 0;
-      while (new File(dest).exists()) dest = "temp" + index++ + ".iptc";
-      IIMWriter writer = new IIMWriter(new DefaultIIMOutputStream(new FileOutputStream(dest)));
+      ByteArrayOutputStream sw = new ByteArrayOutputStream();
+      IIMWriter writer = new IIMWriter(new DefaultIIMOutputStream(sw));
       iimFile.writeTo(writer);
       writer.close();
 
-      byte[] bytes = Files.readAllBytes(Paths.get(dest));
+      byte[] bytes = sw.toByteArray();
       for (byte b : bytes) {
         data.put(b);
       }
       data.put((byte) 0);
 
-      new File(dest).delete();
+      return;
     } catch (Exception ex) {
       ex.printStackTrace();
-
-      // write original (deprecated)
-      for (int i = 0; i < getOriginal().size(); i++) {
-        data.put(getOriginal().get(i).toByte());
-      }
-      data.put((byte) 0);
     }
   }
 
   public int getLength() {
     try {
-      String dest = "temp.iptc";
-      int index = 0;
-      while (new File(dest).exists()) dest = "temp" + index++ + ".iptc";
-      IIMWriter writer = new IIMWriter(new DefaultIIMOutputStream(new FileOutputStream(dest)));
+      ByteArrayOutputStream sw = new ByteArrayOutputStream();
+      IIMWriter writer = new IIMWriter(new DefaultIIMOutputStream(sw));
       iimFile.writeTo(writer);
       writer.close();
-      long length = new File(dest).length();
-      new File(dest).delete();
-      return (int)length;
+      return sw.size();
     } catch (IOException e) {
       e.printStackTrace();
     }

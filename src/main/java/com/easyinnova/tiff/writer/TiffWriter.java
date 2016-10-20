@@ -214,8 +214,14 @@ public class TiffWriter {
         n = ((XMP)tv.getValue().get(0)).getLength();
       if (id == 34675)
         n = tv.getReadlength();
-      if (id == 33723)
-        n = ((IPTC) tv.getValue().get(0)).getLength();
+      if (id == 33723) {
+        abstractTiffType att = tv.getValue().get(0);
+        if (att instanceof IPTC) {
+          IPTC iptc = (IPTC) att;
+          n = (iptc).getLength();
+          //n = iptc.getOriginal().size();
+        } else n = tv.getCardinality();
+      }
       data.putInt(n);
 
       pointers.put(id, (int) data.position());
@@ -365,8 +371,18 @@ public class TiffWriter {
         }
       } else if (id == 33723) {
         // IPTC
-        IPTC iptc = (IPTC) tag.getValue().get(0);
-        iptc.write(data);
+        abstractTiffType att = tag.getValue().get(0);
+        if (att instanceof IPTC) {
+          IPTC iptc = (IPTC) att;
+          iptc.write(data);
+          //for (int i = 0; i < iptc.getOriginal().size(); i++) data.put(iptc.getOriginal().get(i).toByte());
+          //data.put((byte) 0);
+        } else {
+          for (int i = 0; i < tag.getValue().size(); i++) {
+            data.put(tag.getValue().get(i).toByte());
+          }
+          data.put((byte) 0);
+        }
       } else if (id == 330) {
         // SubIFD
         IFD subifd = ((IFD) tag.getValue().get(0));
