@@ -19,13 +19,11 @@
 
 package com.easyinnova.tiff.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -33,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.CodeSource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -63,12 +62,73 @@ public class TiffTags {
    * Read tag from buffer.
    *
    * @param br the br
-   * @param gson the gson
    * @return the tag
    */
-  private static Tag readTagFromBuffer(BufferedReader br, Gson gson) {
-    Tag tag = gson.fromJson(br, Tag.class);
+  private static Tag readTagFromBuffer(BufferedReader br) {
+    int id = 0;
+    String name = "";
+    ArrayList<String> types = new ArrayList<>();
+    String cardinality = "";
+    String defaultValue = "";
+    String typedef = null;
+    String[] valueCodes = null;
+    String[] valueDescriptions = null;
+
+    try {
+      String sCurrentLine;
+      boolean readingTypes = false;
+      while ((sCurrentLine = br.readLine()) != null) {
+        if (sCurrentLine.contains("\"id\"")) {
+          String sid = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace(",", "").trim();
+          id = Integer.parseInt(sid);
+        } else if (sCurrentLine.contains("\"name\"")) {
+          String sval = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
+          name = sval;
+        } else if (sCurrentLine.contains("\"cardinality\"")) {
+          String sval = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
+          cardinality = sval;
+        } else if (sCurrentLine.contains("\"defaultValue\"")) {
+          String sval = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
+          defaultValue = sval;
+        } else if (sCurrentLine.contains("\"valueCodes\"")) {
+          sCurrentLine = br.readLine();
+          valueCodes = sCurrentLine.split(",");
+        } else if (sCurrentLine.contains("\"valueDescriptions\"")) {
+          sCurrentLine = br.readLine();
+          valueDescriptions = sCurrentLine.split(",");
+        } else if (sCurrentLine.contains("\"typedef\"")) {
+          String sval = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
+          typedef = sval;
+        } else if (sCurrentLine.contains("\"type\"")) {
+          readingTypes = true;
+        } else if (sCurrentLine.contains("],")) {
+          readingTypes = false;
+        } else if (readingTypes) {
+          String sval = sCurrentLine.replace("\"", "").replace(",", "").trim();
+          types.add(sval);
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        //br.reset();
+        if (br != null) br.close();
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    }
+
+    Tag tag = new Tag(id, name, types, cardinality, defaultValue, typedef);
     tag.createValuesDictionary();
+    if (valueCodes != null && valueDescriptions != null && valueCodes.length == valueDescriptions.length) {
+      HashMap<String, String> values = new HashMap<String, String>();
+      for (int i=0;i<valueCodes.length;i++) {
+        values.put(valueCodes[i].trim(), valueDescriptions[i].trim().replace("\"", ""));
+      }
+      tag.setValues(values);
+    }
+
     tagMap.put(tag.getId(), tag);
     tagNames.put(tag.getName(), tag);
     return tag;
@@ -81,8 +141,6 @@ public class TiffTags {
    */
   protected TiffTags() throws ReadTagsIOException {
     try {
-      Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-
       Path path = Paths.get("./src/main/resources/tifftags");
       if (Files.exists(path)) {
         // Look in current dir
@@ -92,7 +150,7 @@ public class TiffTags {
             try {
               FileReader fr = new FileReader(fileEntry.toPath().toString());
               BufferedReader br = new BufferedReader(fr);
-              readTagFromBuffer(br, gson);
+              readTagFromBuffer(br);
             } catch (FileNotFoundException e) {
               throw new ReadTagsIOException();
             }
@@ -110,7 +168,7 @@ public class TiffTags {
             if (name.startsWith("tifftags/") && !name.equals("tifftags/")) {
               try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(zip));
-                readTagFromBuffer(in, gson);
+                readTagFromBuffer(in);
               } catch (Exception ex) {
                 throw new ReadTagsIOException();
               }

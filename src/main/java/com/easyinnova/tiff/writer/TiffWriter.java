@@ -118,6 +118,7 @@ public class TiffWriter {
       writeIfds();
       data.close();
     } catch (Exception ex) {
+      ex.printStackTrace();
       throw ex;
     }
   }

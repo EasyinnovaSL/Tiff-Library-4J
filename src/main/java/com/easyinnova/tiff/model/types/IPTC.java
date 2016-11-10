@@ -30,9 +30,6 @@
  */
 package com.easyinnova.tiff.model.types;
 
-import com.easyinnova.iptc.IptcTags;
-import com.easyinnova.iptc.Tag;
-import com.easyinnova.iptc.abstractIptcType;
 import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;

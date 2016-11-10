@@ -89,6 +89,7 @@ public class IPTCTest {
 
       new File(filename.replace(".tif", "2.tif")).delete();
     } catch (Exception e) {
+      e.printStackTrace();
       assertEquals(0, 1);
     }
   }

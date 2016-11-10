@@ -128,6 +128,10 @@ public class Tag {
     return desc;
   }
 
+  public HashMap<String, String> getValues() {
+    return tagValueDescriptions;
+  }
+
   /**
    * Gets the name.
    *
@@ -323,6 +327,10 @@ public class Tag {
     this.created = date;
     this.modified= date;
     this.typedef = typedef;
+  }
+
+  public void setValues(HashMap<String, String> values) {
+    this.tagValueDescriptions = values;
   }
 
   /**
