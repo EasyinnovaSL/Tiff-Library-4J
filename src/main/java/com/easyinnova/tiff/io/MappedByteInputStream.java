@@ -1,7 +1,5 @@
 package com.easyinnova.tiff.io;
 
-import sun.nio.ch.DirectBuffer;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

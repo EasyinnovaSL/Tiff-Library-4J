@@ -64,7 +64,7 @@ public class TiffTags {
    * @param br the br
    * @return the tag
    */
-  private static Tag readTagFromBuffer(BufferedReader br) {
+  private static Tag readTagFromBuffer(BufferedReader br, boolean close) {
     int id = 0;
     String name = "";
     ArrayList<String> types = new ArrayList<>();
@@ -113,7 +113,7 @@ public class TiffTags {
     } finally {
       try {
         //br.reset();
-        if (br != null) br.close();
+        if (br != null && close) br.close();
       } catch (IOException ex) {
         ex.printStackTrace();
       }
@@ -150,7 +150,7 @@ public class TiffTags {
             try {
               FileReader fr = new FileReader(fileEntry.toPath().toString());
               BufferedReader br = new BufferedReader(fr);
-              readTagFromBuffer(br);
+              readTagFromBuffer(br, true);
             } catch (FileNotFoundException e) {
               throw new ReadTagsIOException();
             }
@@ -168,7 +168,7 @@ public class TiffTags {
             if (name.startsWith("tifftags/") && !name.equals("tifftags/")) {
               try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(zip));
-                readTagFromBuffer(in);
+                readTagFromBuffer(in, false);
               } catch (Exception ex) {
                 throw new ReadTagsIOException();
               }
