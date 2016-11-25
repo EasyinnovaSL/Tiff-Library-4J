@@ -271,13 +271,14 @@ public class IPTC extends abstractTiffType {
   public void read(TagValue tv, String filename) {
     originalValue = tv.getValue();
     File file = new File(filename);
+    IIMReader reader = null;
+    SubIIMInputStream subStream = null;
     try {
       int offset = tv.getReadOffset();
       int length = tv.getReadlength();
-      SubIIMInputStream subStream = new SubIIMInputStream(new FileIIMInputStream(file), offset, length);
+      subStream = new SubIIMInputStream(new FileIIMInputStream(file), offset, length);
 
-      IIMReader reader = new IIMReader(subStream,
-          new IIMDataSetInfoFactory());
+      reader = new IIMReader(subStream, new IIMDataSetInfoFactory());
 
       IIMFile iimFileReader = new IIMFile();
       iimFileReader.readFrom(reader, 0);
@@ -296,7 +297,13 @@ public class IPTC extends abstractTiffType {
 
       subStream.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      //e.printStackTrace();
+      try {
+        reader.close();
+        subStream.close();
+      } catch (Exception ex) {
+
+      }
     } catch (InvalidDataSetException e) {
       e.printStackTrace();
     }

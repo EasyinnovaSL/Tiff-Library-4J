@@ -149,7 +149,11 @@ public class abstractTiffType extends TiffObject {
    * @return the byte
    */
   public byte toByte() {
-	byte b = new java.lang.Byte(this.toString());
-    return b;
+    try {
+      byte b = new java.lang.Byte(this.toString());
+      return b;
+    } catch (Exception ex) {
+      return 0;
+    }
   }
 }
