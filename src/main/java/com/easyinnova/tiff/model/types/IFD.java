@@ -230,10 +230,12 @@ public class IFD extends abstractTiffType {
    */
   public boolean isThumbnail() {
     if (tags.containsTagId(254)) {
-      return BigInteger.valueOf(tags.get(254).getFirstNumericValue()).testBit(0);
+      if (tags.get(254).getCardinality() > 0)
+        return BigInteger.valueOf(tags.get(254).getFirstNumericValue()).testBit(0);
     }
     if (tags.containsTagId(255)) {
-      return tags.get(255).getFirstNumericValue() == 2;
+      if (tags.get(255).getCardinality() > 0)
+        return tags.get(255).getFirstNumericValue() == 2;
     }
     if (hasSubIFD() && getImageSize() < getsubIFD().getImageSize()) {
       return true;
