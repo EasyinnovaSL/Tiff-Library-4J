@@ -42,6 +42,8 @@ import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.Rational;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
+import java.lang.reflect.Executable;
+
 /**
  * Checks if the Tiff file complies with the Baseline 6.0.
  */
@@ -111,12 +113,16 @@ public class BaselineProfile extends GenericProfile implements Profile {
   @Override
   public void validate() {
     int n = 0;
-    for (TiffObject o : model.getImageIfds()) {
-      IFD ifd = (IFD) o;
-      IfdTags metadata = ifd.getMetadata();
-      validateMetadata(metadata);
-      checkImage(ifd, n, metadata);
-      n++;
+    try {
+      for (TiffObject o : model.getImageIfds()) {
+        IFD ifd = (IFD) o;
+        IfdTags metadata = ifd.getMetadata();
+        validateMetadata(metadata);
+        checkImage(ifd, n, metadata);
+        n++;
+      }
+    } catch (Exception ex) {
+
     }
   }
 

@@ -63,146 +63,150 @@ public class TiffITProfile extends GenericProfile implements Profile {
    */
   @Override
   public void validate() {
-    currentIfd = 0;
-    for (TiffObject o : model.getImageIfds()) {
-      currentIfd++;
-      IFD ifd = (IFD) o;
-      IfdTags metadata = ifd.getMetadata();
-      int sft = -1;
-      int photo = -1;
-      int bps = -1;
-      int planar = -1;
-      int comp = -1;
-      if (metadata.containsTagId(TiffTags.getTagId("SubfileType"))) {
-        sft = (int)metadata.get(TiffTags.getTagId("SubfileType")).getFirstNumericValue();
-      }
-      if (metadata.containsTagId(TiffTags.getTagId("Compression"))) {
-        comp = (int)metadata.get(TiffTags.getTagId("Compression")).getFirstNumericValue();
-      }
-      if (metadata.containsTagId(TiffTags.getTagId("PhotometricInterpretation"))) {
-        photo = (int)metadata.get(TiffTags.getTagId("PhotometricInterpretation")).getFirstNumericValue();
-      }
-      if (metadata.containsTagId(TiffTags.getTagId("BitsPerSample"))) {
-        bps = (int)metadata.get(TiffTags.getTagId("BitsPerSample")).getFirstNumericValue();
-      }
-      if (metadata.containsTagId(TiffTags.getTagId("PlanarConfiguration"))) {
-        planar = (int)metadata.get(TiffTags.getTagId("PlanarConfiguration")).getFirstNumericValue();
-      }
+    try {
+      currentIfd = 0;
+      for (TiffObject o : model.getImageIfds()) {
+        currentIfd++;
+        IFD ifd = (IFD) o;
+        IfdTags metadata = ifd.getMetadata();
+        int sft = -1;
+        int photo = -1;
+        int bps = -1;
+        int planar = -1;
+        int comp = -1;
+        if (metadata.containsTagId(TiffTags.getTagId("SubfileType"))) {
+          sft = (int) metadata.get(TiffTags.getTagId("SubfileType")).getFirstNumericValue();
+        }
+        if (metadata.containsTagId(TiffTags.getTagId("Compression"))) {
+          comp = (int) metadata.get(TiffTags.getTagId("Compression")).getFirstNumericValue();
+        }
+        if (metadata.containsTagId(TiffTags.getTagId("PhotometricInterpretation"))) {
+          photo = (int) metadata.get(TiffTags.getTagId("PhotometricInterpretation")).getFirstNumericValue();
+        }
+        if (metadata.containsTagId(TiffTags.getTagId("BitsPerSample"))) {
+          bps = (int) metadata.get(TiffTags.getTagId("BitsPerSample")).getFirstNumericValue();
+        }
+        if (metadata.containsTagId(TiffTags.getTagId("PlanarConfiguration"))) {
+          planar = (int) metadata.get(TiffTags.getTagId("PlanarConfiguration")).getFirstNumericValue();
+        }
 
-      int p = profile;
+        int p = profile;
 
-      // Determination of TIFF/IT file type
-      if (sft == 1 || sft == -1) {
-        if (comp == 1 || comp == 32895) {
-          if (photo == 5) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 32768) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 2) {
-              if (bps > 1) {
+        // Determination of TIFF/IT file type
+        if (sft == 1 || sft == -1) {
+          if (comp == 1 || comp == 32895) {
+            if (photo == 5) {
+              if (planar == 1) {
                 validateIfdCT(ifd, p);
-              } else if (bps == 1) {
-                validateIfdSD(ifd, p);
+              } else if (planar == 32768) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 2) {
+                if (bps > 1) {
+                  validateIfdCT(ifd, p);
+                } else if (bps == 1) {
+                  validateIfdSD(ifd, p);
+                }
+              }
+            } else if (photo == 2) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 32768) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 2) {
+                validateIfdCT(ifd, p);
+              }
+            } else if (photo == 8) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 32768) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 2) {
+                validateIfdCT(ifd, p);
+              }
+            } else if (photo == 0 || photo == 1) {
+              if (bps == 1) {
+                validateIfdBP(ifd, p);
+              } else if (bps > 1) {
+                validateIfdMP(ifd, p);
               }
             }
-          } else if (photo == 2) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 32768) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 2) {
-              validateIfdCT(ifd, p);
-            }
-          } else if (photo == 8) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 32768) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 2) {
-              validateIfdCT(ifd, p);
-            }
-          } else if (photo == 0 || photo == 1) {
-            if (bps == 1) {
+          } else if (comp == 4) {
+            if (photo == 0 || photo == 1) {
               validateIfdBP(ifd, p);
-            } else if (bps > 1) {
-              validateIfdMP(ifd, p);
+            } else if (photo == 5) {
+              validateIfdSD(ifd, p);
             }
-          }
-        } else if (comp == 4) {
-          if (photo == 0 || photo == 1) {
-            validateIfdBP(ifd, p);
-          } else if (photo == 5) {
-            validateIfdSD(ifd, p);
-          }
-        } else if (comp == 7) {
-          if (photo == 5) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            }
-          } else if (photo == 2) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            }
-          } else if (photo == 6) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            }
-          } else if (photo == 8) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            }
-          } else if (photo == 0 || photo == 1) {
-            if (bps > 1) {
-              validateIfdMP(ifd, p);
-            }
-          }
-        } else if (comp == 8) {
-          if (photo == 5) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 32768) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 2) {
-              if (bps > 1) {
+          } else if (comp == 7) {
+            if (photo == 5) {
+              if (planar == 1) {
                 validateIfdCT(ifd, p);
-              } else if (bps == 1) {
-                validateIfdSD(ifd, p);
+              }
+            } else if (photo == 2) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              }
+            } else if (photo == 6) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              }
+            } else if (photo == 8) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              }
+            } else if (photo == 0 || photo == 1) {
+              if (bps > 1) {
+                validateIfdMP(ifd, p);
               }
             }
-          } else if (photo == 2) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 32768) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 2) {
-              validateIfdCT(ifd, p);
+          } else if (comp == 8) {
+            if (photo == 5) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 32768) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 2) {
+                if (bps > 1) {
+                  validateIfdCT(ifd, p);
+                } else if (bps == 1) {
+                  validateIfdSD(ifd, p);
+                }
+              }
+            } else if (photo == 2) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 32768) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 2) {
+                validateIfdCT(ifd, p);
+              }
+            } else if (photo == 8) {
+              if (planar == 1) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 32768) {
+                validateIfdCT(ifd, p);
+              } else if (planar == 2) {
+                validateIfdCT(ifd, p);
+              }
+            } else if (photo == 0 || photo == 1) {
+              if (bps == 1) {
+                validateIfdBP(ifd, p);
+              } else if (bps > 1) {
+                validateIfdMP(ifd, p);
+              }
             }
-          } else if (photo == 8) {
-            if (planar == 1) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 32768) {
-              validateIfdCT(ifd, p);
-            } else if (planar == 2) {
-              validateIfdCT(ifd, p);
-            }
-          } else if (photo == 0 || photo == 1) {
-            if (bps == 1) {
-              validateIfdBP(ifd, p);
-            } else if (bps > 1) {
-              validateIfdMP(ifd, p);
-            }
+          } else if (comp == 32896) {
+            validateIfdLW(ifd, p);
+          } else if (comp == 32897) {
+            validateIfdHC(ifd, p);
+          } else if (comp == 32898) {
+            validateIfdBL(ifd, p);
+          } else if (((sft >> 3) & 1) == 1) {
+            validateIfdFP(ifd, p);
           }
-        } else if (comp == 32896) {
-          validateIfdLW(ifd, p);
-        } else if (comp == 32897) {
-          validateIfdHC(ifd, p);
-        } else if (comp == 32898) {
-          validateIfdBL(ifd, p);
-        } else if (((sft >> 3) & 1) == 1) {
-          validateIfdFP(ifd, p);
         }
       }
+    } catch (Exception e) {
+
     }
   }
 

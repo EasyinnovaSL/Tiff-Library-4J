@@ -42,12 +42,16 @@ public class TiffEPProfile extends GenericProfile implements Profile {
    */
   @Override
   public void validate() {
-    IFD ifd = model.getFirstIFD();
-    int n = 0;
-    while (ifd != null) {
-      validateIfd(ifd, n);
-      ifd = ifd.getNextIFD();
-      n++;
+    try {
+      IFD ifd = model.getFirstIFD();
+      int n = 0;
+      while (ifd != null) {
+        validateIfd(ifd, n);
+        ifd = ifd.getNextIFD();
+        n++;
+      }
+    } catch (Exception e) {
+
     }
   }
 
