@@ -211,17 +211,21 @@ public class TiffWriter {
       int tagtype = tv.getType();
       data.putShort((short) id);
       data.putShort((short) tagtype);
-      if (id == 700)
-        n = ((XMP)tv.getValue().get(0)).getLength();
+      if (id == 700) {
+        if (tv.getValue().size() > 0)
+          n = ((XMP) tv.getValue().get(0)).getLength();
+      }
       if (id == 34675)
         n = tv.getReadlength();
       if (id == 33723) {
-        abstractTiffType att = tv.getValue().get(0);
-        if (att instanceof IPTC) {
-          IPTC iptc = (IPTC) att;
-          n = (iptc).getLength();
-          //n = iptc.getOriginal().size();
-        } else n = tv.getCardinality();
+        if (tv.getValue().size() > 0) {
+          abstractTiffType att = tv.getValue().get(0);
+          if (att instanceof IPTC) {
+            IPTC iptc = (IPTC) att;
+            n = (iptc).getLength();
+            //n = iptc.getOriginal().size();
+          } else n = tv.getCardinality();
+        }
       }
       data.putInt(n);
 
@@ -330,7 +334,8 @@ public class TiffWriter {
     }
     if (id == 700) {
       // XMP
-      n = tag.getValue().get(0).toString().length();
+      if (tag.getValue().size() > 0)
+        n = tag.getValue().get(0).toString().length();
     }
     if (id == 33723) {
       // IPTC

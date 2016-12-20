@@ -363,7 +363,8 @@ public class TiffReader {
             tagid = data.readShort(index).toInt();
             tagType = data.readShort(index + 2).toInt();
             tagN = data.readLong(index + 4).toInt();
-            checkType(tagid, tagType, n);
+            boolean ok = checkType(tagid, tagType, n);
+            if (!ok && tagN > 1000) tagN = 1000;
             TagValue tv = getValue(tagType, tagN, tagid, index + 8, ifd, n);
             if (ifd.containsTagId(tagid)) {
               if (duplicateTagTolerance > 0)
@@ -416,7 +417,7 @@ public class TiffReader {
    * @param tagType the tag type
    * @param n the n
    */
-  private void checkType(int tagid, int tagType, int n) {
+  private boolean checkType(int tagid, int tagType, int n) {
     if (TiffTags.hasTag(tagid) && !TiffTags.getTag(tagid).getName().equals("IPTC")) {
       boolean found = false;
       String stagType = TiffTags.getTagTypeName(tagType);
@@ -435,8 +436,11 @@ public class TiffReader {
       if (!found) {
         validation.addError("Incorrect type for tag " + TiffTags.getTag(tagid).getName(),
             "IFD" + n, stagType);
+        return false;
       }
+      return true;
     }
+    return false;
   }
 
   /**
