@@ -223,7 +223,10 @@ public class TagValue extends TiffObject {
       } catch (Exception ex) {
       }
       if (defined) {
-        s = value.get(0).toString();
+        if (value.size() > 0)
+          s = value.get(0).toString();
+        else
+          s = "";
       } else if (type != 1 || value.size() < 10) {
         int n = value.size();
         if (n > 1)
@@ -248,6 +251,9 @@ public class TagValue extends TiffObject {
    * @return String string
    */
   public String readString() {
+    if (value == null || value.size() == 0)
+      return "";
+
     byte[] bbs = new byte[value.size() - 1];
     for (int i = 0; i < value.size() - 1; i++) {
       abstractTiffType att = value.get(i);
