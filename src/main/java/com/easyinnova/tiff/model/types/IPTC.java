@@ -96,7 +96,7 @@ public class IPTC extends abstractTiffType {
    * Instantiates a new IPTC.
    */
   public IPTC() {
-    validation = new ValidationResult();
+    validation = new ValidationResult(true);
   }
 
   /**

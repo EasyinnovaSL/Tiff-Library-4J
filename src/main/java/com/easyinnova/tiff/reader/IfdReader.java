@@ -102,28 +102,32 @@ public class IfdReader {
     int actualWidth = 0;
     long actualHeight = tilesHeight;
     for (int i = 0; i < ifd.getTag("TileOffsets").getValue().size(); i++) {
-      int to = ifd.getTag("TileOffsets").getValue().get(i).toInt();
-      Tile tile = new Tile();
-      tile.setOffset(to);
-      tile.setWidth((int) tilesWidth);
-      tile.setHeight((int) tilesHeight);
-      long padX = 0;
-      long padY = 0;
-      boolean newLine = false;
-      actualWidth += tilesWidth;
-      if (actualWidth > totalWidth) {
-        padX = tilesWidth - actualWidth % totalWidth;
-        newLine = true;
+      try {
+        int to = ifd.getTag("TileOffsets").getValue().get(i).toInt();
+        Tile tile = new Tile();
+        tile.setOffset(to);
+        tile.setWidth((int) tilesWidth);
+        tile.setHeight((int) tilesHeight);
+        long padX = 0;
+        long padY = 0;
+        boolean newLine = false;
+        actualWidth += tilesWidth;
+        if (actualWidth > totalWidth) {
+          padX = tilesWidth - actualWidth % totalWidth;
+          newLine = true;
+        }
+        if (actualHeight > totalLength) {
+          padY = tilesHeight - actualHeight % totalLength;
+        }
+        tile.setPadding((int) padX, (int) padY);
+        if (newLine) {
+          actualHeight += tilesHeight;
+          actualWidth = 0;
+        }
+        tiles.add(tile);
+      } catch (Exception ex) {
+
       }
-      if (actualHeight > totalLength) {
-        padY = tilesHeight - actualHeight % totalLength;
-      }
-      tile.setPadding((int) padX, (int) padY);
-      if (newLine) {
-        actualHeight += tilesHeight;
-        actualWidth = 0;
-      }
-      tiles.add(tile);
     }
     imageTiles.setTiles(tiles);
 
@@ -147,13 +151,17 @@ public class IfdReader {
     if (rowLength == 0)
       rowLength = 1;
     for (int i = 0; i < ifd.getTag("StripOffsets").getValue().size(); i++) {
-      int so = ifd.getTag("StripOffsets").getValue().get(i).toInt();
-      int sbc = ifd.getTag("StripBYTECount").getValue().get(i).toInt();
-      Strip strip = new Strip();
-      strip.setOffset(so);
-      strip.setLength(sbc);
-      strip.setStripRows((int) (sbc / rowLength));
-      strips.add(strip);
+      try {
+        int so = ifd.getTag("StripOffsets").getValue().get(i).toInt();
+        int sbc = ifd.getTag("StripBYTECount").getValue().get(i).toInt();
+        Strip strip = new Strip();
+        strip.setOffset(so);
+        strip.setLength(sbc);
+        strip.setStripRows((int) (sbc / rowLength));
+        strips.add(strip);
+      } catch (Exception ex) {
+
+      }
     }
     imageStrips.setStrips(strips);
     imageStrips.setRowsPerStrip(rps);

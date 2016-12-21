@@ -156,13 +156,17 @@ public class TiffReader {
     return bpit.getValidation();
   }
 
+  public int readFile(String filename) {
+    return readFile(filename, true);
+  }
+
   /**
    * Parses a Tiff File and create an internal model representation.
    *
    * @param filename the Tiff filename
    * @return Error code (0: successful, -1: file not found, -2: IO exception)
    */
-  public int readFile(String filename) {
+  public int readFile(String filename, boolean validate) {
     int result = 0;
 
     try {
@@ -170,7 +174,7 @@ public class TiffReader {
         data = new TiffInputStream(new File(filename));
 
         tiffModel = new TiffDocument();
-        validation = new ValidationResult();
+        validation = new ValidationResult(validate);
         tiffModel.setSize(data.size());
         boolean correctHeader = readHeader();
         if (correctHeader) {
@@ -182,20 +186,27 @@ public class TiffReader {
           } else if (validation.isCorrect()) {
             readIFDs();
 
-            BaselineProfile bp = new BaselineProfile(tiffModel);
-            bp.validate();
-            getBaselineValidation().add(bp.getValidation());
+            if (validate) {
+              BaselineProfile bp = new BaselineProfile(tiffModel);
+              bp.validate();
+              getBaselineValidation().add(bp.getValidation());
+            }
           }
         }
+
+        if (getBaselineValidation().getFatalError())
+          tiffModel.setFatalError(true);
 
         data.close();
       } else {
         // File not found
         result = -1;
+        tiffModel.setFatalError(true);
       }
     } catch (Exception ex) {
       // IO exception
       result = -2;
+      tiffModel.setFatalError(true);
     }
 
     return result;
@@ -345,11 +356,14 @@ public class TiffReader {
       if (directoryEntries < 1) {
         validation.addError("Incorrect number of IFD entries", "IFD" + n,
             directoryEntries);
+        validation.setFatalError(true);
       } else if (directoryEntries > 500) {
         if (n < 0) {
           validation.addError("Incorrect number of IFD entries", "SubIFD" + (-n), directoryEntries);
+          validation.setFatalError(true);
         } else {
           validation.addError("Incorrect number of IFD entries", "IFD" + n, directoryEntries);
+          validation.setFatalError(true);
         }
       } else {
         index += 2;
@@ -405,7 +419,7 @@ public class TiffReader {
       }
     } catch (Exception ex) {
       validation.addErrorLoc("IO Exception", "IFD" + n);
-      ir.setIfd(null);
+      return null;
     }
     return ir;
   }

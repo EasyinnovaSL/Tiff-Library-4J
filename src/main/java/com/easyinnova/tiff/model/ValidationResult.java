@@ -47,13 +47,19 @@ public class ValidationResult {
   /** Global correctness of the Tiff file. */
   public boolean correct;
 
+  private boolean validate;
+
+  private boolean fatalError;
+
   /**
    * Default constructor.
    */
-  public ValidationResult() {
+  public ValidationResult(boolean validate) {
     errors = new ArrayList<ValidationEvent>();
     warnings = new ArrayList<ValidationEvent>();
     correct = true;
+    this.validate = validate;
+    fatalError = false;
   }
 
   /**
@@ -64,6 +70,7 @@ public class ValidationResult {
    * @param loc the error location
    */
   private void iaddError(String desc, String value, String loc) {
+    if (!validate) return;
     ValidationEvent ve = new ValidationEvent(desc, value, loc);
     errors.add(ve);
     correct = false;
@@ -77,6 +84,7 @@ public class ValidationResult {
    * @param loc the location
    */
   private void iaddWarning(String desc, String value, String loc) {
+    if (!validate) return;
     ValidationEvent ve = new ValidationEvent(desc, value, loc);
     warnings.add(ve);
   }
@@ -125,6 +133,14 @@ public class ValidationResult {
     iaddError(desc, null, loc);
   }
 
+  public void setFatalError(boolean value) {
+    fatalError = value;
+  }
+
+  public boolean getFatalError() {
+    return fatalError;
+  }
+
   /**
    * Adds an warning.
    *
@@ -143,6 +159,7 @@ public class ValidationResult {
    */
   public void add(ValidationResult validation) {
     correct &= validation.correct;
+    if (!validate) return;
     errors.addAll(validation.errors);
     warnings.addAll(validation.warnings);
   }

@@ -62,12 +62,15 @@ public class TiffDocument {
   /** The file size in bytes. */
   private long size;
 
+  private boolean fatalError;
+
   /**
    * Instantiates a new tiff file.
    */
   public TiffDocument() {
     firstIFD = null;
     metadata = null;
+    fatalError = false;
   }
 
   /**
@@ -104,6 +107,14 @@ public class TiffDocument {
    */
   public void setSize(long size) {
     this.size = size;
+  }
+
+  public boolean getFatalError() {
+    return fatalError;
+  }
+
+  public void setFatalError(boolean error) {
+    fatalError = error;
   }
 
   public IccProfile getIccProfile() {

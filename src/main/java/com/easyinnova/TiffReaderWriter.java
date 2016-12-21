@@ -103,7 +103,7 @@ public class TiffReaderWriter {
       for (final String filename : files) {
         try {
           TiffReader tr = new TiffReader();
-          int result = tr.readFile(filename);
+          int result = tr.readFile(filename, true);
           // tr.getModel().getMetadata().get("Creator");
           reportResults(tr, result, filename, output_file);
   

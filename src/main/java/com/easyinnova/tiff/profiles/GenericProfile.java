@@ -49,7 +49,7 @@ public class GenericProfile {
    * @param doc the tiff file model
    */
   public GenericProfile(TiffDocument doc) {
-    validation = new ValidationResult();
+    validation = new ValidationResult(true);
     this.model = doc;
   }
 

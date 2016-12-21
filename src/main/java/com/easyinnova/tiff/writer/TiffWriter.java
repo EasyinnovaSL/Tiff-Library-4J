@@ -456,18 +456,22 @@ public class TiffWriter {
     TagValue stripOffsets = metadata.get(273);
     TagValue stripSizes = metadata.get(279);
     for (int i = 0; i < stripOffsets.getCardinality(); i++) {
-      int pos = (int) data.position();
-      newStripOffsets.add(pos);
-      int start = stripOffsets.getValue().get(i).toInt();
-      int size = stripSizes.getValue().get(i).toInt();
-      this.input.seekOffset(start);
-      for (int off = start; off < start + size; off++) {
-        byte v = this.input.readDirectByte();
-        data.put(v);
-      }
-      if (data.position() % 2 != 0) {
-        // Correct word alignment
-        data.put((byte) 0);
+      try {
+        int pos = (int) data.position();
+        newStripOffsets.add(pos);
+        int start = stripOffsets.getValue().get(i).toInt();
+        int size = stripSizes.getValue().get(i).toInt();
+        this.input.seekOffset(start);
+        for (int off = start; off < start + size; off++) {
+          byte v = this.input.readDirectByte();
+          data.put(v);
+        }
+        if (data.position() % 2 != 0) {
+          // Correct word alignment
+          data.put((byte) 0);
+        }
+      } catch (Exception ex) {
+
       }
     }
     return newStripOffsets;
