@@ -529,9 +529,10 @@ public class BaselineProfile extends GenericProfile implements Profile {
     // Check whether the image is stored in tiles or strips
     strips = ifd.hasStrips();
     tiles = ifd.hasTiles();
-    if (!strips && !tiles)
+    if (!strips && !tiles) {
       validation.addErrorLoc("Missing image organization tags", "IFD" + n);
-    else if (strips && tiles)
+      validation.setFatalError(true);
+    } else if (strips && tiles)
       validation.addErrorLoc("Image in both strips and tiles", "IFD" + n);
     else if (strips) {
       CheckStrips(metadata, n);

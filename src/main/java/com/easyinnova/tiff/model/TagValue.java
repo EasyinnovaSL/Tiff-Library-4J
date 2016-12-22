@@ -31,6 +31,7 @@
  */
 package com.easyinnova.tiff.model;
 
+import com.easyinnova.tiff.Constants;
 import com.easyinnova.tiff.model.types.Ascii;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
@@ -216,7 +217,6 @@ public class TagValue extends TiffObject {
     if (type == 2 || type == 7) {
       s = readString();
     } else {
-      int max = 200;
       boolean defined = false;
       try {
         defined = TiffTags.hasTag(id) && TiffTags.getTag(id).hasTypedef();
@@ -235,7 +235,7 @@ public class TagValue extends TiffObject {
           s += value.get(i).toString();
           if (n > 1 && i + 1 < n)
             s += ",";
-          if (s.length() > max)
+          if (s.length() > Constants.MaxStringSize)
             break;
         }
         if (n > 1)
@@ -251,11 +251,15 @@ public class TagValue extends TiffObject {
    * @return String string
    */
   public String readString() {
-    if (value == null || value.size() == 0)
+    int size = value.size();
+    if (size > Constants.MaxStringSize)
+      size = Constants.MaxStringSize;
+
+    if (value == null || size == 0)
       return "";
 
-    byte[] bbs = new byte[value.size() - 1];
-    for (int i = 0; i < value.size() - 1; i++) {
+    byte[] bbs = new byte[size - 1];
+    for (int i = 0; i < size - 1; i++) {
       abstractTiffType att = value.get(i);
       bbs[i] = att.toByte();
     }

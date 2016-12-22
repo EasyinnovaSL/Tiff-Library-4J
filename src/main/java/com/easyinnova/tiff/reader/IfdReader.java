@@ -144,7 +144,7 @@ public class IfdReader {
     List<Strip> strips = new ArrayList<Strip>();
     long tsbc = ifd.getTag("StripBYTECount").getFirstNumericValue();
     long rps = 0;
-    if (!ifd.containsTagId(TiffTags.getTagId("RowsPerStrip")))
+    if (!ifd.containsTagId(TiffTags.getTagId("RowsPerStrip")) || ifd.getTag("RowsPerStrip").getCardinality() == 0)
       rps = 1;
     else rps = ifd.getTag("RowsPerStrip").getFirstNumericValue();
     long rowLength = tsbc / rps;

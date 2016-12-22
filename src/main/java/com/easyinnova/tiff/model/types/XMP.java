@@ -225,6 +225,7 @@ public class XMP extends XmlType {
   @Deprecated
   void oldSchool() throws ParserConfigurationException, IOException, SAXException, TransformerException {
     DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    builder.setErrorHandler(null);
     Document doc = builder.parse(new InputSource(xmlReader));
     DocumentTraversal traversal = (DocumentTraversal) doc;
 
