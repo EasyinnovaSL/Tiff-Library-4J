@@ -416,7 +416,7 @@ public class TiffReader {
         ir.setNextIfdOffset(nextIfdOffset);
 
         ir.readImage();
-        if (!ifd.hasStrips() && !ifd.hasTiles())
+        if (isImage && !ifd.hasStrips() && !ifd.hasTiles())
           validation.setFatalError(true);
       }
     } catch (Exception ex) {
