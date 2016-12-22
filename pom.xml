@@ -28,7 +28,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   </licenses>
   <dependencies>
 	<!--<dependency>
-		<groupId>com.google.code.gson</groupId>is
+		<groupId>com.google.code.gson</groupId>
 		<artifactId>gson</artifactId>
 		<version>2.3.1</version>
 	</dependency>-->
