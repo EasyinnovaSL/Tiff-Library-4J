@@ -51,6 +51,8 @@ public class ValidationResult {
 
   private boolean fatalError;
 
+  private String fatalErrorMessage;
+
   /**
    * Default constructor.
    */
@@ -60,6 +62,7 @@ public class ValidationResult {
     correct = true;
     this.validate = validate;
     fatalError = false;
+    fatalErrorMessage = "";
   }
 
   /**
@@ -133,13 +136,17 @@ public class ValidationResult {
     iaddError(desc, null, loc);
   }
 
-  public void setFatalError(boolean value) {
+  public void setFatalError(boolean value, String message) {
     fatalError = value;
+    if (fatalErrorMessage.length() > 0) fatalErrorMessage += "\n";
+    fatalErrorMessage += message;
   }
 
   public boolean getFatalError() {
     return fatalError;
   }
+
+  public String getFatalErrorMessage() { return fatalErrorMessage; }
 
   /**
    * Adds an warning.

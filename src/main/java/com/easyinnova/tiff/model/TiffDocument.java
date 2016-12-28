@@ -63,6 +63,7 @@ public class TiffDocument {
   private long size;
 
   private boolean fatalError;
+  private String fatalErrorMessage;
 
   /**
    * Instantiates a new tiff file.
@@ -113,8 +114,13 @@ public class TiffDocument {
     return fatalError;
   }
 
-  public void setFatalError(boolean error) {
+  public String getFatalErrorMEssage() {
+    return fatalErrorMessage;
+  }
+
+  public void setFatalError(boolean error, String message) {
     fatalError = error;
+    fatalErrorMessage = message;
   }
 
   public IccProfile getIccProfile() {

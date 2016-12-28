@@ -47,7 +47,9 @@ import com.easyinnova.tiff.profiles.BaselineProfile;
 import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.profiles.TiffITProfile;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
@@ -194,19 +196,20 @@ public class TiffReader {
           }
         }
 
-        if (getBaselineValidation().getFatalError())
-          tiffModel.setFatalError(true);
+        if (getBaselineValidation().getFatalError()) {
+          tiffModel.setFatalError(true, getBaselineValidation().getFatalErrorMessage());
+        }
 
         data.close();
       } else {
         // File not found
         result = -1;
-        tiffModel.setFatalError(true);
+        tiffModel.setFatalError(true, "File not found");
       }
     } catch (Exception ex) {
       // IO exception
       result = -2;
-      tiffModel.setFatalError(true);
+      tiffModel.setFatalError(true, "IO Exception");
     }
 
     return result;
@@ -356,14 +359,14 @@ public class TiffReader {
       if (directoryEntries < 1) {
         validation.addError("Incorrect number of IFD entries", "IFD" + n,
             directoryEntries);
-        validation.setFatalError(true);
+        validation.setFatalError(true, "Incorrect number of IFD entries");
       } else if (directoryEntries > 500) {
         if (n < 0) {
           validation.addError("Incorrect number of IFD entries", "SubIFD" + (-n), directoryEntries);
-          validation.setFatalError(true);
+          validation.setFatalError(true, "Incorrect number of IFD entries");
         } else {
           validation.addError("Incorrect number of IFD entries", "IFD" + n, directoryEntries);
-          validation.setFatalError(true);
+          validation.setFatalError(true, "Incorrect number of IFD entries");
         }
       } else {
         index += 2;
@@ -416,8 +419,9 @@ public class TiffReader {
         ir.setNextIfdOffset(nextIfdOffset);
 
         ir.readImage();
-        if (isImage && !ifd.hasStrips() && !ifd.hasTiles())
-          validation.setFatalError(true);
+        if (isImage && !ifd.hasStrips() && !ifd.hasTiles()) {
+          validation.setFatalError(true, "Incorrect image");
+        }
       }
     } catch (Exception ex) {
       validation.addErrorLoc("IO Exception", "IFD" + n);

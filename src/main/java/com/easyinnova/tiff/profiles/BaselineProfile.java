@@ -42,6 +42,8 @@ import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.Rational;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.lang.reflect.Executable;
 
 /**
@@ -531,7 +533,7 @@ public class BaselineProfile extends GenericProfile implements Profile {
     tiles = ifd.hasTiles();
     if (!strips && !tiles) {
       validation.addErrorLoc("Missing image organization tags", "IFD" + n);
-      validation.setFatalError(true);
+      validation.setFatalError(true, "Missing image organization tags");
     } else if (strips && tiles)
       validation.addErrorLoc("Image in both strips and tiles", "IFD" + n);
     else if (strips) {
