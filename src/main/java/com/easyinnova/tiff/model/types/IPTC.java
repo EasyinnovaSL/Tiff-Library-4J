@@ -228,7 +228,7 @@ public class IPTC extends abstractTiffType {
     try {
       date = sdf.parse(dateField + " " + timeField);
     } catch (ParseException e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       return null;
     }
     return date;
