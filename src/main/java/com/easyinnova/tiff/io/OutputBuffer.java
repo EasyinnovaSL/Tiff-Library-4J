@@ -32,7 +32,7 @@ package com.easyinnova.tiff.io;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteOrder;
+import com.easyinnova.tiff.model.ByteOrder;
 
 /**
  * The Class OutputBuffer.

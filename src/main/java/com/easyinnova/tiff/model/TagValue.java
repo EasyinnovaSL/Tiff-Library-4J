@@ -35,6 +35,7 @@ import com.easyinnova.tiff.Constants;
 import com.easyinnova.tiff.model.types.Ascii;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,7 +44,7 @@ import java.util.List;
 /**
  * IFD tag object containing a list of values of a given tag type.
  */
-public class TagValue extends TiffObject {
+public class TagValue extends TiffObject implements Serializable {
 
   /** The tag identifier. */
   private int id;

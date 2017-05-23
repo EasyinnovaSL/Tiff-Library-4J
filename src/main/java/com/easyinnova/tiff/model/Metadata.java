@@ -30,6 +30,7 @@
  */
 package com.easyinnova.tiff.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ import java.util.Set;
 /**
  * A dictinary of all the metadata contained in the tiff file.
  */
-public class Metadata {
+public class Metadata implements Serializable {
 
   /** The metadata. */
   private HashMap<String, MetadataObject> metadata;

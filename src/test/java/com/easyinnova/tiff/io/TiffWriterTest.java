@@ -29,7 +29,7 @@ import com.easyinnova.tiff.writer.TiffWriter;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.ByteOrder;
+import com.easyinnova.tiff.model.ByteOrder;
 
 /**
  * Testing class.

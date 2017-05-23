@@ -30,13 +30,14 @@
  */
 package com.easyinnova.tiff.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The Class MetadataObject.
  */
-public class MetadataObject {
+public class MetadataObject implements Serializable {
 
   /** The list. */
   private List<TiffObject> list;

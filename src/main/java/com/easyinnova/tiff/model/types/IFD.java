@@ -38,6 +38,7 @@ import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffTags;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ import java.util.List;
 /**
  * The Class IFD.
  */
-public class IFD extends abstractTiffType {
+public class IFD extends abstractTiffType implements Serializable {
 
   /** The tags. */
   private IfdTags tags;
@@ -60,10 +61,10 @@ public class IFD extends abstractTiffType {
   private IFD subIFD;
 
   /** The image strips. */
-  private ImageStrips imageStrips;
+  private transient ImageStrips imageStrips;
 
   /** The image tiles. */
-  private ImageTiles imageTiles;
+  private transient ImageTiles imageTiles;
 
   /** The is image. */
   private boolean isImage;

@@ -35,26 +35,26 @@ import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.IccProfile;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
-import java.nio.ByteOrder;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Modeling of the TIFF file with methods to access its IFDs and metadata.
  */
-public class TiffDocument {
+public class TiffDocument implements Serializable {
 
   /** The magic number. */
   private int magicNumber;
 
   /** The list of Ifd. */
-  private IFD firstIFD;
+  private transient IFD firstIFD;
 
   /** The metadata. */
-  private Metadata metadata;
+  private transient Metadata metadata;
 
   /** The byte order. */
-  private ByteOrder byteOrder;
+  private transient ByteOrder byteOrder;
 
   /** The offset of the first IFD. */
   private int firstIFDOffset;

@@ -14,7 +14,7 @@ import com.easyinnova.tiff.writer.TiffWriter;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.ByteOrder;
+import com.easyinnova.tiff.model.ByteOrder;
 
 /**
  * Created by easy on 05/10/2016.
