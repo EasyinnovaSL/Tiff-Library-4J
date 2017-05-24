@@ -105,7 +105,9 @@ public class IfdTags {
     int id = TiffTags.getTagId(tagName);
     TagValue tag = new TagValue(id, 2);
     for (int i = 0; i < tagValue.length(); i++) {
-      Ascii cha = new Ascii(tagValue.charAt(i));
+      int val = tagValue.charAt(i);
+      if (val > 127) val = 0;
+      Ascii cha = new Ascii(val);
       tag.add(cha);
     }
     Ascii chaf = new Ascii(0);
