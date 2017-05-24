@@ -179,6 +179,16 @@ public class TagValue extends TiffObject implements Serializable {
     return readValue;
   }
 
+  public String getFirstTextReadValue() {
+    if (readValue == null) return "";
+    for (abstractTiffType rVal : readValue){
+      if (rVal instanceof Text){
+        return rVal.toString();
+      }
+    }
+    return "";
+  }
+
   public void setReadValue() {
     this.readValue = getDescriptiveValueObject();
   }
