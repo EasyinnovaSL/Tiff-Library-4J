@@ -34,16 +34,14 @@ import com.easyinnova.tiff.model.TagValue;
 
 import java.io.StringReader;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 /**
  * The Class XmlType.
  */
 public class XmlType extends abstractTiffType {
 	/** The xml model. */
-	protected StringReader xmlReader;
+	protected transient StringReader xmlReader;
 	/**
 	 * The xml.
 	 */

@@ -38,7 +38,6 @@ import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffTags;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ import java.util.List;
 /**
  * The Class IFD.
  */
-public class IFD extends abstractTiffType implements Serializable {
+public class IFD extends abstractTiffType {
 
   /** The tags. */
   private IfdTags tags;
@@ -239,6 +238,9 @@ public class IFD extends abstractTiffType implements Serializable {
         return tags.get(255).getFirstNumericValue() == 2;
     }
     if (hasSubIFD() && getImageSize() < getsubIFD().getImageSize()) {
+      return true;
+    }
+    if (hasParent() && getImageSize() < getParent().getImageSize()) {
       return true;
     }
     return false;

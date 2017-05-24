@@ -5,7 +5,7 @@
     "BYTE",
     "UNDEFINED"
   ],
-  "typedef": XMP,
+  "typedef": "XMP",
   "cardinality": "N",
   "defaultValue": "",
   "ifd": "",

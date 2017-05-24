@@ -48,13 +48,13 @@ public class TiffDocument implements Serializable {
   private int magicNumber;
 
   /** The list of Ifd. */
-  private transient IFD firstIFD;
+  private IFD firstIFD;
 
   /** The metadata. */
-  private transient Metadata metadata;
+  private Metadata metadata;
 
   /** The byte order. */
-  private transient ByteOrder byteOrder;
+  private ByteOrder byteOrder;
 
   /** The offset of the first IFD. */
   private int firstIFDOffset;

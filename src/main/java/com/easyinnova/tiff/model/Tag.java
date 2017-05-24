@@ -68,6 +68,9 @@ public class Tag {
   /** The typedef. */
   private String typedef = null;
 
+  /** The forced description value. */
+  private String forceDescription = null;
+
   /** The created. */
   private Date created;
   
@@ -120,12 +123,19 @@ public class Tag {
    * @param encodedValue the encoded value
    * @return the tag value description
    */
-  public String getTagValueDescription(String encodedValue) {
+  public String getTextDescription(String encodedValue) {
+    if (forceDescription != null) {
+      return forceDescription;
+    }
     String desc = null;
     if (tagValueDescriptions.containsKey(encodedValue)) {
       desc = tagValueDescriptions.get(encodedValue);
     }
     return desc;
+  }
+
+  public boolean hasReadableDescription(){
+    return typedef == null;
   }
 
   public HashMap<String, String> getValues() {
@@ -313,7 +323,7 @@ public class Tag {
    * @param defaultValue the default value
    * @param typedef the typedef
    */
-  public Tag(int id, String name, List<String>  type, String cardinality, String defaultValue, String typedef) {
+  public Tag(int id, String name, List<String>  type, String cardinality, String defaultValue, String typedef, String forceDescription) {
     this.id = id;
     this.name = name;
     this.type = type;
@@ -327,6 +337,7 @@ public class Tag {
     this.created = date;
     this.modified= date;
     this.typedef = typedef;
+    this.forceDescription = forceDescription;
   }
 
   public void setValues(HashMap<String, String> values) {

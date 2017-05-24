@@ -5,6 +5,7 @@
     "LONG",
     "IFD"
   ],
+  "typedef": "IFD",
   "cardinality": "N",
   "defaultValue": "",
   "ifd": "",

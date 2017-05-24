@@ -34,13 +34,14 @@ package com.easyinnova.tiff.model.types;
 import com.easyinnova.tiff.model.Tag;
 import com.easyinnova.tiff.model.TiffTags;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * The Class IccTags.
  */
-public class IccTags {
+public class IccTags implements Serializable {
   /** Tag list. */
   public ArrayList<IccTag> tags;
 

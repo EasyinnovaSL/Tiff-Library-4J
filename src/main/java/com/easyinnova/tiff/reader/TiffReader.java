@@ -617,6 +617,7 @@ public class TiffReader {
       }
     }
 
+    if (ok) tv.setReadValue();
     return tv;
   }
 }

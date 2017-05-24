@@ -47,9 +47,6 @@ public class IccProfile extends abstractTiffType {
   /** The tags. */
   public IccTags tags;
 
-  /** The validation result. */
-  public ValidationResult validation;
-
   /** The version. */
   private String version;
 

@@ -66,7 +66,7 @@ public class TiffTags {
    */
   private static Tag readTagFromBuffer(BufferedReader br, boolean close) {
     int id = 0;
-    String name = "";
+    String name = "", forceDescription = null;
     ArrayList<String> types = new ArrayList<>();
     String cardinality = "";
     String defaultValue = "";
@@ -84,6 +84,9 @@ public class TiffTags {
         } else if (sCurrentLine.contains("\"name\"")) {
           String sval = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
           name = sval;
+        } else if (sCurrentLine.contains("\"forceDescription\"")) {
+          String sval = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
+          forceDescription = sval;
         } else if (sCurrentLine.contains("\"cardinality\"")) {
           String sval = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
           cardinality = sval;
@@ -119,7 +122,7 @@ public class TiffTags {
       }
     }
 
-    Tag tag = new Tag(id, name, types, cardinality, defaultValue, typedef);
+    Tag tag = new Tag(id, name, types, cardinality, defaultValue, typedef, forceDescription);
     tag.createValuesDictionary();
     if (valueCodes != null && valueDescriptions != null && valueCodes.length == valueDescriptions.length) {
       HashMap<String, String> values = new HashMap<String, String>();
