@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteOrder;
+import com.easyinnova.tiff.model.ByteOrder;
 
 /**
  * The Class TiffFileInputStreamTest.

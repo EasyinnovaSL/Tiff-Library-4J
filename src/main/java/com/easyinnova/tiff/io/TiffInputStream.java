@@ -31,6 +31,7 @@
  */
 package com.easyinnova.tiff.io;
 
+import com.easyinnova.tiff.model.ByteOrder;
 import com.easyinnova.tiff.model.types.Ascii;
 import com.easyinnova.tiff.model.types.Byte;
 import com.easyinnova.tiff.model.types.Double;
@@ -48,8 +49,6 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteOrder;
-import java.nio.MappedByteBuffer;
 
  /**
  * The Class TiffInputStream.

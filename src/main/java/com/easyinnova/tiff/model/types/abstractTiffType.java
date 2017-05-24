@@ -35,10 +35,12 @@ import com.easyinnova.tiff.model.Metadata;
 import com.easyinnova.tiff.model.TagValue;
 import com.easyinnova.tiff.model.TiffObject;
 
+import java.io.Serializable;
+
 /**
  * The generic class abstractTiffType.
  */
-public class abstractTiffType extends TiffObject {
+public class abstractTiffType extends TiffObject implements Serializable {
 
   /** The tag size in bytes. */
   private int typeSize;

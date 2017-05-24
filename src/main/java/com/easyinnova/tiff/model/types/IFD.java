@@ -60,10 +60,10 @@ public class IFD extends abstractTiffType {
   private IFD subIFD;
 
   /** The image strips. */
-  private ImageStrips imageStrips;
+  private transient ImageStrips imageStrips;
 
   /** The image tiles. */
-  private ImageTiles imageTiles;
+  private transient ImageTiles imageTiles;
 
   /** The is image. */
   private boolean isImage;
@@ -238,6 +238,9 @@ public class IFD extends abstractTiffType {
         return tags.get(255).getFirstNumericValue() == 2;
     }
     if (hasSubIFD() && getImageSize() < getsubIFD().getImageSize()) {
+      return true;
+    }
+    if (hasParent() && getImageSize() < getParent().getImageSize()) {
       return true;
     }
     return false;

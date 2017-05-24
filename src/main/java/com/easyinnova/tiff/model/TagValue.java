@@ -33,17 +33,20 @@ package com.easyinnova.tiff.model;
 
 import com.easyinnova.tiff.Constants;
 import com.easyinnova.tiff.model.types.Ascii;
+import com.easyinnova.tiff.model.types.Text;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 /**
  * IFD tag object containing a list of values of a given tag type.
  */
-public class TagValue extends TiffObject {
+public class TagValue extends TiffObject implements Serializable {
 
   /** The tag identifier. */
   private int id;
@@ -52,7 +55,10 @@ public class TagValue extends TiffObject {
   private int type;
 
   /** The list of values. */
-  private List<abstractTiffType> value;
+  private transient List<abstractTiffType> value;
+
+  /** The list of readable values. */
+  private List<abstractTiffType> readValue;
   
   /** The offset where the tag has been written. */
   private int offset;
@@ -75,7 +81,8 @@ public class TagValue extends TiffObject {
   public TagValue(int id, int type) {
     this.id = id;
     this.type = type;
-    value = new ArrayList<abstractTiffType>();
+    value = new ArrayList<>();
+    readValue = new ArrayList<>();
   }
 
   /**
@@ -115,15 +122,21 @@ public class TagValue extends TiffObject {
    *
    * @return the descriptive value
    */
-  public String getDescriptiveValue() {
-    String desc = this.toString();
+  public List<abstractTiffType> getDescriptiveValueObject() {
     Tag tag = TiffTags.getTag(id);
     if (tag != null) {
-      String tagDescription = tag.getTagValueDescription(toString());
-      if (tagDescription != null)
-        desc = tagDescription;
+      if (tag.hasReadableDescription()){
+        String desc = this.toString();
+        String tagDescription = tag.getTextDescription(toString());
+        if (tagDescription != null){
+          desc = tagDescription;
+        }
+        return Arrays.asList(new Text(desc));
+      } else {
+        return getValue();
+      }
     }
-    return desc;
+    return null;
   }
 
   /**
@@ -160,6 +173,24 @@ public class TagValue extends TiffObject {
    */
   public void setValue(List<abstractTiffType> value) {
     this.value = value;
+  }
+
+  public List<abstractTiffType> getReadValue() {
+    return readValue;
+  }
+
+  public String getFirstTextReadValue() {
+    if (readValue == null) return "";
+    for (abstractTiffType rVal : readValue){
+      if (rVal instanceof Text){
+        return rVal.toString();
+      }
+    }
+    return "";
+  }
+
+  public void setReadValue() {
+    this.readValue = getDescriptiveValueObject();
   }
 
   /**
@@ -310,7 +341,8 @@ public class TagValue extends TiffObject {
    * Reset.
    */
   public void reset() {
-    value = new ArrayList<abstractTiffType>();
+    value = new ArrayList<>();
+    readValue = new ArrayList<>();
   }
 }
 

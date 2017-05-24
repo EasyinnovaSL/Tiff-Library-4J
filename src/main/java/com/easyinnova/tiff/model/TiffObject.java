@@ -31,10 +31,12 @@
  */
 package com.easyinnova.tiff.model;
 
+import java.io.Serializable;
+
 /**
  * The generic class TiffObject.
  */
-public class TiffObject {
+public class TiffObject implements Serializable {
 
   /**
    * The container element of this tiff object (EXIF, XMP, IPTC...)

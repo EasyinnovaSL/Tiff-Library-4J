@@ -31,10 +31,12 @@
  */
 package com.easyinnova.tiff.model;
 
+import java.io.Serializable;
+
 /**
  * The object that contains an error in the validation of a Tiff file.
  */
-public class ValidationEvent {
+public class ValidationEvent implements Serializable {
 
   /** The error description. */
   private String description;

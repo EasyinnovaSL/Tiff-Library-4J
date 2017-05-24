@@ -30,10 +30,12 @@
  */
 package com.easyinnova.tiff.model;
 
+import java.io.Serializable;
+
 /**
  * The Class IccProfileCreator.
  */
-public class IccProfileCreator {
+public class IccProfileCreator implements Serializable{
 
   /** The signature. */
   private int signature;

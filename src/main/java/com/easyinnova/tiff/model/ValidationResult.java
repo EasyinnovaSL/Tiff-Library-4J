@@ -31,12 +31,13 @@
  */
 package com.easyinnova.tiff.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Object that stores the results of the validation, errors and warnings.
  */
-public class ValidationResult {
+public class ValidationResult implements Serializable {
 
   /** Errors List. */
   public ArrayList<ValidationEvent> errors;

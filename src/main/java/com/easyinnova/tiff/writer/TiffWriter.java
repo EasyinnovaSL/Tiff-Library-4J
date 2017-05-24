@@ -51,7 +51,7 @@ import com.easyinnova.tiff.model.types.XMP;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
 import java.io.IOException;
-import java.nio.ByteOrder;
+import com.easyinnova.tiff.model.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

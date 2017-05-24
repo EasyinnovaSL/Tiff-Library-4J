@@ -82,21 +82,16 @@ public class IPTC extends abstractTiffType {
    * The Constant SEGMENT_MARKER.
    */
   public static final int[] SEGMENT_MARKER = {28, 2};
-  /**
-   * The validation result.
-   */
-  public ValidationResult validation;
 
   /** The original value. */
   private List<abstractTiffType> originalValue;
 
-  private IIMFile iimFile;
+  private transient IIMFile iimFile;
 
   /**
    * Instantiates a new IPTC.
    */
   public IPTC() {
-    validation = new ValidationResult(true);
   }
 
   /**

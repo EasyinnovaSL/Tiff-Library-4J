@@ -35,14 +35,14 @@ import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.IccProfile;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
-import java.nio.ByteOrder;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Modeling of the TIFF file with methods to access its IFDs and metadata.
  */
-public class TiffDocument {
+public class TiffDocument implements Serializable {
 
   /** The magic number. */
   private int magicNumber;

@@ -41,7 +41,7 @@ import com.easyinnova.tiff.model.types.SShort;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteOrder;
+import com.easyinnova.tiff.model.ByteOrder;
 
 /**
  * The Class TiffOutputStream.

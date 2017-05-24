@@ -32,6 +32,7 @@
 package com.easyinnova.tiff.reader;
 
 import com.easyinnova.tiff.io.TiffInputStream;
+import com.easyinnova.tiff.model.ByteOrder;
 import com.easyinnova.tiff.model.IccProfileCreators;
 import com.easyinnova.tiff.model.ReadIccConfigIOException;
 import com.easyinnova.tiff.model.ReadTagsIOException;
@@ -42,16 +43,12 @@ import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.ValidationResult;
 import com.easyinnova.tiff.model.types.IFD;
 import com.easyinnova.tiff.model.types.abstractTiffType;
-import com.easyinnova.tiff.model.types.IPTC;
 import com.easyinnova.tiff.profiles.BaselineProfile;
 import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.profiles.TiffITProfile;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -620,6 +617,7 @@ public class TiffReader {
       }
     }
 
+    if (ok) tv.setReadValue();
     return tv;
   }
 }

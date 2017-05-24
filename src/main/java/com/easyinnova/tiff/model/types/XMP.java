@@ -34,8 +34,6 @@ import com.adobe.xmp.XMPException;
 import com.adobe.xmp.XMPIterator;
 import com.adobe.xmp.XMPMeta;
 import com.adobe.xmp.XMPMetaFactory;
-import com.adobe.xmp.XMPSchemaRegistry;
-import com.adobe.xmp.impl.XMPIteratorImpl;
 import com.adobe.xmp.options.SerializeOptions;
 import com.adobe.xmp.properties.XMPPropertyInfo;
 import com.easyinnova.tiff.io.TiffOutputStream;
@@ -46,7 +44,6 @@ import com.easyinnova.tiff.model.TagValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.traversal.DocumentTraversal;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.traversal.NodeIterator;
@@ -62,11 +59,8 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -76,7 +70,7 @@ import javax.xml.transform.stream.StreamResult;
  * The Class XMP.
  */
 public class XMP extends XmlType {
-  private XMPMeta xmpMeta;
+  private transient XMPMeta xmpMeta;
 
   /** The metadata. */
   private Metadata metadata;

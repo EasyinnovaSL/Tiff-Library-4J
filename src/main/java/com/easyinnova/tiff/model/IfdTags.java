@@ -33,13 +33,14 @@ package com.easyinnova.tiff.model;
 
 import com.easyinnova.tiff.model.types.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Set of tags from an IFD.
  */
-public class IfdTags {
+public class IfdTags implements Serializable {
   /** Tag list. */
   private ArrayList<TagValue> tags;
 
