@@ -52,22 +52,22 @@ public class TiffTagsTest {
   @Test
   public void test() {
     Tag tag = TiffTags.getTag(259);
-    assertEquals(tag.getTagValueDescription("5"), "LZW");
-    assertEquals(tag.getTagValueDescription("unexisting"), null);
+    assertEquals(tag.getTextDescription("5"), "LZW");
+    assertEquals(tag.getTextDescription("unexisting"), null);
 
     Tag tag2 = TiffTags.getTag(TiffTags.getTagId("PhotometricInterpretation"));
-    assertEquals(tag2.getTagValueDescription("2"), "RGB");
-    assertEquals(tag2.getTagValueDescription("6"), "YCbCr");
-    assertEquals(tag2.getTagValueDescription("unexisting"), null);
+    assertEquals(tag2.getTextDescription("2"), "RGB");
+    assertEquals(tag2.getTextDescription("6"), "YCbCr");
+    assertEquals(tag2.getTextDescription("unexisting"), null);
 
     tag2 = TiffTags.getTag(TiffTags.getTagId("Orientation"));
-    assertEquals(tag2.getTagValueDescription("1"), "TopLeft");
-    assertEquals(tag2.getTagValueDescription("unexisting"), null);
+    assertEquals(tag2.getTextDescription("1"), "TopLeft");
+    assertEquals(tag2.getTextDescription("unexisting"), null);
 
     tag2 = TiffTags.getTag(TiffTags.getTagId("PlanarConfiguration"));
-    assertEquals(tag2.getTagValueDescription("1"), "Chunky");
-    assertEquals(tag2.getTagValueDescription("2"), "Planar");
-    assertEquals(tag2.getTagValueDescription("unexisting"), null);
+    assertEquals(tag2.getTextDescription("1"), "Chunky");
+    assertEquals(tag2.getTextDescription("2"), "Planar");
+    assertEquals(tag2.getTextDescription("unexisting"), null);
 
     TiffReader tr;
     try {
@@ -79,7 +79,7 @@ public class TiffTagsTest {
       assertEquals(true, tr.getBaselineValidation().isCorrect());
 
       String value =
-          tr.getModel().getFirstIFD().getTag("PhotometricInterpretation").getDescriptiveValue();
+          tr.getModel().getFirstIFD().getTag("PhotometricInterpretation").getFirstTextReadValue();
       assertEquals(value, "Bilevel");
     } catch (ReadTagsIOException e) {
       assertEquals(0, 1);
