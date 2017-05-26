@@ -37,6 +37,8 @@ import java.io.Serializable;
  * The object that contains an error in the validation of a Tiff file.
  */
 public class ValidationEvent implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
 
   /** The error description. */
   private String description;

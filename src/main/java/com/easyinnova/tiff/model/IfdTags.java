@@ -41,6 +41,9 @@ import java.util.HashMap;
  * Set of tags from an IFD.
  */
 public class IfdTags implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
+
   /** Tag list. */
   private ArrayList<TagValue> tags;
 

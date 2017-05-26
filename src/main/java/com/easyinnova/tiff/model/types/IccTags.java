@@ -42,6 +42,9 @@ import java.util.HashMap;
  * The Class IccTags.
  */
 public class IccTags implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
+
   /** Tag list. */
   public ArrayList<IccTag> tags;
 

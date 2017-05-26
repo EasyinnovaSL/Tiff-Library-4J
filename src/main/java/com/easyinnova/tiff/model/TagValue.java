@@ -48,6 +48,9 @@ import java.util.List;
  */
 public class TagValue extends TiffObject implements Serializable {
 
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
+
   /** The tag identifier. */
   private int id;
 
@@ -226,7 +229,7 @@ public class TagValue extends TiffObject implements Serializable {
    * @return the cardinality
    */
   public int getCardinality() {
-    return value.size();
+    return (value != null) ? value.size() : readValue.size() ;
   }
 
   /**
@@ -235,7 +238,8 @@ public class TagValue extends TiffObject implements Serializable {
    * @return the first integer value
    */
   public long getFirstNumericValue() {
-    return Long.parseLong(value.get(0).toString());
+    String val = (value != null) ? value.get(0).toString() : readValue.get(0).toString();
+    return Long.parseLong(val);
   }
 
   /**
@@ -244,6 +248,7 @@ public class TagValue extends TiffObject implements Serializable {
    * @return the string
    */
   public String toString() {
+    if (value == null) return "";
     String s = "";
     if (type == 2 || type == 7) {
       s = readString();

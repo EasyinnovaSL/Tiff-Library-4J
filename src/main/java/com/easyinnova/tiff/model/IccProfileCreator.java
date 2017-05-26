@@ -37,6 +37,9 @@ import java.io.Serializable;
  */
 public class IccProfileCreator implements Serializable{
 
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
+
   /** The signature. */
   private int signature;
 

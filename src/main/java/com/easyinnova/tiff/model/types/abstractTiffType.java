@@ -41,6 +41,8 @@ import java.io.Serializable;
  * The generic class abstractTiffType.
  */
 public class abstractTiffType extends TiffObject implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
 
   /** The tag size in bytes. */
   private int typeSize;

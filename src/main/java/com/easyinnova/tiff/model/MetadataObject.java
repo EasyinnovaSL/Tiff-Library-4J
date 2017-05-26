@@ -38,6 +38,8 @@ import java.util.List;
  * The Class MetadataObject.
  */
 public class MetadataObject implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
 
   /** The list. */
   private List<TiffObject> list;

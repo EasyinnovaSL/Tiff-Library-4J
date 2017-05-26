@@ -12,6 +12,9 @@ public class ByteOrder implements Serializable {
     this.name = name;
   }
 
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
+
   /**
    * Constant denoting big-endian byte order.  In this order, the bytes of a
    * multibyte value are ordered from most significant to least significant.

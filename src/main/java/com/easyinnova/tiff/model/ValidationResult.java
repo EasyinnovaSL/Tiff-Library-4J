@@ -38,6 +38,8 @@ import java.util.ArrayList;
  * Object that stores the results of the validation, errors and warnings.
  */
 public class ValidationResult implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
 
   /** Errors List. */
   public ArrayList<ValidationEvent> errors;

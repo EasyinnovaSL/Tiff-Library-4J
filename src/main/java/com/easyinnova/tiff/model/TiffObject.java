@@ -37,6 +37,8 @@ import java.io.Serializable;
  * The generic class TiffObject.
  */
 public class TiffObject implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
 
   /**
    * The container element of this tiff object (EXIF, XMP, IPTC...)

@@ -40,6 +40,8 @@ import java.util.Set;
  * A dictinary of all the metadata contained in the tiff file.
  */
 public class Metadata implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
 
   /** The metadata. */
   private HashMap<String, MetadataObject> metadata;

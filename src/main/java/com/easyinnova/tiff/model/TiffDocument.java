@@ -43,6 +43,8 @@ import java.util.List;
  * Modeling of the TIFF file with methods to access its IFDs and metadata.
  */
 public class TiffDocument implements Serializable {
+  /** Do not modify! */
+  private static final long serialVersionUID = 2946L;
 
   /** The magic number. */
   private int magicNumber;
@@ -159,7 +161,7 @@ public class TiffDocument implements Serializable {
   }
 
   /**
-   * Gets the images count.
+   * Gets the images count (main images and thumbnails).
    *
    * @return the ifd count
    */
@@ -176,6 +178,54 @@ public class TiffDocument implements Serializable {
       c = n;
     }
     return c;
+  }
+
+  /**
+   * Gets the main images count.
+   *
+   * @return the ifd count
+   */
+  public int getMainImagesCount() {
+    int count = 0;
+    List<TiffObject> list = new ArrayList<>();
+    if (metadata.contains("IFD")) {
+      list.addAll(getMetadataList("IFD"));
+    }
+    if (metadata.contains("SubIFDs")) {
+      list.addAll(getMetadataList("SubIFDs"));
+    }
+
+    for (TiffObject to : list) {
+      IFD ifd = (IFD) to;
+      if (ifd.isImage() && !ifd.isThumbnail())
+        count++;
+    }
+
+    return count;
+  }
+
+  /**
+   * Gets the thumbnails images count.
+   *
+   * @return the ifd count
+   */
+  public int getThumbnailsImagesCount() {
+    int count = 0;
+    List<TiffObject> list = new ArrayList<>();
+    if (metadata.contains("IFD")) {
+      list.addAll(getMetadataList("IFD"));
+    }
+    if (metadata.contains("SubIFDs")) {
+      list.addAll(getMetadataList("SubIFDs"));
+    }
+
+    for (TiffObject to : list) {
+      IFD ifd = (IFD) to;
+      if (ifd.isImage() && ifd.isThumbnail())
+        count++;
+    }
+
+    return count;
   }
 
   /**
