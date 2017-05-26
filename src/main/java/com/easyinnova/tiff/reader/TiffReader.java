@@ -570,7 +570,7 @@ public class TiffReader {
 
     if (ok && TiffTags.hasTag(id)) {
       Tag t = TiffTags.getTag(id);
-      if (t.hasTypedef()) {
+      if (t.hasTypedef() && !t.getTypedef().equals("SubIFD")) {
         String tagclass = t.getTypedef();
 
         try {
