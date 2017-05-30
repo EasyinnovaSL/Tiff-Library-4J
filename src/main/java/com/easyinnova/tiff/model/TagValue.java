@@ -239,7 +239,27 @@ public class TagValue extends TiffObject implements Serializable {
    */
   public long getFirstNumericValue() {
     String val = (value != null) ? value.get(0).toString() : readValue.get(0).toString();
-    return Long.parseLong(val);
+    if (isInteger(val)) {
+      return Long.parseLong(val);
+    } else {
+      return 0;
+    }
+  }
+
+  boolean isInteger(String s) {
+    return isInteger(s,10);
+  }
+
+  boolean isInteger(String s, int radix) {
+    if(s.isEmpty()) return false;
+    for(int i = 0; i < s.length(); i++) {
+      if(i == 0 && s.charAt(i) == '-') {
+        if(s.length() == 1) return false;
+        else continue;
+      }
+      if(Character.digit(s.charAt(i),radix) < 0) return false;
+    }
+    return true;
   }
 
   /**
