@@ -188,12 +188,8 @@ public class TiffDocument implements Serializable {
   public int getMainImagesCount() {
     int count = 0;
     List<TiffObject> list = new ArrayList<>();
-    if (metadata.contains("IFD")) {
-      list.addAll(getMetadataList("IFD"));
-    }
-    if (metadata.contains("SubIFDs")) {
-      list.addAll(getMetadataList("SubIFDs"));
-    }
+    list.addAll(getMetadataList("IFD"));
+    list.addAll(getMetadataList("SubIFDs"));
 
     for (TiffObject to : list) {
       IFD ifd = (IFD) to;
@@ -212,12 +208,8 @@ public class TiffDocument implements Serializable {
   public int getThumbnailsImagesCount() {
     int count = 0;
     List<TiffObject> list = new ArrayList<>();
-    if (metadata.contains("IFD")) {
-      list.addAll(getMetadataList("IFD"));
-    }
-    if (metadata.contains("SubIFDs")) {
-      list.addAll(getMetadataList("SubIFDs"));
-    }
+    list.addAll(getMetadataList("IFD"));
+    list.addAll(getMetadataList("SubIFDs"));
 
     for (TiffObject to : list) {
       IFD ifd = (IFD) to;
