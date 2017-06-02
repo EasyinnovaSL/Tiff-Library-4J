@@ -98,7 +98,6 @@ public class TiffTags {
           sCurrentLine = br.readLine();
           valueCodes = sCurrentLine.split(",");
         } else if (sCurrentLine.contains("\"description\"")) {
-          sCurrentLine = br.readLine();
           description = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
         } else if (sCurrentLine.contains("\"valueDescriptions\"")) {
           sCurrentLine = br.readLine();

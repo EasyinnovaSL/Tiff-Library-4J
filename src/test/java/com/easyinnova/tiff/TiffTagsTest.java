@@ -69,6 +69,9 @@ public class TiffTagsTest {
     assertEquals(tag2.getTextDescription("2"), "Planar");
     assertEquals(tag2.getTextDescription("unexisting"), null);
 
+    tag2 = TiffTags.getTag(TiffTags.getTagId("Compression"));
+    assertEquals(tag2.getDescription(), "Compression scheme");
+
     TiffReader tr;
     try {
       tr = new TiffReader();
