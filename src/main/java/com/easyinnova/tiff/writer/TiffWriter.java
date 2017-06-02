@@ -119,6 +119,9 @@ public class TiffWriter {
       data.close();
     } catch (Exception ex) {
       ex.printStackTrace();
+      if (data != null) {
+        data.close();
+      }
       throw ex;
     }
   }
