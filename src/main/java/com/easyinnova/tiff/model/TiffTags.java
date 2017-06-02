@@ -71,6 +71,7 @@ public class TiffTags {
     String cardinality = "";
     String defaultValue = "";
     String typedef = null;
+    String description = null;
     String[] valueCodes = null;
     String[] valueDescriptions = null;
 
@@ -96,6 +97,9 @@ public class TiffTags {
         } else if (sCurrentLine.contains("\"valueCodes\"")) {
           sCurrentLine = br.readLine();
           valueCodes = sCurrentLine.split(",");
+        } else if (sCurrentLine.contains("\"description\"")) {
+          sCurrentLine = br.readLine();
+          description = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1).replace("\"", "").replace(",", "").trim();
         } else if (sCurrentLine.contains("\"valueDescriptions\"")) {
           sCurrentLine = br.readLine();
           valueDescriptions = sCurrentLine.split(",");
@@ -123,6 +127,7 @@ public class TiffTags {
     }
 
     Tag tag = new Tag(id, name, types, cardinality, defaultValue, typedef, forceDescription);
+    tag.setDescription(description);
     tag.createValuesDictionary();
     if (valueCodes != null && valueDescriptions != null && valueCodes.length == valueDescriptions.length) {
       HashMap<String, String> values = new HashMap<String, String>();

@@ -8,7 +8,7 @@
   "cardinality": "1",
   "defaultValue": "",
   "ifd": "",
-  "description": "",
+  "description": "Image Height (in pixels)",
   "source": "",
   "created": "18/05/2015",
   "modified": "18/05/2015"
