@@ -49,6 +49,8 @@ public class RandomAccessFileInputStream extends InputStream {
    */
   private long limit = -1;
 
+  private String path;
+
   /**
    * Instantiates a new tiff file input stream.
    *
@@ -56,7 +58,12 @@ public class RandomAccessFileInputStream extends InputStream {
    * @throws FileNotFoundException the file not found exception
    */
   public RandomAccessFileInputStream(File file) throws FileNotFoundException {
+    path = file.getPath();
     randomAccessFile = new RandomAccessFile(file, "r");
+  }
+
+  public String getPath() {
+    return path;
   }
 
   @Override public int read() throws IOException {

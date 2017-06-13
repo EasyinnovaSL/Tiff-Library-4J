@@ -24,7 +24,7 @@
  * © 2015 Easy Innova, SL
  * </p>
  *
- * @author Xavier Tarrés Bonet
+ * @author Victor Munoz
  * @version 1.0
  * @since 26/5/2015
  *
@@ -47,13 +47,14 @@ import com.easyinnova.tiff.model.types.Undefined;
 
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
  /**
  * The Class TiffInputStream.
  */
-public class TiffInputStream extends MappedByteInputStream implements TiffDataIntput {
+public class TiffInputStream implements TiffDataIntput {
 
   /** The Byte order. */
   private ByteOrder byteOrder;
@@ -64,13 +65,33 @@ public class TiffInputStream extends MappedByteInputStream implements TiffDataIn
   /** The buffer. */
   private PagedInputBuffer buffer;
 
+  /** The file stream */
+  private MappedByteInputStream internalFile;
+  private RandomAccessFileInputStream internalFileBig;
+
   /**
    * Instantiates a new data byte order input stream.
    * @param file file
    * @throws FileNotFoundException sdf
    */
   public TiffInputStream(File file) throws FileNotFoundException {
-  super(file);
+    FileInputStream f = new FileInputStream(file);
+    long mbsize = 0;
+    try {
+      mbsize = f.getChannel().size();
+    } catch (Exception ex) {
+
+    }
+
+    internalFile = null;
+    internalFileBig = null;
+
+    if (mbsize > 2147483647L) {
+      internalFileBig = new RandomAccessFileInputStream(file);
+    } else {
+      internalFile = new MappedByteInputStream(file);
+    }
+
     byteOrder = ByteOrder.BIG_ENDIAN;
     fileOffset = 0;
     buffer = new PagedInputBuffer(this);
@@ -85,11 +106,35 @@ public class TiffInputStream extends MappedByteInputStream implements TiffDataIn
     return byteOrder;
   }
 
-   public String getFilePath() {
-     return getPath();
+  public String getFilePath() {
+    if (internalFile != null)
+      return internalFile.getPath();
+    else
+      return internalFileBig.getPath();
    }
 
-  /**
+  public int read() throws IOException {
+    if (internalFile != null)
+      return internalFile.read();
+    else
+      return internalFileBig.read();
+  }
+
+  public void seek(long pos) throws IOException {
+    if (internalFile != null)
+      internalFile.seek(pos);
+    else
+      internalFileBig.seek(pos);
+  }
+
+  public void close() throws IOException {
+    if (internalFile != null)
+      internalFile.close();
+    else
+      internalFileBig.close();
+  }
+
+   /**
    * Gets the stream.
    *
    * @return the stream
@@ -503,6 +548,9 @@ public class TiffInputStream extends MappedByteInputStream implements TiffDataIn
    * @return the file size.
    */
   public long size() {
-    return super.size();
+    if (internalFile != null)
+      return internalFile.size();
+    else
+      return internalFileBig.size();
   }
 }

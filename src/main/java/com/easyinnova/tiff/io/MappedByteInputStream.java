@@ -11,7 +11,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * Created by easy on 09/08/2016.
+ * Created by Victor Munoz on 09/08/2016.
  */
 public class MappedByteInputStream extends InputStream {
 
