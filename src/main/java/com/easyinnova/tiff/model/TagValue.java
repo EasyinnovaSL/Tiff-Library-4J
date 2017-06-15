@@ -58,7 +58,8 @@ public class TagValue extends TiffObject implements Serializable {
   private int type;
 
   /** The list of values. */
-  private transient List<abstractTiffType> value;
+  private List<abstractTiffType> value;
+  private transient List<abstractTiffType> valueBackup;
 
   /** The list of readable values. */
   private List<abstractTiffType> readValue;
@@ -86,6 +87,7 @@ public class TagValue extends TiffObject implements Serializable {
     this.type = type;
     value = new ArrayList<>();
     readValue = new ArrayList<>();
+    valueBackup = new ArrayList<>();
   }
 
   /**
@@ -170,12 +172,30 @@ public class TagValue extends TiffObject implements Serializable {
    }
 
   /**
+   * Gets the list of values backups.
+   *
+   * @return the list
+   */
+  public List<abstractTiffType> getValueBackup() {
+    return this.valueBackup;
+  }
+
+  /**
    * Sets the value.
    *
    * @param value the new value
    */
   public void setValue(List<abstractTiffType> value) {
     this.value = value;
+  }
+
+  /**
+   * Sets the valueBakup.
+   *
+   * @param valueBackup the new value backup
+   */
+  public void setValueBackup(List<abstractTiffType> valueBackup) {
+    this.valueBackup = valueBackup;
   }
 
   public List<abstractTiffType> getReadValue() {
