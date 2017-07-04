@@ -30,8 +30,13 @@
  */
 package com.easyinnova.tiff.model.types;
 
+import com.adobe.xmp.XMPException;
+import com.adobe.xmp.XMPMetaFactory;
+import com.adobe.xmp.options.SerializeOptions;
+import com.easyinnova.tiff.io.TiffOutputStream;
 import com.easyinnova.tiff.model.TagValue;
 
+import java.io.IOException;
 import java.io.StringReader;
 
 import javax.xml.stream.XMLStreamException;
@@ -108,6 +113,13 @@ public class XmlType extends abstractTiffType {
 
 		tv.clear();
 		tv.add(this);
+	}
+
+	public void writeXml(TiffOutputStream data) throws IOException, XMPException {
+		SerializeOptions options = new SerializeOptions();
+		for (byte b : bytes) {
+			data.put(b);
+		}
 	}
 }
 

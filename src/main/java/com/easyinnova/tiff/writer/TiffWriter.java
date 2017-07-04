@@ -48,6 +48,7 @@ import com.easyinnova.tiff.model.types.SLong;
 import com.easyinnova.tiff.model.types.SRational;
 import com.easyinnova.tiff.model.types.SShort;
 import com.easyinnova.tiff.model.types.XMP;
+import com.easyinnova.tiff.model.types.XmlType;
 import com.easyinnova.tiff.model.types.abstractTiffType;
 
 import java.io.IOException;
@@ -374,9 +375,14 @@ public class TiffWriter {
         XMP xmp = (XMP)tt;
         try {
           xmp.write(data);
-        }catch (XMPException ex) {
-          ex.printStackTrace();
-          throw new IOException();
+        }catch (Exception ex) {
+          XmlType xml = (XmlType)tt;
+          try {
+            xml.writeXml(data);
+          } catch (Exception exx) {
+            exx.printStackTrace();
+            throw new IOException();
+          }
         }
       } else if (id == 33723) {
         // IPTC

@@ -338,6 +338,9 @@ public class XMP extends XmlType {
     } catch (XMPException e) {
       e.printStackTrace();
       return 0;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return 0;
     }
   }
 
