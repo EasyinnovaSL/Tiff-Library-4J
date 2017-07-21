@@ -300,7 +300,13 @@ public class IPTC extends abstractTiffType {
 
       }
     } catch (InvalidDataSetException e) {
-      e.printStackTrace();
+      //e.printStackTrace();
+      try {
+        reader.close();
+        subStream.close();
+      } catch (Exception ex) {
+
+      }
     }
   }
 

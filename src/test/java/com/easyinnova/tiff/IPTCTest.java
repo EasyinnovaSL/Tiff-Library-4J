@@ -49,6 +49,20 @@ public class IPTCTest {
     }
   }
 
+  void delete(String filename) {
+    int tries = 10;
+    while (new File(filename).exists()) {
+      if (tries-- < 0)
+        break;
+      try {
+        Thread.sleep(2000);
+        new File(filename).delete();
+      } catch (Exception ex) {
+
+      }
+    }
+  }
+
   /**
    * Valid examples set.
    */
@@ -87,7 +101,7 @@ public class IPTCTest {
       assertEquals(trCopy.getBaselineValidation().errors.size(), 0);
       trCopy.getStream().close();
 
-      new File(filename.replace(".tif", "2.tif")).delete();
+      delete(filename.replace(".tif", "2.tif"));
     } catch (Exception e) {
       e.printStackTrace();
       assertEquals(0, 1);
@@ -151,7 +165,7 @@ public class IPTCTest {
       assertEquals("Test Description", iptc2.getDescription());
       assertEquals(date.toString(), iptc2.getDatetime().toString());
 
-      new File(filename.replace(".tif", "2.tif")).delete();
+      delete(filename.replace(".tif", "2.tif"));
 
     } catch (Exception e) {
       assertEquals(0, 1);
