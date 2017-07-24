@@ -45,6 +45,10 @@ import javax.xml.stream.XMLStreamException;
  * The Class XmlType.
  */
 public class XmlType extends abstractTiffType {
+
+	/** Do not modify! */
+	private static final long serialVersionUID = 1102624980909600286L;
+
 	/** The xml model. */
 	protected transient StringReader xmlReader;
 	/**
