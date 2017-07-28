@@ -80,11 +80,11 @@ public class IfdReader {
    */
   public void readImage() {
     if (ifd.containsTagId(TiffTags.getTagId("StripOffsets"))
-        && ifd.containsTagId(TiffTags.getTagId("StripBYTECount"))) {
+        || ifd.containsTagId(TiffTags.getTagId("StripBYTECount"))) {
       readStrips();
     }
     if (ifd.containsTagId(TiffTags.getTagId("TileOffsets"))
-        && ifd.containsTagId(TiffTags.getTagId("TileBYTECounts"))) {
+        || ifd.containsTagId(TiffTags.getTagId("TileBYTECounts"))) {
       readTiles();
     }
   }
@@ -95,44 +95,49 @@ public class IfdReader {
   private void readTiles() {
     ImageTiles imageTiles = new ImageTiles();
     List<Tile> tiles = new ArrayList<Tile>();
-    long totalWidth = ifd.getTag("ImageWidth").getFirstNumericValue();
-    long totalLength = ifd.getTag("ImageLength").getFirstNumericValue();
-    long tilesWidth = ifd.getTag("TileWidth").getFirstNumericValue();
-    long tilesHeight = ifd.getTag("TileLength").getFirstNumericValue();
-    int actualWidth = 0;
-    long actualHeight = tilesHeight;
-    for (int i = 0; i < ifd.getTag("TileOffsets").getValue().size(); i++) {
-      try {
-        int to = ifd.getTag("TileOffsets").getValue().get(i).toInt();
-        Tile tile = new Tile();
-        tile.setOffset(to);
-        tile.setWidth((int) tilesWidth);
-        tile.setHeight((int) tilesHeight);
-        long padX = 0;
-        long padY = 0;
-        boolean newLine = false;
-        actualWidth += tilesWidth;
-        if (actualWidth > totalWidth) {
-          padX = tilesWidth - actualWidth % totalWidth;
-          newLine = true;
-        }
-        if (actualHeight > totalLength) {
-          padY = tilesHeight - actualHeight % totalLength;
-        }
-        tile.setPadding((int) padX, (int) padY);
-        if (newLine) {
-          actualHeight += tilesHeight;
-          actualWidth = 0;
-        }
-        tiles.add(tile);
-      } catch (Exception ex) {
+    if (ifd.containsTagId(TiffTags.getTagId("TileOffsets"))
+        && ifd.containsTagId(TiffTags.getTagId("TileBYTECounts"))
+        && ifd.containsTagId(TiffTags.getTagId("TileLength"))
+        && ifd.containsTagId(TiffTags.getTagId("TileWidth"))) {
+      long totalWidth = ifd.getTag("ImageWidth").getFirstNumericValue();
+      long totalLength = ifd.getTag("ImageLength").getFirstNumericValue();
+      long tilesWidth = ifd.getTag("TileWidth").getFirstNumericValue();
+      long tilesHeight = ifd.getTag("TileLength").getFirstNumericValue();
+      int actualWidth = 0;
+      long actualHeight = tilesHeight;
+      for (int i = 0; i < ifd.getTag("TileOffsets").getValue().size(); i++) {
+        try {
+          int to = ifd.getTag("TileOffsets").getValue().get(i).toInt();
+          Tile tile = new Tile();
+          tile.setOffset(to);
+          tile.setWidth((int) tilesWidth);
+          tile.setHeight((int) tilesHeight);
+          long padX = 0;
+          long padY = 0;
+          boolean newLine = false;
+          actualWidth += tilesWidth;
+          if (actualWidth > totalWidth) {
+            padX = tilesWidth - actualWidth % totalWidth;
+            newLine = true;
+          }
+          if (actualHeight > totalLength) {
+            padY = tilesHeight - actualHeight % totalLength;
+          }
+          tile.setPadding((int) padX, (int) padY);
+          if (newLine) {
+            actualHeight += tilesHeight;
+            actualWidth = 0;
+          }
+          tiles.add(tile);
+        } catch (Exception ex) {
 
+        }
       }
-    }
-    imageTiles.setTiles(tiles);
+      imageTiles.setTiles(tiles);
 
-    imageTiles.setTileHeight((int) tilesHeight);
-    imageTiles.setTileWidth((int) tilesWidth);
+      imageTiles.setTileHeight((int) tilesHeight);
+      imageTiles.setTileWidth((int) tilesWidth);
+    }
     ifd.setImageTiles(imageTiles);
   }
 
@@ -142,25 +147,28 @@ public class IfdReader {
   private void readStrips() {
     ImageStrips imageStrips = new ImageStrips();
     List<Strip> strips = new ArrayList<Strip>();
-    long tsbc = ifd.getTag("StripBYTECount").getFirstNumericValue();
     long rps = 0;
-    if (!ifd.containsTagId(TiffTags.getTagId("RowsPerStrip")) || ifd.getTag("RowsPerStrip").getCardinality() == 0)
-      rps = 1;
-    else rps = ifd.getTag("RowsPerStrip").getFirstNumericValue();
-    long rowLength = tsbc / rps;
-    if (rowLength == 0)
-      rowLength = 1;
-    for (int i = 0; i < ifd.getTag("StripOffsets").getValue().size(); i++) {
-      try {
-        int so = ifd.getTag("StripOffsets").getValue().get(i).toInt();
-        int sbc = ifd.getTag("StripBYTECount").getValue().get(i).toInt();
-        Strip strip = new Strip();
-        strip.setOffset(so);
-        strip.setLength(sbc);
-        strip.setStripRows((int) (sbc / rowLength));
-        strips.add(strip);
-      } catch (Exception ex) {
+    if (ifd.containsTagId(TiffTags.getTagId("StripOffsets"))
+        && ifd.containsTagId(TiffTags.getTagId("StripBYTECount"))) {
+      long tsbc = ifd.getTag("StripBYTECount").getFirstNumericValue();
+      if (!ifd.containsTagId(TiffTags.getTagId("RowsPerStrip")) || ifd.getTag("RowsPerStrip").getCardinality() == 0)
+        rps = 1;
+      else rps = ifd.getTag("RowsPerStrip").getFirstNumericValue();
+      long rowLength = tsbc / rps;
+      if (rowLength == 0)
+        rowLength = 1;
+      for (int i = 0; i < ifd.getTag("StripOffsets").getValue().size(); i++) {
+        try {
+          int so = ifd.getTag("StripOffsets").getValue().get(i).toInt();
+          int sbc = ifd.getTag("StripBYTECount").getValue().get(i).toInt();
+          Strip strip = new Strip();
+          strip.setOffset(so);
+          strip.setLength(sbc);
+          strip.setStripRows((int) (sbc / rowLength));
+          strips.add(strip);
+        } catch (Exception ex) {
 
+        }
       }
     }
     imageStrips.setStrips(strips);

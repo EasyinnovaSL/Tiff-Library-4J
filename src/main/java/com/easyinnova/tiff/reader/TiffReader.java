@@ -438,16 +438,18 @@ public class TiffReader {
     if (TiffTags.hasTag(tagid) && !TiffTags.getTag(tagid).getName().equals("IPTC")) {
       boolean found = false;
       String stagType = TiffTags.getTagTypeName(tagType);
-      if (stagType.equals("SUBIFD"))
-        stagType = "IFD";
-      if (stagType.equals("UNDEFINED"))
-        stagType = "BYTE";
-      for (String vType : TiffTags.getTag(tagid).getType()) {
-        String vType2 = vType;
-        if (vType2.equals("UNDEFINED"))
-          vType2 = "BYTE";
-        if (vType2.equals(stagType)) {
-          found = true;
+      if (stagType != null) {
+        if (stagType.equals("SUBIFD"))
+          stagType = "IFD";
+        if (stagType.equals("UNDEFINED"))
+          stagType = "BYTE";
+        for (String vType : TiffTags.getTag(tagid).getType()) {
+          String vType2 = vType;
+          if (vType2.equals("UNDEFINED"))
+            vType2 = "BYTE";
+          if (vType2.equals(stagType)) {
+            found = true;
+          }
         }
       }
       if (!found) {
