@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.easyinnova</groupId>
+    <groupId>org.openpreservation</groupId>
     <artifactId>tifflibrary4java</artifactId>
-    <version>1.9.7</version>
+    <version>1.9.8</version>
     <packaging>jar</packaging>
     <name>Tiff Library 4 Java</name>
     <description>A library to read and give access to Tiff files.</description>
-    <url>https://github.com/easyinnova/Tiff-Library-4J/</url>
+    <url>https://github.com/openpreserve/Tiff-Library-4J.git/</url>
     <inceptionYear>2015</inceptionYear>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,6 +56,12 @@
     </dependencies>
     <developers>
         <developer>
+            <name>Carl Wilson</name>
+            <email>carl@openpreservation.org</email>
+            <organization>Open Preservation Foundation</organization>
+            <organizationUrl>https://openpreservation.org/</organizationUrl>
+        </developer>
+        <developer>
             <name>Víctor Muñoz Solà</name>
             <email>victormunoz@easyinnova.com</email>
             <organization>Easy Innova</organization>
@@ -63,10 +69,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git@github.com:easyinnova/Tiff-Library-4J.git</connection>
-        <developerConnection>scm:git:git@github.com:easyinnova/Tiff-Library-4J.git
-        </developerConnection>
-        <url>git@github.com:easyinnova/Tiff-Library-4J.git</url>
+        <connection>scm:git:git@github.com:openpreserve/Tiff-Library-4J.git</connection>
+        <developerConnection>scm:git:git@github.com:openpreserve/Tiff-Library-4J.git</developerConnection>
+        <url>git@github.com:openpreserve/Tiff-Library-4J.git</url>
     </scm>
     <distributionManagement>
         <snapshotRepository>

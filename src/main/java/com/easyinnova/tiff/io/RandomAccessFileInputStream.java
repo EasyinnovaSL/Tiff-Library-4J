@@ -62,6 +62,15 @@ public class RandomAccessFileInputStream extends InputStream {
     randomAccessFile = new RandomAccessFile(file, "r");
   }
 
+  public RandomAccessFileInputStream(final RandomAccessFile raf) throws FileNotFoundException {
+    this(raf, "");
+  }
+
+  public RandomAccessFileInputStream(final RandomAccessFile raf, final String path) throws FileNotFoundException {
+    this.path = path;
+	this.randomAccessFile = raf;
+  }
+
   public String getPath() {
     return path;
   }

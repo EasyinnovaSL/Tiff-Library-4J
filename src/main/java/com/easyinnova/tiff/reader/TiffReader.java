@@ -48,6 +48,7 @@ import com.easyinnova.tiff.profiles.TiffEPProfile;
 import com.easyinnova.tiff.profiles.TiffITProfile;
 
 import java.io.File;
+import java.io.RandomAccessFile;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -171,7 +172,52 @@ public class TiffReader {
     try {
       if (Files.exists(Paths.get(filename))) {
         data = new TiffInputStream(new File(filename));
+        result = this.validate(validate);
+      } else {
+        // File not found
+        result = -1;
+        tiffModel.setFatalError(true, "File not found");
+      }
+    } catch (Exception ex) {
+      // IO exception
+      result = -2;
+      tiffModel.setFatalError(true, "IO Exception");
+    }
 
+    return result;
+  }
+
+  /**
+   * Parses a Tiff File and create an internal model representation.
+   *
+   * @param filename the Tiff filename
+   * @return Error code (0: successful, -1: file not found, -2: IO exception)
+   */
+  public int readFile(RandomAccessFile raf, boolean validate) {
+    int result = 0;
+
+    try {
+      data = new TiffInputStream(raf);
+      result = this.validate(validate);
+    } catch (Exception ex) {
+      // IO exception
+      result = -2;
+      tiffModel.setFatalError(true, "IO Exception");
+    }
+
+    return result;
+  }
+
+  /**
+   * Parses a Tiff File and create an internal model representation.
+   *
+   * @param filename the Tiff filename
+   * @return Error code (0: successful, -1: file not found, -2: IO exception)
+   */
+  private int validate(boolean validate) {
+    int result = 0;
+
+    try {
         tiffModel = new TiffDocument();
         validation = new ValidationResult(validate);
         tiffModel.setSize(data.size());
@@ -198,11 +244,6 @@ public class TiffReader {
         }
 
         data.close();
-      } else {
-        // File not found
-        result = -1;
-        tiffModel.setFatalError(true, "File not found");
-      }
     } catch (Exception ex) {
       // IO exception
       result = -2;
