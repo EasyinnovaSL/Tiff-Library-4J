@@ -99,12 +99,26 @@ public class TiffInputStream implements TiffDataIntput {
   }
 	  
   public TiffInputStream(RandomAccessFile raf) throws FileNotFoundException {
+    long mbsize = 0;
+    try {
+      mbsize = raf.getChannel().size();
+    } catch (Exception ex) {
+
+    }
+
     internalFile = null;
-    internalFileBig = new RandomAccessFileInputStream(raf);
+    internalFileBig = null;
+
+    if (mbsize > 2147483647L) {
+      internalFileBig = new RandomAccessFileInputStream(raf);
+    } else {
+      internalFile = new MappedByteInputStream(raf);
+    }
     byteOrder = ByteOrder.BIG_ENDIAN;
     fileOffset = 0;
     buffer = new PagedInputBuffer(this);
   }
+  
 	  
   /**
    * Gets the byte order.

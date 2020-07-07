@@ -32,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.nio.BufferUnderflowException;
 import java.nio.MappedByteBuffer;
@@ -58,6 +59,17 @@ public class MappedByteInputStream extends InputStream {
     path = file.getPath();
     f = new FileInputStream(file);
     ch = f.getChannel();
+    try {
+      mbsize = ch.size();
+      mb = ch.map(FileChannel.MapMode.READ_ONLY, 0L, mbsize);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public MappedByteInputStream(RandomAccessFile raf) throws FileNotFoundException {
+    path = "";
+    ch = raf.getChannel();
     try {
       mbsize = ch.size();
       mb = ch.map(FileChannel.MapMode.READ_ONLY, 0L, mbsize);
