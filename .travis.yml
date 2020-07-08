@@ -11,7 +11,7 @@ branches:
     - "/^v|d\\d+\\.\\d+\\.\\d+$/"
     - "/^jenkins-jhove-v|d\\d+\\.\\d+\\.\\d+$/"
 
-install: mvn install -Dgpg.skip=true
+install: mvn clean package
 
 before_install:
   - sudo apt-get install -y jq
